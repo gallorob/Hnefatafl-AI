@@ -69,7 +69,7 @@
     <Compile Include="Pieces\Impl\Pawn.cs" />
     <Compile Include="Pieces\IPiece.cs" />
     <Compile Include="Player\Impl\HumanPlayer.cs" />
-    <Compile Include="Player\Impl\TaflBot.cs" />
+    <Compile Include="AI\TaflBotRandom.cs" />
     <Compile Include="Player\IPlayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

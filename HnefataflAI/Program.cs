@@ -1,4 +1,5 @@
-﻿using HnefataflAI.Commons;
+﻿using HnefataflAI.AI;
+using HnefataflAI.Commons;
 using HnefataflAI.Commons.DataTypes;
 using HnefataflAI.Games;
 using HnefataflAI.Games.Engine.Impl;
@@ -13,8 +14,8 @@ namespace HnefataflAI
     {
         static void Main(string[] args)
         {
-            RunPvPGame();
-            //RunPvPCGame();
+            //RunPvPGame();
+            RunPvPCGame();
             //RunMovesTest();
 
             //testMatrix();

@@ -29,11 +29,11 @@ namespace HnefataflAI.Commons.Utils
                 case Directions.UP:
                     return position.Row < totalRows;
                 case Directions.DOWN:
-                    return position.Row > 0;
+                    return position.Row > 1;
                 case Directions.LEFT:
                     return position.Col > DefaultValues.FIRST_COLUMN;
                 case Directions.RIGHT:
-                    return position.Col < DefaultValues.FIRST_COLUMN + totalCols;
+                    return position.Col < DefaultValues.FIRST_COLUMN + totalCols - 1;
                 default:
                     return false;
             }

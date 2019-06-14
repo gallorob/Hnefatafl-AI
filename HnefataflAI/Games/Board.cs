@@ -31,6 +31,10 @@ namespace HnefataflAI.Games
         {
             this.Set(piece, position);
         }
+        public void AddPiece(IPiece piece)
+        {
+            this.AddPiece(piece, piece.Position);
+        }
         public void RemovePiece(IPiece piece, Position position)
         {
             IPiece currentPiece = this.At(position);

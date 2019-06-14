@@ -41,9 +41,9 @@ namespace HnefataflAI.Games.Engine.Impl
             {
                 this.WhiteMoves.Add(move);
             }
+            board.RemovePiece(move.Piece);
             move.Piece.UpdatePosition(move.To);
-            board.RemovePiece(move.Piece, move.From);
-            board.AddPiece(move.Piece, move.To);
+            board.AddPiece(move.Piece);
         }
         private void ValidateMove(Move move, Board board, PieceColors playerColor)
         {
@@ -87,7 +87,25 @@ namespace HnefataflAI.Games.Engine.Impl
                     board.RemovePiece(piece);
                 }
             }
+            if (!isGameOver)
+            {
+                isGameOver = HasRepeatedMoves(this.BlakcMoves);
+            }
+            if (!isGameOver)
+            {
+                isGameOver = HasRepeatedMoves(this.WhiteMoves);
+            }
             return isGameOver;
+        }
+        private bool HasRepeatedMoves(List<Move> moves)
+        {
+            if (moves.Count > 5)
+            {
+                return moves[moves.Count - 1].Equals(moves[moves.Count - 3])
+                    &&
+                    moves[moves.Count - 3].Equals(moves[moves.Count - 5]);
+            }
+            return false;
         }
     }
 }

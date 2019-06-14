@@ -1,10 +1,11 @@
 ﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Games;
+using HnefataflAI.Player;
 using System;
 using System.Collections.Generic;
 
-namespace HnefataflAI.Player.Impl
+namespace HnefataflAI.AI
 {
     class TaflBotRandom : IPlayer
     {

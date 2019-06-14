@@ -1,4 +1,5 @@
-﻿using HnefataflAI.Commons;
+﻿using HnefataflAI.AI;
+using HnefataflAI.Commons;
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
@@ -57,7 +58,6 @@ namespace HnefataflAI.Games
         }
         private void PlayPlayer(IPlayer player)
         {
-            Console.WriteLine(this.Board);
             try
             {
                 switch (player.PieceColors)
@@ -69,6 +69,7 @@ namespace HnefataflAI.Games
                         Console.WriteLine(Messages.WHITE_TURN);
                         break;
                 }
+                Console.WriteLine(this.Board);
                 PlayTurn(player);
                 Console.Clear();
             }
