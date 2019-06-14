@@ -1,4 +1,5 @@
 ﻿using HnefataflAI.Commons;
+using HnefataflAI.Commons.DataTypes;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Pieces;
@@ -9,20 +10,20 @@ namespace HnefataflAI.Games
 {
     public class Board
     {
-        private readonly IPiece[,] board;
+        private readonly Matrix<IPiece> board;
+        public int TotalRows { get; private set; }
+        public int TotalCols { get; private set; }
         public Board(int numRows, int numCols)
         {
             this.TotalRows = numRows;
             this.TotalCols = numCols;
-            this.board = new IPiece[this.TotalRows, this.TotalCols];
+            this.board = new Matrix<IPiece>(numRows, numCols);
         }
-        public Board(IPiece[,] newBoard)
+        public Board(Matrix<IPiece> newBoard)
         {
             this.board = newBoard;
         }
-        public int TotalRows { get; private set; }
-        public int TotalCols { get; private set; }
-        public IPiece[,] GetCurrentBoard()
+        public Matrix<IPiece> GetCurrentBoard()
         {
             return this.board;
         }
@@ -39,27 +40,23 @@ namespace HnefataflAI.Games
                 this.Set(null, position);
             }
         }
-        public int GetArrayRow(int row)
+        public void RemovePiece(IPiece piece)
         {
-            return this.TotalRows - row;
-        }
-        public int GetArrayCol(int col)
-        {
-            return col - 'a';
+            this.RemovePiece(piece, piece.Position);
         }
         private void Set(IPiece piece, Position position)
         {
-            int arrRow = this.GetArrayRow(position.Row);
-            int arrCol = this.GetArrayCol(position.Col);
+            int arrRow = BoardUtils.GetArrayRow(this.TotalRows, position.Row);
+            int arrCol = BoardUtils.GetArrayCol(position.Col);
 
-            this.board[arrRow, arrCol] = piece;
+            this.board.Set(arrRow, arrCol, piece);
         }
         public IPiece At(Position position)
         {
-            int arrRow = this.GetArrayRow(position.Row);
-            int arrCol = this.GetArrayCol(position.Col);
+            int arrRow = BoardUtils.GetArrayRow(this.TotalRows, position.Row);
+            int arrCol = BoardUtils.GetArrayCol(position.Col);
 
-            return this.board[arrRow, arrCol];
+            return this.board.At(arrRow, arrCol);
         }
         public override string ToString()
         {
@@ -69,7 +66,7 @@ namespace HnefataflAI.Games
                 result += this.TotalRows - i + "\t";
                 for (int j = 0; j < this.TotalCols; j++)
                 {
-                    IPiece piece = this.board[i, j];
+                    IPiece piece = this.board.At(i, j);
                     if (piece == null)
                         result += " . ";
                     else if (piece is King)
@@ -95,9 +92,9 @@ namespace HnefataflAI.Games
             {
                 for (int j = 0; j < this.TotalCols; j++)
                 {
-                    if (this.board[i, j] != null)
+                    if (this.board.At(i, j) != null)
                     {
-                        IPiece piece = this.board[i, j];
+                        IPiece piece = this.board.At(i, j);
                         if (piece.PieceColors.Equals(pieceColor))
                             pieces.Add(piece);
                     }
