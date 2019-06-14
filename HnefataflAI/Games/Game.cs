@@ -10,6 +10,8 @@ namespace HnefataflAI.Games
 {
     public class Game
     {
+        private bool GameOver = false;
+        private PieceColors CurrentlyPlaying = PieceColors.BLACK;
         internal Board Board { get; private set; }
         internal IPlayer Player1 { get; private set; }
         internal IPlayer Player2 { get; private set; }
@@ -25,17 +27,37 @@ namespace HnefataflAI.Games
         }
         public void StartGame()
         {
-            bool gameOver = false;
             Console.WriteLine("\t\t\tGAME OF HNEFATAFL");
-
-            while (!gameOver)
+            while (!this.GameOver)
             {
                 PlayPlayer(this.Player1);
+                this.CurrentlyPlaying = Player1.PieceColors;
+                if (this.GameOver) break;
                 PlayPlayer(this.Player2);
+                this.CurrentlyPlaying = Player2.PieceColors;
+                if (this.GameOver) break;
             }
+            DisplayGameOver(CurrentlyPlaying);
+        }
+        private void DisplayGameOver(PieceColors pieceColor)
+        {
+            string winner = "";
+            switch (pieceColor)
+            {
+                case PieceColors.BLACK:
+                    winner = "Attacker";
+                    break;
+                case PieceColors.WHITE:
+                    winner = "Defender";
+                    break;
+            }
+            Console.WriteLine(String.Format(Messages.GAME_OVER, winner));
+            Console.WriteLine(Messages.PRESS_TO_CONTINUE);
+            Console.Clear();
         }
         private void PlayPlayer(IPlayer player)
         {
+            Console.WriteLine(this.Board);
             try
             {
                 switch (player.PieceColors)
@@ -61,16 +83,14 @@ namespace HnefataflAI.Games
         }
         private void PlayTurn(IPlayer player)
         {
-            Console.WriteLine(this.Board);
             string[] playerMove;
             if (player is HumanPlayer)
                 playerMove = player.getMove();
             else
-                playerMove = ((TaflBot)player).getMove(this.Board.GetBoardCopy(), this.BotRuleEngine.GetAvailableMovesByColor(player.PieceColors));
+                playerMove = ((TaflBotRandom)player).getMove(this.Board.GetBoardCopy(), this.BotRuleEngine.GetAvailableMovesByColor(player.PieceColors));
             Move actualMove = this.GameEngine.ProcessPlayerMove(playerMove, this.Board);
             this.GameEngine.ApplyMove(actualMove, this.Board, player.PieceColors);
-            Console.Clear();
-            Console.WriteLine(this.Board);
+            this.GameOver = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);
         }
     }
 }

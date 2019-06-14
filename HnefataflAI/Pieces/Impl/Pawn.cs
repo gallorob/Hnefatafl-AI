@@ -7,7 +7,7 @@ namespace HnefataflAI.Pieces.Impl
     {
         public PieceColors PieceColors { get; internal set; }
         public Position Position { get; internal set; }
-        public virtual void updatePosition(Position newPosition)
+        public virtual void UpdatePosition(Position newPosition)
         {
             this.Position = newPosition;
         }

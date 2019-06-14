@@ -1,4 +1,6 @@
-﻿using HnefataflAI.Commons.Exceptions;
+﻿using System;
+using HnefataflAI.Commons.Exceptions;
+using HnefataflAI.Commons.Positions;
 
 namespace HnefataflAI.Commons.Utils
 {
@@ -19,6 +21,14 @@ namespace HnefataflAI.Commons.Utils
                 throw new InvalidInputException(ErrorMessages.INVALID_INPUT);
             }
             return move;
+        }
+
+        internal static void ValidateMove(Position from, Position to)
+        {
+            if (from.Col != to.Col && from.Row != to.Row)
+            {
+                throw new InvalidInputException(ErrorMessages.INVALID_DESTINATION_POSITION);
+            }
         }
     }
 }

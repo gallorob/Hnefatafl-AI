@@ -3,6 +3,7 @@ using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Pieces;
+using HnefataflAI.Pieces.Impl;
 using System;
 using System.Collections.Generic;
 
@@ -21,6 +22,7 @@ namespace HnefataflAI.Games.Engine.Impl
             string[] inputTo = playerMove[1].Split(':');
             Position to = PositionUtils.ValidateAndReturnInputPosition(inputTo);
             ValidatePosition(to, board);
+            MoveUtils.ValidateMove(from, to);
             IPiece movedPiece = board.At(from);
             if (movedPiece == null)
             {
@@ -39,7 +41,7 @@ namespace HnefataflAI.Games.Engine.Impl
             {
                 this.WhiteMoves.Add(move);
             }
-
+            move.Piece.UpdatePosition(move.To);
             board.RemovePiece(move.Piece, move.From);
             board.AddPiece(move.Piece, move.To);
         }
@@ -69,6 +71,23 @@ namespace HnefataflAI.Games.Engine.Impl
             {
                 throw new InvalidMoveException(position, ErrorMessages.POSITION_OUT_OF_BOARD);
             }
+        }
+        public bool GetGameStatus(IPiece movedPiece, Board board)
+        {
+            bool isGameOver = false;
+            List<IPiece> capturedPieces = this.RuleEngine.CheckIfHasCaptured(movedPiece, board);
+            foreach (IPiece piece in capturedPieces)
+            {
+                if (piece is King && !isGameOver)
+                {
+                    isGameOver = this.RuleEngine.CheckIfKingIsCaptured(piece, board);
+                }
+                else
+                {
+                    board.RemovePiece(piece);
+                }
+            }
+            return isGameOver;
         }
     }
 }

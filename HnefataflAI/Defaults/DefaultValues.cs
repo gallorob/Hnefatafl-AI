@@ -6,8 +6,10 @@ namespace HnefataflAI.Defaults
 {
     public class DefaultValues
     {
-        public static int MAX_ROWS = 11;
-        public static int MAX_COLS = 11;
+        public static readonly int MAX_ROWS = 11;
+        public static readonly int MAX_COLS = 11;
+        public static readonly char FIRST_COLUMN = 'a';
+        public static readonly char UPPER_FIRST_COLUMN = 'A';
         public static Board GetDefaultHnefataflTable()
         {
             Board board = new Board(11, 11);
@@ -45,7 +47,7 @@ namespace HnefataflAI.Defaults
             int[] blackRows = { 11, 11, 11, 11, 11, 8, 8, 7, 7, 6, 6, 5, 5, 4, 4, 1, 1, 1, 1, 1 };
             char[] blackCols = { 'd', 'e', 'f', 'g', 'h', 'a', 'k', 'a', 'k', 'a', 'k', 'a', 'k', 'a', 'k', 'd', 'e', 'f', 'g', 'h' };
 
-            King king = new King(new Position(4, 'f'));
+            King king = new King(new Position(5, 'f'));
             board.AddPiece(king, king.Position);
             for (int i = 0; i < whiteRows.Length; i++)
             {

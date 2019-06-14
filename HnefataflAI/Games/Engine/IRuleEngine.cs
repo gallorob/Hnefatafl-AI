@@ -12,5 +12,7 @@ namespace HnefataflAI.Games.Engine
         bool IsPositionValid(Position position, int totalRows, int totalCols);
         bool IsMoveOnBoardCorner(Position move, int totalRows, int totalCols);
         bool IsMoveOnThrone(Position move, int totalRows, int totalCols);
+        List<IPiece> CheckIfHasCaptured(IPiece piece, Board board);
+        bool CheckIfKingIsCaptured(IPiece king, Board board);
     }
 }

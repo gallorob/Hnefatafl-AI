@@ -15,7 +15,7 @@ namespace HnefataflAI.Commons.Utils
             char col;
             if (input.Length != 2)
             {
-                throw new InvalidInputException(ErrorMessages.INVALID_IPUT_POSITION);
+                throw new InvalidInputException(ErrorMessages.INVALID_INPUT);
             }
             try
             {

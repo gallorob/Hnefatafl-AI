@@ -6,5 +6,6 @@
         public static readonly string PRESS_TO_CONTINUE = "\nPress a button to continue...";
         public static readonly string WHITE_TURN = "\nDefender player turn\n";
         public static readonly string BLACK_TURN = "\nAttacker player turn\n";
+        public static string GAME_OVER = "\n\nGame over - {0} is victorious!";
     }
 }

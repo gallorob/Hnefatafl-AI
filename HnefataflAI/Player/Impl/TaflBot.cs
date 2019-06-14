@@ -6,11 +6,11 @@ using System.Collections.Generic;
 
 namespace HnefataflAI.Player.Impl
 {
-    class TaflBot : IPlayer
+    class TaflBotRandom : IPlayer
     {
         public PieceColors PieceColors { get; private set; }
 
-        public TaflBot(PieceColors pieceColors)
+        public TaflBotRandom(PieceColors pieceColors)
         {
             this.PieceColors = pieceColors;
         }

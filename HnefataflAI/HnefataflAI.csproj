@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commons\DataTypes\Matrix.cs" />
     <Compile Include="Commons\Exceptions\ErrorMessages.cs" />
     <Compile Include="Commons\Exceptions\InvalidInputException.cs" />
     <Compile Include="Commons\Exceptions\InvalidMoveException.cs" />
