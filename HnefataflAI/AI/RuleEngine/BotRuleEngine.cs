@@ -1,11 +1,12 @@
 ﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Positions;
-using HnefataflAI.Commons.Utils;
+using HnefataflAI.Games;
+using HnefataflAI.Games.Engine;
+using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Pieces;
-using HnefataflAI.Pieces.Impl;
 using System.Collections.Generic;
 
-namespace HnefataflAI.Games.Engine.Impl
+namespace HnefataflAI.AI.RuleEngine
 {
     class BotRuleEngine
     {

@@ -4,6 +4,6 @@
     public interface IPlayer
     {
         PieceColors PieceColors { get; }
-        string[] getMove();
+        string[] GetMove();
     }
 }

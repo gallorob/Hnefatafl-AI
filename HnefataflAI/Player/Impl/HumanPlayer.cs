@@ -12,7 +12,7 @@ namespace HnefataflAI.Player.Impl
         {
             this.PieceColors = pieceColors;
         }
-        public string[] getMove()
+        public string[] GetMove()
         {
             Console.Write(Messages.ENTER_MOVE);
             return MoveUtils.MoveFromInput(Console.ReadLine());

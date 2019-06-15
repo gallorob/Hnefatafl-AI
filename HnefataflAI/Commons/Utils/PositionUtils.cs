@@ -20,7 +20,7 @@ namespace HnefataflAI.Commons.Utils
             try
             {
                 row = System.Int32.Parse(input[1]);
-            } catch (System.Exception e)
+            } catch (System.Exception)
             {
                 throw new InvalidInputException(ErrorMessages.INVALID_IPUT_POSITION);
             }
@@ -28,7 +28,7 @@ namespace HnefataflAI.Commons.Utils
             {
                 col = input[0].ToCharArray()[0];
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
                 throw new InvalidInputException(ErrorMessages.INVALID_IPUT_POSITION);
             }

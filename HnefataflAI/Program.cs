@@ -1,12 +1,13 @@
 ﻿using HnefataflAI.AI;
+using HnefataflAI.AI.Bots;
+using HnefataflAI.AI.Bots.Impl;
+using HnefataflAI.AI.RuleEngine;
 using HnefataflAI.Commons;
 using HnefataflAI.Commons.DataTypes;
 using HnefataflAI.Games;
-using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Player;
 using HnefataflAI.Player.Impl;
 using System;
-using System.Collections.Generic;
 
 namespace HnefataflAI
 {
@@ -14,8 +15,8 @@ namespace HnefataflAI
     {
         static void Main(string[] args)
         {
-            //RunPvPGame();
-            RunPvPCGame();
+            RunPvPGame();
+            //RunPvPCGame();
             //RunMovesTest();
 
             //testMatrix();
@@ -76,7 +77,8 @@ namespace HnefataflAI
 
         static void RunPvPGame()
         {
-            Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
+            //Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
+            Board board = Defaults.DefaultValues.GetMovesTestTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             IPlayer player2 = new HumanPlayer(PieceColors.WHITE);
 
@@ -87,7 +89,7 @@ namespace HnefataflAI
         {
             Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
-            IPlayer player2 = new TaflBotRandom(PieceColors.WHITE);
+            IHnefataflBot player2 = new TaflBotRandom(PieceColors.WHITE);
 
             Game game = new Game(board, player1, player2);
             game.StartGame();
@@ -96,7 +98,7 @@ namespace HnefataflAI
         {
             Board board = Defaults.DefaultValues.GetMovesTestTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
-            IPlayer player2 = new TaflBotRandom(PieceColors.WHITE);
+            IHnefataflBot player2 = new TaflBotRandom(PieceColors.WHITE);
             BotRuleEngine ruleEngine = new BotRuleEngine(board);
 
             Console.Out.Write(String.Format("Board state:\n{0}", board));

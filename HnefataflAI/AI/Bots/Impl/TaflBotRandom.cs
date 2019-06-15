@@ -1,13 +1,12 @@
 ﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Games;
-using HnefataflAI.Player;
 using System;
 using System.Collections.Generic;
 
-namespace HnefataflAI.AI
+namespace HnefataflAI.AI.Bots.Impl
 {
-    class TaflBotRandom : IPlayer
+    class TaflBotRandom : IHnefataflBot
     {
         public PieceColors PieceColors { get; private set; }
 
@@ -15,11 +14,11 @@ namespace HnefataflAI.AI
         {
             this.PieceColors = pieceColors;
         }
-        public string[] getMove()
+        public string[] GetMove()
         {
             throw new System.NotImplementedException();
         }
-        public string[] getMove(Board board, List<Move> moves)
+        public string[] GetMove(Board board, List<Move> moves)
         {
             Random rnd = new Random();
             int index = rnd.Next(moves.Count);

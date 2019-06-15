@@ -1,4 +1,5 @@
-﻿using HnefataflAI.AI;
+﻿using HnefataflAI.AI.Bots;
+using HnefataflAI.AI.RuleEngine;
 using HnefataflAI.Commons;
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Games.Engine;
@@ -54,7 +55,7 @@ namespace HnefataflAI.Games
             }
             Console.WriteLine(String.Format(Messages.GAME_OVER, winner));
             Console.WriteLine(Messages.PRESS_TO_CONTINUE);
-            Console.Clear();
+            Console.ReadKey();
         }
         private void PlayPlayer(IPlayer player)
         {
@@ -86,9 +87,9 @@ namespace HnefataflAI.Games
         {
             string[] playerMove;
             if (player is HumanPlayer)
-                playerMove = player.getMove();
+                playerMove = player.GetMove();
             else
-                playerMove = ((TaflBotRandom)player).getMove(this.Board.GetBoardCopy(), this.BotRuleEngine.GetAvailableMovesByColor(player.PieceColors));
+                playerMove = ((IHnefataflBot)player).GetMove(this.Board.GetBoardCopy(), this.BotRuleEngine.GetAvailableMovesByColor(player.PieceColors));
             Move actualMove = this.GameEngine.ProcessPlayerMove(playerMove, this.Board);
             this.GameEngine.ApplyMove(actualMove, this.Board, player.PieceColors);
             this.GameOver = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);

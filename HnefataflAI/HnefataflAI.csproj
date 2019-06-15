@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\Bots\IHnefataflBot.cs" />
     <Compile Include="Commons\DataTypes\Matrix.cs" />
     <Compile Include="Commons\Exceptions\ErrorMessages.cs" />
     <Compile Include="Commons\Exceptions\InvalidInputException.cs" />
@@ -58,7 +59,7 @@
     <Compile Include="Commons\Positions\Position.cs" />
     <Compile Include="Defaults\DefaultValues.cs" />
     <Compile Include="Games\Engine\IGameEngine.cs" />
-    <Compile Include="Games\Engine\Impl\BotRuleEngine.cs" />
+    <Compile Include="AI\RuleEngine\BotRuleEngine.cs" />
     <Compile Include="Games\Engine\Impl\HnefataflGameEngine.cs" />
     <Compile Include="Games\Engine\Impl\RuleEngineImpl.cs" />
     <Compile Include="Games\Engine\IRuleEngine.cs" />
@@ -69,7 +70,7 @@
     <Compile Include="Pieces\Impl\Pawn.cs" />
     <Compile Include="Pieces\IPiece.cs" />
     <Compile Include="Player\Impl\HumanPlayer.cs" />
-    <Compile Include="AI\TaflBotRandom.cs" />
+    <Compile Include="AI\Bots\Impl\TaflBotRandom.cs" />
     <Compile Include="Player\IPlayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

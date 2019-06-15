@@ -12,7 +12,7 @@ namespace HnefataflAI.Games.Engine.Impl
     public class HnefataflGameEngine : IGameEngine
     {
         internal List<Move> WhiteMoves = new List<Move>();
-        internal List<Move> BlakcMoves = new List<Move>();
+        internal List<Move> BlackMoves = new List<Move>();
         internal IRuleEngine RuleEngine = new RuleEngineImpl();
         public Move ProcessPlayerMove(string[] playerMove, Board board)
         {
@@ -35,7 +35,7 @@ namespace HnefataflAI.Games.Engine.Impl
             ValidateMove(move, board, playerColor);
             if (move.Piece.PieceColors.Equals(PieceColors.BLACK))
             {
-                this.BlakcMoves.Add(move);
+                this.BlackMoves.Add(move);
             }
             else
             {
@@ -80,6 +80,7 @@ namespace HnefataflAI.Games.Engine.Impl
             {
                 if (piece is King && !isGameOver)
                 {
+                    // winning condition for Attacker
                     isGameOver = this.RuleEngine.CheckIfKingIsCaptured(piece, board);
                 }
                 else
@@ -89,10 +90,17 @@ namespace HnefataflAI.Games.Engine.Impl
             }
             if (!isGameOver)
             {
-                isGameOver = HasRepeatedMoves(this.BlakcMoves);
+                // winning condition for Defender
+                isGameOver = movedPiece is King && this.RuleEngine.IsMoveOnBoardCorner(movedPiece.Position, board.TotalRows, board.TotalCols);
             }
             if (!isGameOver)
             {
+                // losing condition for Attacker
+                isGameOver = HasRepeatedMoves(this.BlackMoves);
+            }
+            if (!isGameOver)
+            {
+                // losing condition for Defender
                 isGameOver = HasRepeatedMoves(this.WhiteMoves);
             }
             return isGameOver;
