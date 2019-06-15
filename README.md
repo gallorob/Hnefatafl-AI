@@ -6,6 +6,7 @@ Currently it's a console application (maybe in the future I'll try and make some
   * Board and pieces are fully implemented
   * Pieces' position and player moves are fully implemented and fully validated
   * GameEngine processes captures (both for normal pieces and king)
-  * Added Attacker's victory condition (Defender's to be implemented)
-  * Moves repetition is to be fixed
-  * The bot just moves randomly (it chooses randomly from a list of valid moves)
+  * Added Attacker's and Defender's victory condition 
+  * Current bots are:
+  - TaflBotRandom; just moves randomly (it chooses randomly from a list of valid moves)
+  - TaflBotBasic; evaluates the best move it can make in the current turn
