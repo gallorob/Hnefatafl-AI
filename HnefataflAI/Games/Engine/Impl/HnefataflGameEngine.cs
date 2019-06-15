@@ -83,8 +83,15 @@ namespace HnefataflAI.Games.Engine.Impl
                     // winning condition for Attacker
                     gameStatus.IsGameOver = this.RuleEngine.CheckIfKingIsCaptured(piece, board);
                     gameStatus.Status = Status.WIN;
+                    if (gameStatus.IsGameOver)
+                    {
+                        board.RemovePiece(piece);
+                    }
                 }
-                board.RemovePiece(piece);
+                else
+                {
+                    board.RemovePiece(piece);
+                }
             }
             if (!gameStatus.IsGameOver)
             {

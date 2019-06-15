@@ -99,7 +99,7 @@ namespace HnefataflAI
         {
             Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
-            IHnefataflBot player2 = new TaflBotBasic(PieceColors.WHITE);
+            IHnefataflBot player2 = new TaflBotMinimax(PieceColors.WHITE);
 
             Game game = new Game(board, player1, player2);
             game.StartGame();
