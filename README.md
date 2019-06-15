@@ -8,5 +8,5 @@ Currently it's a console application (maybe in the future I'll try and make some
   * GameEngine processes captures (both for normal pieces and king)
   * Added Attacker's and Defender's victory condition 
   * Current bots are:
-  - TaflBotRandom; just moves randomly (it chooses randomly from a list of valid moves)
-  - TaflBotBasic; evaluates the best move it can make in the current turn
+    - TaflBotRandom; just moves randomly (it chooses randomly from a list of valid moves)
+    - TaflBotBasic; evaluates the best move it can make in the current turn
