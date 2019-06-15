@@ -22,6 +22,8 @@ namespace HnefataflAI.Games
         public Board(Matrix<IPiece> newBoard)
         {
             this.board = newBoard;
+            this.TotalRows = newBoard.RowsNumber();
+            this.TotalCols = newBoard.ColumnsNumber();
         }
         public Matrix<IPiece> GetCurrentBoard()
         {
@@ -83,10 +85,6 @@ namespace HnefataflAI.Games
                 result += "\n";
             }
             return result;
-        }
-        public Board GetBoardCopy()
-        {
-            return (Board)this.MemberwiseClone();
         }
         public List<IPiece> GetPiecesByColor(PieceColors pieceColor)
         {

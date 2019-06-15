@@ -106,7 +106,7 @@ namespace HnefataflAI.Games
             if (player is HumanPlayer)
                 playerMove = player.GetMove();
             else
-                playerMove = ((IHnefataflBot)player).GetMove(this.Board.GetBoardCopy(), this.BotRuleEngine.GetAvailableMovesByColor(player.PieceColors));
+                playerMove = ((IHnefataflBot)player).GetMove(this.Board, this.BotRuleEngine.GetAvailableMovesByColor(player.PieceColors));
             Move actualMove = this.GameEngine.ProcessPlayerMove(playerMove, this.Board);
             this.GameEngine.ApplyMove(actualMove, this.Board, player.PieceColors);
             this.GameStatus = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);

@@ -11,13 +11,44 @@
         /// </summary>
         private readonly T[,] ActualMatrix;
         /// <summary>
-        /// Constructor for the generic T Matrix
+        /// Create a new generic T Matrix given its dimensions
         /// </summary>
         /// <param name="rowNum">Number of rows</param>
         /// <param name="colNum">Number of columns</param>
         public Matrix(int rowNum, int colNum)
         {
             this.ActualMatrix = new T[rowNum, colNum];
+        }
+        /// <summary>
+        /// Create a new generic T Matrix given its matrix
+        /// </summary>
+        /// <param name="newMatrix">The actual matrix</param>
+        public Matrix(T[,] newMatrix)
+        {
+            this.ActualMatrix = newMatrix;
+        }
+        /// <summary>
+        /// Get a copy of the actual matrix
+        /// </summary>
+        /// <returns>A copy of the actual matrix</returns>
+        public T[,] GetMatrixCopy()
+        {
+            return (T[,]) this.ActualMatrix.Clone();
+        }
+        /// <summary>
+        /// Get the number of rows
+        /// </summary>
+        /// <returns>The number of rows</returns>
+        public int RowsNumber()
+        {
+            return this.ActualMatrix.GetLength(0);
+        }/// <summary>
+         /// Get the number of columns
+         /// </summary>
+         /// <returns>The number of columns</returns>
+        public int ColumnsNumber()
+        {
+            return this.ActualMatrix.GetLength(1);
         }
         /// <summary>
         /// Sets the value in the matrix
@@ -46,7 +77,7 @@
         /// <returns>The whole row</returns>
         public T[] GetRow(int rowNum)
         {
-            return GetRow(rowNum, this.ActualMatrix.GetLength(0));
+            return GetRow(rowNum, this.RowsNumber());
         }
         /// <summary>
         /// Get the row specified and cut at the specified length
@@ -81,7 +112,7 @@
         /// <returns>The whole column</returns>
         public T[] GetCol(int colNum)
         {
-            return GetCol(colNum, this.ActualMatrix.GetLength(1));
+            return GetCol(colNum, this.ColumnsNumber());
         }
         /// <summary>
         /// Get the column specified and cut at the specified length

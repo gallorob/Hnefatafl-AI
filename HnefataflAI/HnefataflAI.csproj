@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AI\Bots\IHnefataflBot.cs" />
+    <Compile Include="AI\Bots\Impl\TaflBotBasic.cs" />
+    <Compile Include="AI\MovesEvaluator.cs" />
+    <Compile Include="AI\PieceValues.cs" />
     <Compile Include="Commons\DataTypes\Matrix.cs" />
     <Compile Include="Commons\Exceptions\ErrorMessages.cs" />
     <Compile Include="Commons\Exceptions\InvalidInputException.cs" />
@@ -51,6 +54,7 @@
     <Compile Include="Commons\Messages.cs" />
     <Compile Include="Commons\Positions\Directions.cs" />
     <Compile Include="Commons\Utils\BoardUtils.cs" />
+    <Compile Include="Commons\Utils\ListUtils.cs" />
     <Compile Include="Commons\Utils\MoveUtils.cs" />
     <Compile Include="Commons\Utils\PositionUtils.cs" />
     <Compile Include="Games\Board.cs" />

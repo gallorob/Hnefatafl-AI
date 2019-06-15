@@ -20,6 +20,17 @@ namespace HnefataflAI
             //RunMovesTest();
 
             //testMatrix();
+            //testMovesEvaluator();
+        }
+
+        private static void testMovesEvaluator()
+        {
+            MovesEvaluator movesEvaluator = new MovesEvaluator();
+            int bv = movesEvaluator.EvaluateBoard(Defaults.DefaultValues.GetDefaultHnefataflTable(), PieceColors.BLACK);
+            int wv = movesEvaluator.EvaluateBoard(Defaults.DefaultValues.GetDefaultHnefataflTable(), PieceColors.WHITE);
+
+            Console.Out.Write(String.Format("Attacker board value: {0}\nDefender board value: {1}", bv, wv));
+            Console.In.Read();
         }
 
         static void testMatrix()
@@ -77,8 +88,7 @@ namespace HnefataflAI
 
         static void RunPvPGame()
         {
-            //Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
-            Board board = Defaults.DefaultValues.GetMovesTestTable();
+            Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             IPlayer player2 = new HumanPlayer(PieceColors.WHITE);
 
@@ -89,7 +99,7 @@ namespace HnefataflAI
         {
             Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
-            IHnefataflBot player2 = new TaflBotRandom(PieceColors.WHITE);
+            IHnefataflBot player2 = new TaflBotBasic(PieceColors.WHITE);
 
             Game game = new Game(board, player1, player2);
             game.StartGame();
