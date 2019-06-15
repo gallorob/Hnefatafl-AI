@@ -46,6 +46,7 @@
     <Compile Include="AI\Bots\IHnefataflBot.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotBasic.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotMinimax.cs" />
+    <Compile Include="AI\Bots\Impl\TaflBotMinimaxAB.cs" />
     <Compile Include="AI\MovesEvaluator.cs" />
     <Compile Include="AI\MoveValue.cs" />
     <Compile Include="AI\PieceValues.cs" />

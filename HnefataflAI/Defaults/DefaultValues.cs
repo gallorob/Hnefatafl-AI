@@ -10,7 +10,7 @@ namespace HnefataflAI.Defaults
         public static readonly int MAX_COLS = 11;
         public static readonly char FIRST_COLUMN = 'a';
         public static readonly char UPPER_FIRST_COLUMN = 'A';
-        public static readonly int MINIMAX_DEPTH = 3;
+        public static readonly int MINIMAX_DEPTH = 4;
         public static Board GetDefaultHnefataflTable()
         {
             Board board = new Board(11, 11);
