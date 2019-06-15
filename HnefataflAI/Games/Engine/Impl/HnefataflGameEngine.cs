@@ -2,9 +2,9 @@
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Commons.Utils;
+using HnefataflAI.Games.GameState;
 using HnefataflAI.Pieces;
 using HnefataflAI.Pieces.Impl;
-using System;
 using System.Collections.Generic;
 
 namespace HnefataflAI.Games.Engine.Impl
@@ -72,42 +72,43 @@ namespace HnefataflAI.Games.Engine.Impl
                 throw new InvalidMoveException(position, ErrorMessages.POSITION_OUT_OF_BOARD);
             }
         }
-        public bool GetGameStatus(IPiece movedPiece, Board board)
+        public GameStatus GetGameStatus(IPiece movedPiece, Board board)
         {
-            bool isGameOver = false;
+            GameStatus gameStatus = new GameStatus(false);
             List<IPiece> capturedPieces = this.RuleEngine.CheckIfHasCaptured(movedPiece, board);
             foreach (IPiece piece in capturedPieces)
             {
-                if (piece is King && !isGameOver)
+                if (piece is King && !gameStatus.IsGameOver)
                 {
                     // winning condition for Attacker
-                    isGameOver = this.RuleEngine.CheckIfKingIsCaptured(piece, board);
+                    gameStatus.IsGameOver = this.RuleEngine.CheckIfKingIsCaptured(piece, board);
+                    gameStatus.Status = Status.WIN;
                 }
-                else
-                {
-                    board.RemovePiece(piece);
-                }
+                board.RemovePiece(piece);
             }
-            if (!isGameOver)
+            if (!gameStatus.IsGameOver)
             {
                 // winning condition for Defender
-                isGameOver = movedPiece is King && this.RuleEngine.IsMoveOnBoardCorner(movedPiece.Position, board.TotalRows, board.TotalCols);
+                gameStatus.IsGameOver = movedPiece is King && this.RuleEngine.IsMoveOnBoardCorner(movedPiece.Position, board.TotalRows, board.TotalCols);
+                gameStatus.Status = Status.WIN;
             }
-            if (!isGameOver)
+            if (!gameStatus.IsGameOver)
             {
                 // losing condition for Attacker
-                isGameOver = HasRepeatedMoves(this.BlackMoves);
+                gameStatus.IsGameOver = HasRepeatedMoves(this.BlackMoves);
+                gameStatus.Status = Status.LOSS;
             }
-            if (!isGameOver)
+            if (!gameStatus.IsGameOver)
             {
                 // losing condition for Defender
-                isGameOver = HasRepeatedMoves(this.WhiteMoves);
+                gameStatus.IsGameOver = HasRepeatedMoves(this.WhiteMoves);
+                gameStatus.Status = Status.LOSS;
             }
-            return isGameOver;
+            return gameStatus;
         }
         private bool HasRepeatedMoves(List<Move> moves)
         {
-            if (moves.Count > 5)
+            if (moves.Count >= 5)
             {
                 return moves[moves.Count - 1].Equals(moves[moves.Count - 3])
                     &&

@@ -15,8 +15,8 @@ namespace HnefataflAI
     {
         static void Main(string[] args)
         {
-            RunPvPGame();
-            //RunPvPCGame();
+            //RunPvPGame();
+            RunPvPCGame();
             //RunMovesTest();
 
             //testMatrix();

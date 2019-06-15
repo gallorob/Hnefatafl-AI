@@ -10,10 +10,6 @@
         }
         public int Row { get; private set; }
         public char Col { get; private set; }
-        public override string ToString()
-        {
-            return this.Col.ToString().ToUpper() + " : " + this.Row;
-        }
         public Position MoveTo(Directions direction)
         {
             Position newPosition = (Position) this.MemberwiseClone();
@@ -33,6 +29,22 @@
                     break;
             }
             return newPosition;
+        }
+        public override string ToString()
+        {
+            return this.Col.ToString().ToUpper() + ":" + this.Row;
+        }
+        public override bool Equals(object obj)
+        {
+            var otherPosition = (Position) obj;
+            return this.Col == otherPosition.Col && this.Row == otherPosition.Row;
+        }
+        public override int GetHashCode()
+        {
+            var hashCode = 1084646500;
+            hashCode = hashCode * -1521134295 + Row.GetHashCode();
+            hashCode = hashCode * -1521134295 + Col.GetHashCode();
+            return hashCode;
         }
     }
 }

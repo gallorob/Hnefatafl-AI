@@ -7,7 +7,6 @@ namespace HnefataflAI.Pieces
     {
         PieceColors PieceColors { get; }
         Position Position { get; }
-
         void UpdatePosition(Position newPosition);
     }
 }

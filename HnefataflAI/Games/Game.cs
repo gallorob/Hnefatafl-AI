@@ -4,6 +4,7 @@ using HnefataflAI.Commons;
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
+using HnefataflAI.Games.GameState;
 using HnefataflAI.Player;
 using HnefataflAI.Player.Impl;
 using System;
@@ -12,7 +13,7 @@ namespace HnefataflAI.Games
 {
     public class Game
     {
-        private bool GameOver = false;
+        private GameStatus GameStatus = new GameStatus(false);
         private PieceColors CurrentlyPlaying = PieceColors.BLACK;
         internal Board Board { get; private set; }
         internal IPlayer Player1 { get; private set; }
@@ -30,27 +31,43 @@ namespace HnefataflAI.Games
         public void StartGame()
         {
             Console.WriteLine("\t\t\tGAME OF HNEFATAFL");
-            while (!this.GameOver)
+            while (!this.GameStatus.IsGameOver)
             {
                 PlayPlayer(this.Player1);
                 this.CurrentlyPlaying = Player1.PieceColors;
-                if (this.GameOver) break;
+                if (this.GameStatus.IsGameOver) break;
                 PlayPlayer(this.Player2);
                 this.CurrentlyPlaying = Player2.PieceColors;
-                if (this.GameOver) break;
+                if (this.GameStatus.IsGameOver) break;
             }
-            DisplayGameOver(CurrentlyPlaying);
+            DisplayGameOver(CurrentlyPlaying, this.GameStatus.Status);
         }
-        private void DisplayGameOver(PieceColors pieceColor)
+        private void DisplayGameOver(PieceColors pieceColor, Status status)
         {
             string winner = "";
             switch (pieceColor)
             {
                 case PieceColors.BLACK:
-                    winner = "Attacker";
+                    switch (status)
+                    {
+                        case Status.WIN:
+                            winner = "Attacker";
+                            break;
+                        case Status.LOSS:
+                            winner = "Defender";
+                            break;
+                    }
                     break;
                 case PieceColors.WHITE:
-                    winner = "Defender";
+                    switch (status)
+                    {
+                        case Status.WIN:
+                            winner = "Defender";
+                            break;
+                        case Status.LOSS:
+                            winner = "Attacker";
+                            break;
+                    }
                     break;
             }
             Console.WriteLine(String.Format(Messages.GAME_OVER, winner));
@@ -92,7 +109,7 @@ namespace HnefataflAI.Games
                 playerMove = ((IHnefataflBot)player).GetMove(this.Board.GetBoardCopy(), this.BotRuleEngine.GetAvailableMovesByColor(player.PieceColors));
             Move actualMove = this.GameEngine.ProcessPlayerMove(playerMove, this.Board);
             this.GameEngine.ApplyMove(actualMove, this.Board, player.PieceColors);
-            this.GameOver = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);
+            this.GameStatus = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);
         }
     }
 }

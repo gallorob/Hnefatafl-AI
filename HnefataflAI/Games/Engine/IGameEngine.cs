@@ -1,4 +1,5 @@
 ﻿using HnefataflAI.Commons;
+using HnefataflAI.Games.GameState;
 using HnefataflAI.Pieces;
 
 namespace HnefataflAI.Games.Engine
@@ -7,6 +8,6 @@ namespace HnefataflAI.Games.Engine
     {
         Move ProcessPlayerMove(string[] playerMove, Board board);
         void ApplyMove(Move move, Board board, PieceColors playerColor);
-        bool GetGameStatus(IPiece movedPiece, Board board);
+        GameStatus GetGameStatus(IPiece movedPiece, Board board);
     }
 }
