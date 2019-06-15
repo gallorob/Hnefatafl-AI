@@ -10,3 +10,4 @@ Currently it's a console application (maybe in the future I'll try and make some
   * Current bots are:
     - TaflBotRandom; just moves randomly (it chooses randomly from a list of valid moves)
     - TaflBotBasic; evaluates the best move it can make in the current turn
+    - TaflBotMinimax; uses a vanilla minimax algorithm to evaluate the best move it can make with a defined lookahed.
