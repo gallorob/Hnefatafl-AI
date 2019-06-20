@@ -14,5 +14,6 @@ namespace HnefataflAI.Games.Engine
         bool IsMoveOnThrone(Position move, int totalRows, int totalCols);
         List<IPiece> CheckIfHasCaptured(IPiece piece, Board board);
         bool CheckIfKingIsCaptured(IPiece king, Board board);
+        bool HasRepeatedMoves(List<Move> moves);
     }
 }

@@ -33,10 +33,10 @@ namespace HnefataflAI.Games.Engine.Impl
         public List<IPiece> CheckIfHasCaptured(IPiece piece, Board board)
         {
             List<IPiece> capturedPieces = new List<IPiece>();
-            AddPieceIfNotNull(HasCapturedPiece(piece, board, Directions.UP), capturedPieces);
-            AddPieceIfNotNull(HasCapturedPiece(piece, board, Directions.DOWN), capturedPieces);
-            AddPieceIfNotNull(HasCapturedPiece(piece, board, Directions.RIGHT), capturedPieces);
-            AddPieceIfNotNull(HasCapturedPiece(piece, board, Directions.LEFT), capturedPieces);
+            foreach (Directions direction in Enum.GetValues(typeof(Directions)))
+            {
+                AddPieceIfNotNull(HasCapturedPiece(piece, board, direction), capturedPieces);
+            }
             return capturedPieces;
         }
         private IPiece HasCapturedPiece(IPiece piece, Board board, Directions direction)
@@ -51,7 +51,7 @@ namespace HnefataflAI.Games.Engine.Impl
                         IPiece otherPiece = board.At(middlePiece.Position.MoveTo(direction));
                         if (otherPiece != null)
                         {
-                            if (otherPiece.PieceColors == piece.PieceColors)
+                            if (otherPiece.PieceColors == piece.PieceColors && !(otherPiece is King))
                             {
                                 return middlePiece;
                             }
@@ -64,6 +64,10 @@ namespace HnefataflAI.Games.Engine.Impl
                         {
                             return middlePiece;
                         }
+                    }
+                    else if (middlePiece is King)
+                    {
+                        return middlePiece;
                     }
                 }
             }
@@ -78,25 +82,37 @@ namespace HnefataflAI.Games.Engine.Impl
         }
         public bool CheckIfKingIsCaptured(IPiece king, Board board)
         {
-            bool up = CheckKingSurroundings(king.Position, Directions.UP, board);
-            bool down = CheckKingSurroundings(king.Position, Directions.DOWN, board);
-            bool right = CheckKingSurroundings(king.Position, Directions.RIGHT, board);
-            bool left = CheckKingSurroundings(king.Position, Directions.LEFT, board);
-
-            return up && down && right && left;
+            bool captured = true;
+            foreach (Directions direction in Enum.GetValues(typeof(Directions)))
+            {
+                captured &= CheckKingSurroundings(king.Position, direction, board);
+            }
+            return captured;
         }
-        private bool CheckKingSurroundings(Position kingPosition, Directions direction, Board board)
+        public bool CheckKingSurroundings(Position kingPosition, Directions direction, Board board)
         {
             if (IsPositionUpdateValid(kingPosition, direction, board.TotalRows, board.TotalCols))
             {
                 IPiece piece = board.At(kingPosition.MoveTo(direction));
                 return piece != null
+                    && piece.PieceColors.Equals(PieceColors.BLACK)
                     ||
                     (IsMoveOnThrone(kingPosition.MoveTo(direction), board.TotalRows, board.TotalCols)
                     ||
                     IsMoveOnBoardCorner(kingPosition.MoveTo(direction), board.TotalRows, board.TotalCols));
             }
             return true;
+        }
+
+        public bool HasRepeatedMoves(List<Move> moves)
+        {
+            if (moves.Count >= 5)
+            {
+                return moves[moves.Count - 1].Equals(moves[moves.Count - 3])
+                    &&
+                    moves[moves.Count - 3].Equals(moves[moves.Count - 5]);
+            }
+            return false;
         }
     }
 }

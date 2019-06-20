@@ -14,6 +14,7 @@ namespace HnefataflAI.Games.Engine.Impl
         internal List<Move> WhiteMoves = new List<Move>();
         internal List<Move> BlackMoves = new List<Move>();
         internal IRuleEngine RuleEngine = new RuleEngineImpl();
+        internal List<IPiece> CapturedPieces = new List<IPiece>();
         public Move ProcessPlayerMove(string[] playerMove, Board board)
         {
             string[] inputFrom = playerMove[0].Split(':');
@@ -43,6 +44,20 @@ namespace HnefataflAI.Games.Engine.Impl
             }
             board.RemovePiece(move.Piece);
             move.Piece.UpdatePosition(move.To);
+            board.AddPiece(move.Piece);
+        }
+        public void UndoMove(Move move, Board board, PieceColors playerColor)
+        {
+            if (move.Piece.PieceColors.Equals(PieceColors.BLACK))
+            {
+                this.BlackMoves.Remove(move);
+            }
+            else
+            {
+                this.WhiteMoves.Remove(move);
+            }
+            board.RemovePiece(move.Piece);
+            move.Piece.UpdatePosition(move.From);
             board.AddPiece(move.Piece);
         }
         private void ValidateMove(Move move, Board board, PieceColors playerColor)
@@ -75,22 +90,29 @@ namespace HnefataflAI.Games.Engine.Impl
         public GameStatus GetGameStatus(IPiece movedPiece, Board board)
         {
             GameStatus gameStatus = new GameStatus(false);
-            List<IPiece> capturedPieces = this.RuleEngine.CheckIfHasCaptured(movedPiece, board);
-            foreach (IPiece piece in capturedPieces)
+            if (!(movedPiece is King))
             {
-                if (piece is King && !gameStatus.IsGameOver)
+                List<IPiece> capturedPieces = this.RuleEngine.CheckIfHasCaptured(movedPiece, board);
+                foreach (IPiece piece in capturedPieces)
                 {
-                    // winning condition for Attacker
-                    gameStatus.IsGameOver = this.RuleEngine.CheckIfKingIsCaptured(piece, board);
-                    gameStatus.Status = Status.WIN;
-                    if (gameStatus.IsGameOver)
+                    if (piece is King && !gameStatus.IsGameOver)
+                    {
+                        // winning condition for Attacker
+                        gameStatus.IsGameOver = this.RuleEngine.CheckIfKingIsCaptured(piece, board);
+                        gameStatus.Status = Status.WIN;
+                        if (gameStatus.IsGameOver)
+                        {
+                            board.RemovePiece(piece);
+                            this.CapturedPieces.Add(piece);
+                            gameStatus.CapturedPieces.Add(piece);
+                        }
+                    }
+                    else
                     {
                         board.RemovePiece(piece);
+                        this.CapturedPieces.Add(piece);
+                        gameStatus.CapturedPieces.Add(piece);
                     }
-                }
-                else
-                {
-                    board.RemovePiece(piece);
                 }
             }
             if (!gameStatus.IsGameOver)
@@ -101,27 +123,32 @@ namespace HnefataflAI.Games.Engine.Impl
             }
             if (!gameStatus.IsGameOver)
             {
+                // winning condition for Defender
+                gameStatus.IsGameOver = board.GetPiecesByColor(PieceColors.BLACK).Count == 0;
+                gameStatus.Status = Status.WIN;
+            }
+            if (!gameStatus.IsGameOver)
+            {
                 // losing condition for Attacker
-                gameStatus.IsGameOver = HasRepeatedMoves(this.BlackMoves);
+                gameStatus.IsGameOver = this.RuleEngine.HasRepeatedMoves(this.BlackMoves);
                 gameStatus.Status = Status.LOSS;
             }
             if (!gameStatus.IsGameOver)
             {
                 // losing condition for Defender
-                gameStatus.IsGameOver = HasRepeatedMoves(this.WhiteMoves);
+                gameStatus.IsGameOver = this.RuleEngine.HasRepeatedMoves(this.WhiteMoves);
                 gameStatus.Status = Status.LOSS;
             }
             return gameStatus;
         }
-        private bool HasRepeatedMoves(List<Move> moves)
+        public void UndoCaptures(Board board)
         {
-            if (moves.Count >= 5)
+            foreach(IPiece piece in this.CapturedPieces)
             {
-                return moves[moves.Count - 1].Equals(moves[moves.Count - 3])
-                    &&
-                    moves[moves.Count - 3].Equals(moves[moves.Count - 5]);
+                //this.CapturedPieces.Remove(piece);
+                board.AddPiece(piece);
             }
-            return false;
+            this.CapturedPieces.Clear();
         }
     }
 }

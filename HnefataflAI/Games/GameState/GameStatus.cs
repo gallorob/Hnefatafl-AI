@@ -1,9 +1,13 @@
-﻿namespace HnefataflAI.Games.GameState
+﻿using HnefataflAI.Pieces;
+using System.Collections.Generic;
+
+namespace HnefataflAI.Games.GameState
 {
     public class GameStatus
     {
         public bool IsGameOver { get; set; }
         public Status Status { get; set; }
+        public List<IPiece> CapturedPieces = new List<IPiece>();
         public GameStatus(bool isGameOver)
         {
             this.IsGameOver = isGameOver;
