@@ -1,18 +1,14 @@
 ﻿using HnefataflAI.AI.RuleEngine;
 using HnefataflAI.Commons;
-using HnefataflAI.Commons.DataTypes;
-using HnefataflAI.Commons.Positions;
+using HnefataflAI.Commons.Logs;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Defaults;
 using HnefataflAI.Games;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
-using HnefataflAI.Pieces;
+using HnefataflAI.Games.GameState;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HnefataflAI.AI.Bots.Impl
 {
@@ -23,13 +19,13 @@ namespace HnefataflAI.AI.Bots.Impl
         /// </summary>
         public PieceColors PieceColors { get; private set; }
         /// <summary>
-        /// The internal GameEngine
+        /// The internal BoardEvaluator
         /// </summary>
-        private readonly IGameEngine GameEngine = new HnefataflGameEngine();
+        private readonly BoardEvaluator MovesEvaluator = new BoardEvaluator();
         /// <summary>
-        /// The internal MovesEvaluator
+        /// The list of moves played by the bot
         /// </summary>
-        private readonly MovesEvaluator MovesEvaluator = new MovesEvaluator();
+        private readonly List<Move> BotMoves = new List<Move>();
         /// <summary>
         /// Constructor for the TaflBotMinimax
         /// </summary>
@@ -54,8 +50,10 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <returns>The best move as a user input</returns>
         public string[] GetMove(Board board, List<Move> moves)
         {
-            Move bestMove = ComputeBestMoveMinimaxAB(DefaultValues.MINIMAX_DEPTH, board, moves, int.MinValue, int.MaxValue, true).Move;
-            return MoveUtils.MoveAsInput(bestMove);
+            MoveValue bestMove = ComputeBestMoveMinimaxAB(DefaultValues.MINIMAX_DEPTH, board, moves, int.MinValue, int.MaxValue, true, this.PieceColors);
+            MovesLogger.LogMove(bestMove.Move, bestMove.Value);
+            this.BotMoves.Add(bestMove.Move);
+            return MoveUtils.MoveAsInput(bestMove.Move);
         }
         /// <summary>
         /// Compute the best move using the Minimax algorithm with Alpha-Beta Pruning
@@ -71,12 +69,12 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <param name="beta">The Beta value</param>
         /// <param name="isMaximizing">>If it's maximizing or minimizing</param>
         /// <returns>The best move in the current turn</returns>
-        private MoveValue ComputeBestMoveMinimaxAB(int depth, Board board, List<Move> moves, int alpha, int beta, bool isMaximizing)
+        private MoveValue ComputeBestMoveMinimaxAB(int depth, Board board, List<Move> moves, int alpha, int beta, bool isMaximizing, PieceColors pieceColors)
         {
             // reached the end of the branch, evaluate the board
             if (depth == 0)
             {
-                int boardValue = this.MovesEvaluator.EvaluateBoard(board, PieceColors);
+                int boardValue = this.MovesEvaluator.EvaluateBoard(board, pieceColors);
                 return new MoveValue(null, boardValue);
             }
             // we need to keep track of both the best move and its value during each iteration
@@ -87,42 +85,98 @@ namespace HnefataflAI.AI.Bots.Impl
             ListUtils.ShuffleList(moves);
             foreach (Move move in moves)
             {
-                // keep a copy of the piece's original position
-                Position originalPosition = move.From;
-                // copy the board so the evaluation doesn't alter the original one
-                Board boardCopy = new Board(new Matrix<IPiece>(board.GetCurrentBoard().GetMatrixCopy()));
+                IGameEngine gameEngine = new HnefataflGameEngine();
                 // update board with the move
-                this.GameEngine.ApplyMove(move, boardCopy, PieceColors);
-                this.GameEngine.GetGameStatus(move.Piece, boardCopy);
+                gameEngine.ApplyMove(move, board, pieceColors);
+                // check if it reached an endgame point
+                GameStatus gameStatus = gameEngine.GetGameStatus(move.Piece, board);
+                if (!gameStatus.IsGameOver)
+                {
+                    gameStatus.IsGameOver = this.IsDuplicatedMove(move);
+                    gameStatus.Status = Status.LOSS;
+                }
                 // recursive call for the move's sub-tree
-                int moveValue = ComputeBestMoveMinimaxAB(depth - 1, boardCopy, new BotRuleEngine(boardCopy).GetAvailableMovesByColor(PieceColors), alpha, beta, !isMaximizing).Value;
+                int moveValue = ComputeBestMoveMinimaxAB(depth - 1,
+                    board,
+                    new BotEngine().GetAvailableMovesByColor(PieceColorsUtils.GetOppositePieceColor(pieceColors), board),
+                    alpha,
+                    beta,
+                    !isMaximizing,
+                    PieceColorsUtils.GetOppositePieceColor(pieceColors)
+                    ).Value;
+                // revert board's state
+                gameEngine.UndoMove(move, board, pieceColors);
+                gameEngine.UndoCaptures(board);
                 // two different cases if we're simulating our turn or the opponent's
                 if (isMaximizing)
                 {
+                    // if an endgame situation is reached, force the pruning
+                    // depth difference is used in order to choose the move that ends the game asap
+                    if (gameStatus.IsGameOver)
+                    {
+                        switch (gameStatus.Status)
+                        {
+                            case Status.LOSS:
+                                moveValue = int.MinValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                break;
+                            case Status.WIN:
+                                moveValue = int.MaxValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                break;
+                        }
+                        MovesLogger.LogEvent(pieceColors, gameStatus.Status, isMaximizing);
+                    }
                     if (moveValue > bestMoveValue.Value)
                     {
                         bestMoveValue.Value = moveValue;
                         bestMoveValue.Move = move;
                     }
-                    alpha = Math.Max(alpha, moveValue);
+                    // compute the alpha
+                    alpha = Math.Max(alpha, bestMoveValue.Value);
                 }
                 else
                 {
+                    // if an endgame situation is reached, force the pruning
+                    // depth difference is used in order to choose the move that ends the game asap
+                    if (gameStatus.IsGameOver)// && depth == DefaultValues.MINIMAX_DEPTH)
+                    {
+                        switch (gameStatus.Status)
+                        {
+                            case Status.LOSS:
+                                moveValue = int.MaxValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                break;
+                            case Status.WIN:
+                                moveValue = int.MaxValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                break;
+                        }
+                        MovesLogger.LogEvent(pieceColors, gameStatus.Status, isMaximizing);
+                    }
                     if (moveValue < bestMoveValue.Value)
                     {
                         bestMoveValue.Value = moveValue;
                         bestMoveValue.Move = move;
                     }
-                    beta = Math.Min(beta, moveValue);
+                    // compute the beta
+                    beta = Math.Min(beta, bestMoveValue.Value);
                 }
-                // reset the moved piece's position to its original value
-                move.Piece.UpdatePosition(originalPosition);
+                MovesLogger.LogMove(this.PieceColors, depth, bestMoveValue.Move, bestMoveValue.Value, isMaximizing, move, moveValue);
                 if (beta <= alpha)
                 {
+                    MovesLogger.LogPruning(alpha, beta);
                     break;
+                }
+                // force to pick a move if none is chosen
+                if (bestMoveValue.Move is null)
+                {
+                    bestMoveValue.Move = moves[0];
                 }
             }
             return bestMoveValue;
+        }
+        private bool IsDuplicatedMove(Move move)
+        {
+            List<Move> tempMoves = new List<Move>(this.BotMoves);
+            tempMoves.Add(move);
+            return new RuleEngineImpl().HasRepeatedMoves(tempMoves);
         }
     }
 }

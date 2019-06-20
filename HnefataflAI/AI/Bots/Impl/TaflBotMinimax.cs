@@ -1,14 +1,10 @@
 ﻿using HnefataflAI.AI.RuleEngine;
 using HnefataflAI.Commons;
-using HnefataflAI.Commons.DataTypes;
-using HnefataflAI.Commons.Positions;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Defaults;
 using HnefataflAI.Games;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
-using HnefataflAI.Pieces;
-using System;
 using System.Collections.Generic;
 
 namespace HnefataflAI.AI.Bots.Impl
@@ -21,6 +17,9 @@ namespace HnefataflAI.AI.Bots.Impl
     /// </summary>
     class TaflBotMinimax : IHnefataflBot
     {
+
+        // TODO: Fix the bot
+
         /// <summary>
         /// The piece color
         /// </summary>
@@ -30,9 +29,9 @@ namespace HnefataflAI.AI.Bots.Impl
         /// </summary>
         private readonly IGameEngine GameEngine = new HnefataflGameEngine();
         /// <summary>
-        /// The internal MovesEvaluator
+        /// The internal BoardEvaluator
         /// </summary>
-        private readonly MovesEvaluator MovesEvaluator = new MovesEvaluator();
+        private readonly BoardEvaluator MovesEvaluator = new BoardEvaluator();
         /// <summary>
         /// Constructor for the TaflBotMinimax
         /// </summary>
@@ -88,15 +87,11 @@ namespace HnefataflAI.AI.Bots.Impl
             ListUtils.ShuffleList(moves);
             foreach (Move move in moves)
             {
-                // keep a copy of the piece's original position
-                Position originalPosition = move.From;
-                // copy the board so the evaluation doesn't alter the original one
-                Board boardCopy = new Board(new Matrix<IPiece>(board.GetCurrentBoard().GetMatrixCopy()));
                 // update board with the move
-                this.GameEngine.ApplyMove(move, boardCopy, PieceColors);
-                this.GameEngine.GetGameStatus(move.Piece, boardCopy);
+                this.GameEngine.ApplyMove(move, board, PieceColors);
+                this.GameEngine.GetGameStatus(move.Piece, board);
                 // recursive call for the move's sub-tree
-                int moveValue = ComputeBestMoveMinimax(depth - 1, boardCopy, new BotRuleEngine(boardCopy).GetAvailableMovesByColor(PieceColors), !isMaximizing).Value;
+                int moveValue = ComputeBestMoveMinimax(depth - 1, board, new BotEngine().GetAvailableMovesByColor(PieceColors, board), !isMaximizing).Value;
                 // two different cases if we're simulating our turn or the opponent's
                 if (isMaximizing)
                 {
@@ -114,8 +109,11 @@ namespace HnefataflAI.AI.Bots.Impl
                         bestMoveValue.Move = move;
                     }
                 }
+                // revert board's state
+                this.GameEngine.UndoMove(move, board, PieceColors);
+                this.GameEngine.UndoCaptures(board);
                 // reset the moved piece's position to its original value
-                move.Piece.UpdatePosition(originalPosition);
+                move.Piece.UpdatePosition(move.From);
             }
            return bestMoveValue;
         }

@@ -28,9 +28,9 @@ namespace HnefataflAI.AI.Bots.Impl
         /// </summary>
         private IGameEngine GameEngine = new HnefataflGameEngine();
         /// <summary>
-        /// The internal MovesEvaluator
+        /// The internal BoardEvaluator
         /// </summary>
-        private MovesEvaluator MovesEvaluator = new MovesEvaluator();
+        private BoardEvaluator MovesEvaluator = new BoardEvaluator();
         /// <summary>
         /// Constructor for the TaflBotBasic
         /// </summary>
@@ -72,22 +72,21 @@ namespace HnefataflAI.AI.Bots.Impl
             ListUtils.ShuffleList(moves);
             foreach (Move move in moves)
             {
-                // keep a copy of the piece's original position
-                Position originalPosition = move.From;
-                // copy the board so the evaluation doesn't alter the original one
-                Board boardCopy = new Board(new Matrix<IPiece>(board.GetCurrentBoard().GetMatrixCopy()));
                 // update board with the move
-                this.GameEngine.ApplyMove(move, boardCopy, PieceColors);
-                this.GameEngine.GetGameStatus(move.Piece, boardCopy);
+                this.GameEngine.ApplyMove(move, board, PieceColors);
+                this.GameEngine.GetGameStatus(move.Piece, board);
                 // evaluate the new board status
-                int moveValue = this.MovesEvaluator.EvaluateBoard(boardCopy, PieceColors);
+                int moveValue = this.MovesEvaluator.EvaluateBoard(board, PieceColors);
                 if (moveValue > bestMoveValue)
                 {
                     bestMove = move;
                     bestMoveValue = moveValue;
                 }
+                // revert board's state
+                this.GameEngine.UndoMove(move, board, PieceColors);
+                this.GameEngine.UndoCaptures(board);
                 // reset the moved piece's position to its original value
-                move.Piece.UpdatePosition(originalPosition);
+                move.Piece.UpdatePosition(move.From);
             }
             return bestMove;
         }

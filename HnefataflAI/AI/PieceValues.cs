@@ -1,15 +1,12 @@
-﻿using HnefataflAI.Pieces.Impl;
-using System.Collections.Generic;
-
-namespace HnefataflAI.AI
+﻿namespace HnefataflAI.AI
 {
     public class PieceValues
     {
-        public readonly Dictionary<string, int> pieceValues = new Dictionary<string, int>();
-        public PieceValues()
-        {
-            this.pieceValues.Add("King", 10);
-            this.pieceValues.Add("Pawn", 1);
-        }
+        public readonly int pawnValue = 10;
+        public readonly int kingValue = 100;
+        public readonly int pawnPositionMultiplier = 2;
+        public readonly int kingPositionMultiplier = 100;
+        public readonly int pawnUnderAttackMultiplier = -5;
+        public readonly int kingUnderAttackMultiplier = -7;
     }
 }

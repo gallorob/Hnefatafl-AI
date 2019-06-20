@@ -66,7 +66,7 @@ namespace HnefataflAI.Games
         }
         public override string ToString()
         {
-            string result = System.String.Format("\t{0}\n", BoardUtils.GetBoardColumnsChars(this.TotalCols));
+            string result = System.String.Format("\t{0}\n\r", BoardUtils.GetBoardColumnsChars(this.TotalCols));
             for (int i = 0; i < this.TotalRows; i++)
             {
                 result += this.TotalRows - i + "\t";
@@ -82,7 +82,7 @@ namespace HnefataflAI.Games
                     else if (piece is Defender)
                         result += " D ";
                 }
-                result += "\n";
+                result += "\n\r";
             }
             return result;
         }
