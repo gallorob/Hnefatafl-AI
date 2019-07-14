@@ -5,6 +5,7 @@ using HnefataflAI.Commons.Utils;
 using HnefataflAI.Games.GameState;
 using HnefataflAI.Games.Rules;
 using HnefataflAI.Pieces;
+using HnefataflAI.Pieces.Impl;
 using System.Collections.Generic;
 
 namespace HnefataflAI.Games.Engine.Impl
@@ -111,7 +112,10 @@ namespace HnefataflAI.Games.Engine.Impl
             GameStatus gameStatus = this.RuleEngine.GetGameStatus(movedPiece, board, this.WhiteMoves, this.BlackMoves);
             foreach (IPiece capturedPiece in gameStatus.CapturedPieces)
             {
-                ApplyCapture(capturedPiece, board);
+                if (!(capturedPiece is King) || (capturedPiece is King && gameStatus.IsGameOver))
+                {
+                    ApplyCapture(capturedPiece, board);
+                }
             }
             return gameStatus;
         }

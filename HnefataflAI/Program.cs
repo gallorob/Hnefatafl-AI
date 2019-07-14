@@ -19,20 +19,21 @@ namespace HnefataflAI
         static void Main()
         {
             //RunPvPGame();
-            RunPvPCGame();
-            //RunPCvPCGame();
+            //RunPvPCGame();
+            RunPCvPCGame();
             //RunMovesTest();
             //TestBoardEvaluator();
         }
-        //private static void RunPCvPCGame()
-        //{
-        //    Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
-        //    IPlayer player1 = new TaflBotMinimaxAB(PieceColors.BLACK);
-        //    IPlayer player2 = new TaflBotMinimaxAB(PieceColors.WHITE);
+        private static void RunPCvPCGame()
+        {
+            RuleTypes ruleType = RuleTypes.HNEFATAFL;
+            Board board = Defaults.DefaultValues.GetDefaultBrandubhTable();
+            IPlayer player1 = new TaflBotMinimaxAB(PieceColors.BLACK, ruleType);
+            ITaflBot player2 = new TaflBotMinimaxAB(PieceColors.WHITE, ruleType);
 
-        //    Game game = new Game(board, player1, player2);
-        //    game.StartGame();
-        //}
+            Game game = new Game(board, player1, player2, ruleType);
+            game.StartGame();
+        }
         static void RunPvPGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;

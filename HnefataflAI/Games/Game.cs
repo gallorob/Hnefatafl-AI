@@ -37,6 +37,7 @@ namespace HnefataflAI.Games
             this.StopWatch.Start();
             while (!this.GameStatus.IsGameOver)
             {
+                this.TurnNumber++;
                 if (this.Player1.PieceColors.Equals(this.CurrentlyPlaying))
                 {
                     PlayPlayer(this.Player1);
@@ -102,7 +103,6 @@ namespace HnefataflAI.Games
         }
         private void PlayTurn(IPlayer player)
         {
-            this.TurnNumber++;
             string[] playerMove;
             if (player is HumanPlayer)
                 playerMove = player.GetMove();
