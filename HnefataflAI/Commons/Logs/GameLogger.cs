@@ -1,5 +1,6 @@
 ﻿using HnefataflAI.Commons.Utils;
 using HnefataflAI.Defaults;
+using HnefataflAI.Games;
 using HnefataflAI.Pieces;
 using System;
 using System.IO;
@@ -8,7 +9,16 @@ namespace HnefataflAI.Commons.Logs
 {
     class GameLogger
     {
-        public static readonly string FilePath = String.Format(@"./game_{0}.log", DateTime.Now.ToString("MMddyyyyhhmm"));
+        public static readonly string FilePath = String.Format(@"./game_{0}.log", DateTime.Now.ToString("MMddyyyyHHmm"));
+        internal static void LogBoard(Board board)
+        {
+            if (DefaultValues.LOG_GAME && DefaultValues.LOG_BOARD)
+            {
+                string toLog = String.Format("{0}",
+                    board.ToString());
+                Log(toLog);
+            }
+        }
         public static void LogMove(int turn, PieceColors pieceColor, Move move)
         {
             if (DefaultValues.LOG_GAME)

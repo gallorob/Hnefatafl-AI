@@ -9,6 +9,7 @@ namespace HnefataflAI.Commons
         public IPiece Piece { get; private set; }
         public Position From { get; private set; }
         public Position To { get; private set; }
+        public bool DoesNotCapture { get; set; }
         public Move(IPiece piece, Position from, Position to)
         {
             this.Piece = piece;
@@ -21,9 +22,13 @@ namespace HnefataflAI.Commons
             this.From = piece.Position;
             this.To = to;
         }
-        public override string ToString()
+        public string MoveRepresentation()
         {
             return System.String.Format("Move for {0} to {1}", Piece.ToString(), To.ToString());
+        }
+        public override string ToString()
+        {
+            return System.String.Format("{0}-{1}", From.ToString(), To.ToString());
         }
         public override bool Equals(object obj)
         {

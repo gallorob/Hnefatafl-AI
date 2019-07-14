@@ -1,6 +1,8 @@
 ﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Commons.Utils;
+using HnefataflAI.Games.GameState;
+using HnefataflAI.Games.Rules;
 using HnefataflAI.Pieces;
 using HnefataflAI.Pieces.Impl;
 using System;
@@ -10,109 +12,105 @@ namespace HnefataflAI.Games.Engine.Impl
 {
     public class RuleEngineImpl : IRuleEngine
     {
-        public bool CanMoveToPosition(IPiece piece, Position position, int totalRows, int totalCols)
+        public IRule Rule { get; private set; }
+        public RuleEngineImpl(IRule rule)
         {
-            return (piece is King) || !(IsMoveOnBoardCorner(position, totalRows, totalCols) || IsMoveOnThrone(position, totalRows, totalCols));
+            this.Rule = rule;
         }
-        public bool IsPositionUpdateValid(Position moved, Directions direction, int totalRows, int totalCols)
+        public List<Move> GetAvailableMoves(PieceColors playerColor, Board board)
         {
-            return BoardUtils.IsPositionUpdateValid(moved, direction, totalRows, totalCols);
+            List<Move> availableMoves = new List<Move>();
+            List<IPiece> pieces = board.GetPiecesByColor(playerColor);
+
+            foreach (IPiece piece in pieces)
+            {
+                availableMoves.AddRange(GetAvailableMoves(piece, board));
+            }
+
+            return availableMoves;
         }
-        public bool IsPositionValid(Position position, int totalRows, int totalCols)
+        public List<Move> GetAvailableMoves(IPiece piece, Board board)
         {
-            return BoardUtils.IsPositionValid(position, totalRows, totalCols);
-        }
-        public bool IsMoveOnBoardCorner(Position move, int totalRows, int totalCols)
-        {
-            return BoardUtils.IsOnBoardCorner(move, totalRows, totalCols);
-        }
-        public bool IsMoveOnThrone(Position move, int totalRows, int totalCols)
-        {
-            return BoardUtils.IsOnThrone(move, totalRows, totalCols);
-        }
-        public List<IPiece> CheckIfHasCaptured(IPiece piece, Board board)
-        {
-            List<IPiece> capturedPieces = new List<IPiece>();
+            List<Move> availableMoves = new List<Move>();
             foreach (Directions direction in Enum.GetValues(typeof(Directions)))
             {
-                AddPieceIfNotNull(HasCapturedPiece(piece, board, direction), capturedPieces);
+                MovesByDirection(direction, piece, availableMoves, board);
             }
-            return capturedPieces;
+            return availableMoves;
         }
-        private IPiece HasCapturedPiece(IPiece piece, Board board, Directions direction)
+        private void MovesByDirection(Directions direction, IPiece piece, List<Move> availableMoves, Board board)
         {
-            if (IsPositionUpdateValid(piece.Position, direction, board.TotalRows, board.TotalCols))
+            Position moved = piece.Position;
+            while (BoardUtils.IsPositionUpdateValid(moved, direction, board.TotalRows, board.TotalCols))
             {
-                IPiece middlePiece = board.At(piece.Position.MoveTo(direction));
-                if (middlePiece != null && middlePiece.PieceColors != piece.PieceColors)
+                moved = moved.MoveTo(direction);
+                if (board.At(moved) != null)
                 {
-                    if (IsPositionUpdateValid(middlePiece.Position, direction, board.TotalRows, board.TotalCols))
+                    break;
+                }
+                if (BoardUtils.CanMoveToPosition(piece, moved, board.TotalRows, board.TotalCols))
+                {
+                    Move move = new Move(piece, moved);
+                    availableMoves.Add(move);
+                }
+            }
+        }
+        public List<IPiece> GetCapturedPieces(IPiece piece, Board board)
+        {
+            return Rule.CheckIfCaptures(piece, board);
+        }
+        public PieceColors GetNextPlayer(IPiece piece, GameStatus gameStatus)
+        {
+            if (Rule.RuleType is RuleTypes.BERSERK_HNEFATAFL && gameStatus.CapturedPieces.Count > 0)
+            {
+                return piece.PieceColors;
+            }
+            return PieceColorsUtils.GetOppositePieceColor(piece.PieceColors);
+        }
+        public GameStatus GetGameStatus(IPiece movedPiece, Board board, List<Move> whiteMoves, List<Move> blackMoves)
+        {
+            List<IPiece> capturedPieces = GetCapturedPieces(movedPiece, board);
+            GameStatus gameStatus = new GameStatus(false);
+            gameStatus.CapturedPieces.AddRange(capturedPieces);
+            gameStatus.NextPlayer = GetNextPlayer(movedPiece, gameStatus);
+
+            if (!(movedPiece is King))
+            {
+                foreach (IPiece piece in capturedPieces)
+                {
+                    if (piece is King && !gameStatus.IsGameOver)
                     {
-                        IPiece otherPiece = board.At(middlePiece.Position.MoveTo(direction));
-                        if (otherPiece != null)
-                        {
-                            if (otherPiece.PieceColors == piece.PieceColors && !(otherPiece is King))
-                            {
-                                return middlePiece;
-                            }
-                        }
-                        else if (
-                            IsMoveOnThrone(middlePiece.Position.MoveTo(direction), board.TotalRows, board.TotalCols)
-                            ||
-                            IsMoveOnBoardCorner(middlePiece.Position.MoveTo(direction), board.TotalRows, board.TotalCols)
-                            )
-                        {
-                            return middlePiece;
-                        }
-                    }
-                    else if (middlePiece is King)
-                    {
-                        return middlePiece;
+                        // winning condition for Attacker
+                        gameStatus.IsGameOver = Rule.CheckIfKingIsCaptured(piece, board);
+                        gameStatus.Status = Status.WIN;
                     }
                 }
             }
-            return null;
-        }
-        private void AddPieceIfNotNull(IPiece piece, List<IPiece> pieces)
-        {
-            if (piece != null)
+            if (!gameStatus.IsGameOver)
             {
-                pieces.Add(piece);
+                // winning condition for Defender
+                gameStatus.IsGameOver = movedPiece is King && BoardUtils.IsOnBoardCorner(movedPiece.Position, board.TotalRows, board.TotalCols);
+                gameStatus.Status = Status.WIN;
             }
-        }
-        public bool CheckIfKingIsCaptured(IPiece king, Board board)
-        {
-            bool captured = true;
-            foreach (Directions direction in Enum.GetValues(typeof(Directions)))
+            if (!gameStatus.IsGameOver)
             {
-                captured &= CheckKingSurroundings(king.Position, direction, board);
+                // winning condition for Defender
+                gameStatus.IsGameOver = board.GetPiecesByColor(PieceColors.BLACK).Count == 0;
+                gameStatus.Status = Status.WIN;
             }
-            return captured;
-        }
-        public bool CheckKingSurroundings(Position kingPosition, Directions direction, Board board)
-        {
-            if (IsPositionUpdateValid(kingPosition, direction, board.TotalRows, board.TotalCols))
+            if (!gameStatus.IsGameOver)
             {
-                IPiece piece = board.At(kingPosition.MoveTo(direction));
-                return piece != null
-                    && piece.PieceColors.Equals(PieceColors.BLACK)
-                    ||
-                    (IsMoveOnThrone(kingPosition.MoveTo(direction), board.TotalRows, board.TotalCols)
-                    ||
-                    IsMoveOnBoardCorner(kingPosition.MoveTo(direction), board.TotalRows, board.TotalCols));
+                // losing condition for Attacker
+                gameStatus.IsGameOver = Rule.CheckIfHasRepeatedMoves(blackMoves);
+                gameStatus.Status = Status.LOSS;
             }
-            return true;
-        }
-
-        public bool HasRepeatedMoves(List<Move> moves)
-        {
-            if (moves.Count >= 5)
+            if (!gameStatus.IsGameOver)
             {
-                return moves[moves.Count - 1].Equals(moves[moves.Count - 3])
-                    &&
-                    moves[moves.Count - 3].Equals(moves[moves.Count - 5]);
+                // losing condition for Defender
+                gameStatus.IsGameOver = Rule.CheckIfHasRepeatedMoves(whiteMoves);
+                gameStatus.Status = Status.LOSS;
             }
-            return false;
+            return gameStatus;
         }
     }
 }

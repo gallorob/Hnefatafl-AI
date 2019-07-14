@@ -1,12 +1,16 @@
-﻿using HnefataflAI.AI;
-using HnefataflAI.AI.Bots;
-using HnefataflAI.AI.Bots.Impl;
-using HnefataflAI.AI.RuleEngine;
-using HnefataflAI.Commons;
+﻿using HnefataflAI.Commons;
+using HnefataflAI.Commons.Utils;
 using HnefataflAI.Games;
 using HnefataflAI.Player;
 using HnefataflAI.Player.Impl;
 using System;
+using System.Collections.Generic;
+using HnefataflAI.Games.Rules;
+using HnefataflAI.AI.Bots;
+using HnefataflAI.AI.Bots.Impl;
+using HnefataflAI.Games.Engine.Impl;
+using HnefataflAI.Games.Engine;
+using HnefataflAI.AI;
 
 namespace HnefataflAI
 {
@@ -15,37 +19,38 @@ namespace HnefataflAI
         static void Main()
         {
             //RunPvPGame();
-            //RunPvPCGame();
-            RunPCvPCGame();
+            RunPvPCGame();
+            //RunPCvPCGame();
             //RunMovesTest();
             //TestBoardEvaluator();
         }
+        //private static void RunPCvPCGame()
+        //{
+        //    Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
+        //    IPlayer player1 = new TaflBotMinimaxAB(PieceColors.BLACK);
+        //    IPlayer player2 = new TaflBotMinimaxAB(PieceColors.WHITE);
 
-        private static void RunPCvPCGame()
-        {
-            Board board = Defaults.DefaultValues.GetDefaultBrandubhTable();
-            IPlayer player1 = new TaflBotMinimaxAB(PieceColors.BLACK);
-            IPlayer player2 = new TaflBotMinimaxAB(PieceColors.WHITE);
-
-            Game game = new Game(board, player1, player2);
-            game.StartGame();
-        }
+        //    Game game = new Game(board, player1, player2);
+        //    game.StartGame();
+        //}
         static void RunPvPGame()
         {
-            Board board = Defaults.DefaultValues.GetTestingTable();
+            RuleTypes ruleType = RuleTypes.HNEFATAFL;
+            Board board = Defaults.DefaultValues.GetDefaultBrandubhTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             IPlayer player2 = new HumanPlayer(PieceColors.WHITE);
 
-            Game game = new Game(board, player1, player2);
+            Game game = new Game(board, player1, player2, ruleType);
             game.StartGame();
         }
         static void RunPvPCGame()
         {
+            RuleTypes ruleType = RuleTypes.HNEFATAFL;
             Board board = Defaults.DefaultValues.GetDefaultBrandubhTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
-            IHnefataflBot player2 = new TaflBotMinimaxAB(PieceColors.WHITE);
+            ITaflBot player2 = new TaflBotMinimaxAB(PieceColors.WHITE, ruleType);
 
-            Game game = new Game(board, player1, player2);
+            Game game = new Game(board, player1, player2, ruleType);
             game.StartGame();
         }
         private static void TestBoardEvaluator()
@@ -61,19 +66,36 @@ namespace HnefataflAI
         }
         static void RunMovesTest()
         {
-            Board board = Defaults.DefaultValues.GetDefaultBrandubhTable();
+            RuleTypes ruleType = RuleTypes.HNEFATAFL;
+            Board board = Defaults.DefaultValues.GetTestingTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
-            IHnefataflBot player2 = new TaflBotRandom(PieceColors.WHITE);
-            BotEngine ruleEngine = new BotEngine();
+            ITaflBot player2 = new TaflBotRandom(PieceColors.WHITE, ruleType);
+            IGameEngine gameEngine = new GameEngineImpl(ruleType);
+
+            List<Move> wmoves = gameEngine.GetMovesByColor(player2.PieceColors, board);
+            List<Move> bmoves = gameEngine.GetMovesByColor(player1.PieceColors, board);
 
             Console.Out.Write(String.Format("Board state:\n{0}", board));
             Console.Out.Write("Moves for white:\n");
-            foreach(Move move in ruleEngine.GetAvailableMovesByColor(player2.PieceColors, board))
+            foreach (Move move in wmoves)
             {
                 Console.Out.Write(String.Format("{0}\n", move));
             }
             Console.Out.Write("Moves for black:\n");
-            foreach (Move move in ruleEngine.GetAvailableMovesByColor(player1.PieceColors, board))
+            foreach (Move move in bmoves)
+            {
+                Console.Out.Write(String.Format("{0}\n", move));
+            }
+
+            MoveUtils.OrderMovesByCapture(wmoves, board, RuleTypes.HNEFATAFL);
+            Console.Out.Write("Moves for white:\n");
+            foreach (Move move in wmoves)
+            {
+                Console.Out.Write(String.Format("{0}\n", move));
+            }
+            MoveUtils.OrderMovesByCapture(bmoves, board, RuleTypes.HNEFATAFL);
+            Console.Out.Write("Moves for black:\n");
+            foreach (Move move in bmoves)
             {
                 Console.Out.Write(String.Format("{0}\n", move));
             }

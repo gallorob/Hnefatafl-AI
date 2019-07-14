@@ -1,12 +1,10 @@
 ﻿using HnefataflAI.Commons;
-using HnefataflAI.Commons.DataTypes;
-using HnefataflAI.Commons.Positions;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Games;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
-using HnefataflAI.Pieces;
-using System;
+using HnefataflAI.Games.GameState;
+using HnefataflAI.Games.Rules;
 using System.Collections.Generic;
 
 namespace HnefataflAI.AI.Bots.Impl
@@ -17,8 +15,12 @@ namespace HnefataflAI.AI.Bots.Impl
     /// Its algorithm is a simple board evaluation in its current turn.
     /// </remarks>
     /// </summary>
-    class TaflBotBasic : IHnefataflBot
+    class TaflBotBasic : ITaflBot
     {
+        /// <summary>
+        /// The rule type for the bot
+        /// </summary>
+        public RuleTypes RuleType { get; private set; }
         /// <summary>
         /// The piece color
         /// </summary>
@@ -26,18 +28,21 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <summary>
         /// The internal GameEngine
         /// </summary>
-        private IGameEngine GameEngine = new HnefataflGameEngine();
+        private readonly IGameEngine GameEngine;
         /// <summary>
         /// The internal BoardEvaluator
         /// </summary>
-        private BoardEvaluator MovesEvaluator = new BoardEvaluator();
+        private readonly BoardEvaluator MovesEvaluator = new BoardEvaluator();
         /// <summary>
         /// Constructor for the TaflBotBasic
         /// </summary>
         /// <param name="pieceColors">The piece color</param>
-        public TaflBotBasic(PieceColors pieceColors)
+        /// <param name="ruleType">The rule type</param>
+        public TaflBotBasic(PieceColors pieceColors, RuleTypes ruleType)
         {
             this.PieceColors = pieceColors;
+            this.RuleType = ruleType;
+            this.GameEngine = new GameEngineImpl(ruleType);
         }
         /// <summary>
         /// Only for implementation
@@ -74,9 +79,17 @@ namespace HnefataflAI.AI.Bots.Impl
             {
                 // update board with the move
                 this.GameEngine.ApplyMove(move, board, PieceColors);
-                this.GameEngine.GetGameStatus(move.Piece, board);
+                GameStatus gameStatus = this.GameEngine.GetGameStatus(move.Piece, board);
                 // evaluate the new board status
                 int moveValue = this.MovesEvaluator.EvaluateBoard(board, PieceColors);
+                if (gameStatus.IsGameOver && gameStatus.Status is Status.WIN)
+                {
+                    moveValue = PieceValues.WinValue;
+                }
+                else if (gameStatus.IsGameOver && gameStatus.Status is Status.LOSS)
+                {
+                    moveValue = PieceValues.LossValue;
+                }
                 if (moveValue > bestMoveValue)
                 {
                     bestMove = move;

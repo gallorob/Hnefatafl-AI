@@ -1,6 +1,7 @@
 ﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Games;
+using HnefataflAI.Games.Rules;
 using System;
 using System.Collections.Generic;
 
@@ -9,8 +10,12 @@ namespace HnefataflAI.AI.Bots.Impl
     /// <summary>
     /// A Hnefatafl bot that plays random valid moves
     /// </summary>
-    class TaflBotRandom : IHnefataflBot
+    class TaflBotRandom : ITaflBot
     {
+        /// <summary>
+        /// The rule type for the bot
+        /// </summary>
+        public RuleTypes RuleType { get; private set; }
         /// <summary>
         /// The piece color
         /// </summary>
@@ -19,9 +24,11 @@ namespace HnefataflAI.AI.Bots.Impl
         /// Constructor for the TaflBotRandom
         /// </summary>
         /// <param name="pieceColors">The piece color</param>
-        public TaflBotRandom(PieceColors pieceColors)
+        /// <param name="ruleType">The rule type</param>
+        public TaflBotRandom(PieceColors pieceColors, RuleTypes ruleType)
         {
             this.PieceColors = pieceColors;
+            this.RuleType = ruleType;
         }
         /// <summary>
         /// Only for implementation

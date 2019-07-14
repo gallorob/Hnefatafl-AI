@@ -3,7 +3,6 @@ using HnefataflAI.Commons.DataTypes;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Pieces;
-using HnefataflAI.Pieces.Impl;
 using System.Collections.Generic;
 
 namespace HnefataflAI.Games
@@ -73,14 +72,7 @@ namespace HnefataflAI.Games
                 for (int j = 0; j < this.TotalCols; j++)
                 {
                     IPiece piece = this.board.At(i, j);
-                    if (piece == null)
-                        result += " . ";
-                    else if (piece is King)
-                        result += " K ";
-                    else if (piece is Attacker)
-                        result += " A ";
-                    else if (piece is Defender)
-                        result += " D ";
+                    result += piece == null ? " . " : piece.PieceRepresentation();
                 }
                 result += "\n\r";
             }

@@ -1,44 +1,42 @@
-﻿using HnefataflAI.AI.RuleEngine;
-using HnefataflAI.Commons;
+﻿using HnefataflAI.Commons;
+using HnefataflAI.Commons.Logs;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Defaults;
 using HnefataflAI.Games;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
+using HnefataflAI.Games.GameState;
+using HnefataflAI.Games.Rules;
 using System.Collections.Generic;
 
 namespace HnefataflAI.AI.Bots.Impl
 {
-    /// <summary>
-    /// A Hnefatafl bot that plays the best move possible
-    /// <remarks>
-    /// Its algorithm is a vanilla minimax algorithm.
-    /// </remarks>
-    /// </summary>
-    class TaflBotMinimax : IHnefataflBot
+    class TaflBotMinimax : ITaflBot
     {
-
-        // TODO: Fix the bot
-
+        /// <summary>
+        /// The rule type for the bot
+        /// </summary>
+        public RuleTypes RuleType { get; private set; }
         /// <summary>
         /// The piece color
         /// </summary>
         public PieceColors PieceColors { get; private set; }
         /// <summary>
-        /// The internal GameEngine
-        /// </summary>
-        private readonly IGameEngine GameEngine = new HnefataflGameEngine();
-        /// <summary>
         /// The internal BoardEvaluator
         /// </summary>
         private readonly BoardEvaluator MovesEvaluator = new BoardEvaluator();
         /// <summary>
+        /// The list of moves played by the bot
+        /// </summary>
+        private readonly List<Move> BotMoves = new List<Move>();
+        /// <summary>
         /// Constructor for the TaflBotMinimax
         /// </summary>
         /// <param name="pieceColors">The piece color</param>
-        public TaflBotMinimax(PieceColors pieceColors)
+        public TaflBotMinimax(PieceColors pieceColors, RuleTypes ruleType)
         {
             this.PieceColors = pieceColors;
+            this.RuleType = ruleType;
         }
         /// <summary>
         /// Only for implementation
@@ -56,27 +54,31 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <returns>The best move as a user input</returns>
         public string[] GetMove(Board board, List<Move> moves)
         {
-            Move bestMove = ComputeBestMoveMinimax(DefaultValues.MINIMAX_DEPTH, board, moves, true).Move;
-            return MoveUtils.MoveAsInput(bestMove);
+            MoveValue bestMove = ComputeBestMoveMinimaxAB(DefaultValues.MINIMAX_DEPTH, board, moves, true, this.PieceColors);
+            MovesLogger.LogMove(bestMove.Move, bestMove.Value);
+            this.BotMoves.Add(bestMove.Move);
+            return MoveUtils.MoveAsInput(bestMove.Move);
         }
         /// <summary>
-        /// Compute the best move using the Minimax algorithm
+        /// Compute the best move using the Minimax algorithm with Alpha-Beta Pruning
         /// </summary>
         /// <remarks>
-        /// This vanilla version of the minimax algorithm is VERY time consuming and resources intensive.
-        /// It's pretty much impossible to play with this Bot since it takes too long to make a move.
+        /// This version of the minimax algorithm is much faster than its vanilla version.
+        /// The game is playable with this bot.
         /// </remarks>
         /// <param name="depth">The lookahead level</param>
         /// <param name="board">The current board state</param>
         /// <param name="moves">The list of all possible moves</param>
-        /// <param name="isMaximizing">If it's maximizing or minimizing</param>
+        /// <param name="alpha">The Alpha value</param>
+        /// <param name="beta">The Beta value</param>
+        /// <param name="isMaximizing">>If it's maximizing or minimizing</param>
         /// <returns>The best move in the current turn</returns>
-        private MoveValue ComputeBestMoveMinimax(int depth, Board board, List<Move> moves, bool isMaximizing)
+        private MoveValue ComputeBestMoveMinimaxAB(int depth, Board board, List<Move> moves, bool isMaximizing, PieceColors pieceColors)
         {
             // reached the end of the branch, evaluate the board
             if (depth == 0)
             {
-                int boardValue = this.MovesEvaluator.EvaluateBoard(board, PieceColors);
+                int boardValue = this.MovesEvaluator.EvaluateBoard(board, pieceColors);
                 return new MoveValue(null, boardValue);
             }
             // we need to keep track of both the best move and its value during each iteration
@@ -87,14 +89,44 @@ namespace HnefataflAI.AI.Bots.Impl
             ListUtils.ShuffleList(moves);
             foreach (Move move in moves)
             {
+                IGameEngine gameEngine = new GameEngineImpl(this.RuleType);
                 // update board with the move
-                this.GameEngine.ApplyMove(move, board, PieceColors);
-                this.GameEngine.GetGameStatus(move.Piece, board);
+                gameEngine.ApplyMove(move, board, pieceColors);
+                // check if it reached an endgame point
+                GameStatus gameStatus = gameEngine.GetGameStatus(move.Piece, board);
+                if (!gameStatus.IsGameOver)
+                {
+                    gameStatus.IsGameOver = MoveUtils.IsDuplicatedMove(this.BotMoves, move, this.RuleType);
+                    gameStatus.Status = Status.LOSS;
+                }
                 // recursive call for the move's sub-tree
-                int moveValue = ComputeBestMoveMinimax(depth - 1, board, new BotEngine().GetAvailableMovesByColor(PieceColors, board), !isMaximizing).Value;
+                int moveValue = ComputeBestMoveMinimaxAB(depth - 1,
+                    board,
+                    new GameEngineImpl(this.RuleType).RuleEngine.GetAvailableMoves(PieceColorsUtils.GetOppositePieceColor(pieceColors), board),
+                    !isMaximizing,
+                    PieceColorsUtils.GetOppositePieceColor(pieceColors)
+                    ).Value;
+                // revert board's state
+                gameEngine.UndoMove(move, board, pieceColors);
+                gameEngine.UndoCaptures(board);
                 // two different cases if we're simulating our turn or the opponent's
                 if (isMaximizing)
                 {
+                    // if an endgame situation is reached, force the pruning
+                    // depth difference is used in order to choose the move that ends the game asap
+                    if (gameStatus.IsGameOver)
+                    {
+                        switch (gameStatus.Status)
+                        {
+                            case Status.LOSS:
+                                moveValue = PieceValues.LossValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                break;
+                            case Status.WIN:
+                                moveValue = PieceValues.WinValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                break;
+                        }
+                        MovesLogger.LogEvent(pieceColors, gameStatus.Status, isMaximizing);
+                    }
                     if (moveValue > bestMoveValue.Value)
                     {
                         bestMoveValue.Value = moveValue;
@@ -103,19 +135,35 @@ namespace HnefataflAI.AI.Bots.Impl
                 }
                 else
                 {
+                    // if an endgame situation is reached, force the pruning
+                    // depth difference is used in order to choose the move that ends the game asap
+                    if (gameStatus.IsGameOver)// && depth == DefaultValues.MINIMAX_DEPTH)
+                    {
+                        switch (gameStatus.Status)
+                        {
+                            case Status.LOSS:
+                                moveValue = PieceValues.WinValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                break;
+                            case Status.WIN:
+                                moveValue = PieceValues.LossValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                break;
+                        }
+                        MovesLogger.LogEvent(pieceColors, gameStatus.Status, isMaximizing);
+                    }
                     if (moveValue < bestMoveValue.Value)
                     {
                         bestMoveValue.Value = moveValue;
                         bestMoveValue.Move = move;
                     }
                 }
-                // revert board's state
-                this.GameEngine.UndoMove(move, board, PieceColors);
-                this.GameEngine.UndoCaptures(board);
-                // reset the moved piece's position to its original value
-                move.Piece.UpdatePosition(move.From);
+                MovesLogger.LogMove(this.PieceColors, depth, bestMoveValue.Move, bestMoveValue.Value, isMaximizing, move, moveValue);
+                // force to pick a move if none is chosen
+                if (bestMoveValue.Move is null)
+                {
+                    bestMoveValue.Move = moves[0];
+                }
             }
-           return bestMoveValue;
+            return bestMoveValue;
         }
     }
 }

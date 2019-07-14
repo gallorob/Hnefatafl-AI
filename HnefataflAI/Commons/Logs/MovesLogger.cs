@@ -8,7 +8,7 @@ namespace HnefataflAI.Commons.Logs
 {
     public class MovesLogger
     {
-        public static readonly string FilePath = String.Format(@"./moves_{0}.log", DateTime.Now.ToString("MMddyyyyhhmm"));
+        public static readonly string FilePath = String.Format(@"./moves_{0}.log", DateTime.Now.ToString("MMddyyyyHHmm"));
         public static void LogMove(PieceColors player, int depth, Move bestMove, int bestMoveValue, bool isMaximizing, Move move, int moveValue)
         {
             if (DefaultValues.LOG_MOVES_EVAL)
@@ -38,8 +38,8 @@ namespace HnefataflAI.Commons.Logs
         {
             if (DefaultValues.LOG_MOVES_EVAL)
             {
-                string ToLog = String.Format("{0}; {1} for {2}",
-                    isMaximizing ? "Max." : "Min."
+                string toLog = String.Format("{0}; {1} for {2}",
+                    isMaximizing ? "Max." : "Min.",
                     status.Equals(Status.LOSS) ? "loss" : "win",
                     PieceColorsUtils.GetRoleFromPieceColor(pieceColors));
                 Log(toLog);

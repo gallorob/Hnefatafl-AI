@@ -1,6 +1,4 @@
-﻿using HnefataflAI.AI.Bots;
-using HnefataflAI.AI.RuleEngine;
-using HnefataflAI.Commons;
+﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Logs;
 using HnefataflAI.Commons.Utils;
@@ -9,15 +7,17 @@ using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.GameState;
 using HnefataflAI.Pieces;
 using HnefataflAI.Player;
-using HnefataflAI.Player.Impl;
 using System;
 using System.Diagnostics;
+using HnefataflAI.Games.Rules;
+using HnefataflAI.Player.Impl;
+using HnefataflAI.AI.Bots;
 
 namespace HnefataflAI.Games
 {
     public class Game
     {
-        private Stopwatch StopWatch = new Stopwatch();
+        private readonly Stopwatch StopWatch = new Stopwatch();
         private int TurnNumber = 0;
         private GameStatus GameStatus = new GameStatus(false);
         private PieceColors CurrentlyPlaying = PieceColors.BLACK;
@@ -25,27 +25,31 @@ namespace HnefataflAI.Games
         internal IPlayer Player1 { get; private set; }
         internal IPlayer Player2 { get; private set; }
         internal IGameEngine GameEngine { get; private set; }
-        internal BotEngine BotRuleEngine { get; private set; }
-        public Game(Board board, IPlayer player1, IPlayer player2)
+        public Game(Board board, IPlayer player1, IPlayer player2, RuleTypes ruleType)
         {
             this.Board = board;
             this.Player1 = player1;
             this.Player2 = player2;
-            this.GameEngine = new HnefataflGameEngine();
-            this.BotRuleEngine = new BotEngine();
+            this.GameEngine = new GameEngineImpl(ruleType);
         }
         public void StartGame()
         {
             this.StopWatch.Start();
-            GameLogger.Log(this.Board.ToString());
             while (!this.GameStatus.IsGameOver)
             {
-                PlayPlayer(this.Player1);
-                this.CurrentlyPlaying = Player1.PieceColors;
-                if (this.GameStatus.IsGameOver) break;
-                PlayPlayer(this.Player2);
-                this.CurrentlyPlaying = Player2.PieceColors;
-                if (this.GameStatus.IsGameOver) break;
+                if (this.Player1.PieceColors.Equals(this.CurrentlyPlaying))
+                {
+                    PlayPlayer(this.Player1);
+                }
+                else
+                {
+                    PlayPlayer(this.Player2);
+                }
+                if (this.GameStatus.IsGameOver)
+                {
+                    break;
+                }
+                this.CurrentlyPlaying = this.GameStatus.NextPlayer;
             }
             this.StopWatch.Stop();
             DisplayGameOver(CurrentlyPlaying, this.GameStatus.Status);
@@ -63,7 +67,7 @@ namespace HnefataflAI.Games
                     break;
             }
             Console.WriteLine(String.Format(Messages.GAME_OVER, winner));
-            GameLogger.Log(this.Board.ToString());
+            GameLogger.LogBoard(this.Board);
             GameLogger.Log(String.Format(Messages.GAME_OVER, winner));
             TimeSpan timeSpan = this.StopWatch.Elapsed;
             GameLogger.LogDuration(timeSpan);
@@ -103,7 +107,7 @@ namespace HnefataflAI.Games
             if (player is HumanPlayer)
                 playerMove = player.GetMove();
             else
-                playerMove = ((IHnefataflBot)player).GetMove(this.Board, this.BotRuleEngine.GetAvailableMovesByColor(player.PieceColors, this.Board));
+                playerMove = ((ITaflBot)player).GetMove(this.Board, this.GameEngine.GetMovesByColor(player.PieceColors, this.Board));
             Move actualMove = this.GameEngine.ProcessPlayerMove(playerMove, this.Board);
             GameLogger.LogMove(this.TurnNumber, player.PieceColors, actualMove);
             GameLogger.Log(this.Board.ToString());

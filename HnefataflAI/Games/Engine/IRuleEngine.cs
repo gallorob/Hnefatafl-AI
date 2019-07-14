@@ -1,5 +1,7 @@
 ﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Positions;
+using HnefataflAI.Games.GameState;
+using HnefataflAI.Games.Rules;
 using HnefataflAI.Pieces;
 using System.Collections.Generic;
 
@@ -7,13 +9,10 @@ namespace HnefataflAI.Games.Engine
 {
     public interface IRuleEngine
     {
-        bool CanMoveToPosition(IPiece piece, Position position, int totalRows, int totalCols);
-        bool IsPositionUpdateValid(Position moved, Directions direction, int totalRows, int totalCols);
-        bool IsPositionValid(Position position, int totalRows, int totalCols);
-        bool IsMoveOnBoardCorner(Position move, int totalRows, int totalCols);
-        bool IsMoveOnThrone(Position move, int totalRows, int totalCols);
-        List<IPiece> CheckIfHasCaptured(IPiece piece, Board board);
-        bool CheckIfKingIsCaptured(IPiece king, Board board);
-        bool HasRepeatedMoves(List<Move> moves);
+        IRule Rule { get; }
+        List<IPiece> GetCapturedPieces(IPiece piece, Board board);
+        List<Move> GetAvailableMoves(PieceColors playerColor, Board board);
+        List<Move> GetAvailableMoves(IPiece piece, Board board);
+        GameStatus GetGameStatus(IPiece movedPiece, Board board, List<Move> whiteMoves, List<Move> blackMoves);
     }
 }

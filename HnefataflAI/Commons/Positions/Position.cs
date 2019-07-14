@@ -32,7 +32,7 @@
         }
         public override string ToString()
         {
-            return this.Col.ToString().ToUpper() + ":" + this.Row;
+            return this.Col.ToString().ToUpper() + this.Row;
         }
         public override bool Equals(object obj)
         {

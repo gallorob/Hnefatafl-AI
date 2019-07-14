@@ -1,5 +1,4 @@
-﻿using HnefataflAI.AI.RuleEngine;
-using HnefataflAI.Commons;
+﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Logs;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Defaults;
@@ -7,13 +6,18 @@ using HnefataflAI.Games;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.GameState;
+using HnefataflAI.Games.Rules;
 using System;
 using System.Collections.Generic;
 
 namespace HnefataflAI.AI.Bots.Impl
 {
-    class TaflBotMinimaxAB : IHnefataflBot
+    class TaflBotMinimaxAB : ITaflBot
     {
+        /// <summary>
+        /// The rule type for the bot
+        /// </summary>
+        public RuleTypes RuleType { get; private set; }
         /// <summary>
         /// The piece color
         /// </summary>
@@ -27,12 +31,13 @@ namespace HnefataflAI.AI.Bots.Impl
         /// </summary>
         private readonly List<Move> BotMoves = new List<Move>();
         /// <summary>
-        /// Constructor for the TaflBotMinimax
+        /// Constructor for the TaflBotMinimaxAB
         /// </summary>
         /// <param name="pieceColors">The piece color</param>
-        public TaflBotMinimaxAB(PieceColors pieceColors)
+        public TaflBotMinimaxAB(PieceColors pieceColors, RuleTypes ruleType)
         {
             this.PieceColors = pieceColors;
+            this.RuleType = ruleType;
         }
         /// <summary>
         /// Only for implementation
@@ -85,20 +90,20 @@ namespace HnefataflAI.AI.Bots.Impl
             ListUtils.ShuffleList(moves);
             foreach (Move move in moves)
             {
-                IGameEngine gameEngine = new HnefataflGameEngine();
+                IGameEngine gameEngine = new GameEngineImpl(this.RuleType);
                 // update board with the move
                 gameEngine.ApplyMove(move, board, pieceColors);
                 // check if it reached an endgame point
                 GameStatus gameStatus = gameEngine.GetGameStatus(move.Piece, board);
                 if (!gameStatus.IsGameOver)
                 {
-                    gameStatus.IsGameOver = this.IsDuplicatedMove(move);
+                    gameStatus.IsGameOver = MoveUtils.IsDuplicatedMove(this.BotMoves, move, this.RuleType);
                     gameStatus.Status = Status.LOSS;
                 }
                 // recursive call for the move's sub-tree
                 int moveValue = ComputeBestMoveMinimaxAB(depth - 1,
                     board,
-                    new BotEngine().GetAvailableMovesByColor(PieceColorsUtils.GetOppositePieceColor(pieceColors), board),
+                    new GameEngineImpl(this.RuleType).RuleEngine.GetAvailableMoves(PieceColorsUtils.GetOppositePieceColor(pieceColors), board),
                     alpha,
                     beta,
                     !isMaximizing,
@@ -117,10 +122,10 @@ namespace HnefataflAI.AI.Bots.Impl
                         switch (gameStatus.Status)
                         {
                             case Status.LOSS:
-                                moveValue = int.MinValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                moveValue = PieceValues.LossValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
                                 break;
                             case Status.WIN:
-                                moveValue = int.MaxValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                moveValue = PieceValues.WinValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
                                 break;
                         }
                         MovesLogger.LogEvent(pieceColors, gameStatus.Status, isMaximizing);
@@ -142,10 +147,10 @@ namespace HnefataflAI.AI.Bots.Impl
                         switch (gameStatus.Status)
                         {
                             case Status.LOSS:
-                                moveValue = int.MaxValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                moveValue = PieceValues.WinValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
                                 break;
                             case Status.WIN:
-                                moveValue = int.MaxValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                moveValue = PieceValues.LossValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
                                 break;
                         }
                         MovesLogger.LogEvent(pieceColors, gameStatus.Status, isMaximizing);
@@ -171,12 +176,6 @@ namespace HnefataflAI.AI.Bots.Impl
                 }
             }
             return bestMoveValue;
-        }
-        private bool IsDuplicatedMove(Move move)
-        {
-            List<Move> tempMoves = new List<Move>(this.BotMoves);
-            tempMoves.Add(move);
-            return new RuleEngineImpl().HasRepeatedMoves(tempMoves);
         }
     }
 }

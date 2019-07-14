@@ -9,7 +9,7 @@ namespace HnefataflAI.Commons.Utils
         {
             return position.ToString().ToLower().Replace(" ", "");
         }
-        public static Position ValidateAndReturnInputPosition(string[] input)
+        public static Position ValidateAndReturnInputPosition(string input)
         {
             int row;
             char col;
@@ -19,14 +19,14 @@ namespace HnefataflAI.Commons.Utils
             }
             try
             {
-                row = System.Int32.Parse(input[1]);
+                row = System.Int32.Parse(input.Substring(1));
             } catch (System.Exception)
             {
                 throw new InvalidInputException(ErrorMessages.INVALID_IPUT_POSITION);
             }
             try
             {
-                col = input[0].ToCharArray()[0];
+                col = input[0];
             }
             catch (System.Exception)
             {

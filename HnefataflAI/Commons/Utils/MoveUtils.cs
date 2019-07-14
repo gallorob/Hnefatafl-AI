@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Positions;
+using HnefataflAI.Games;
+using HnefataflAI.Games.Engine.Impl;
+using HnefataflAI.Games.Rules;
 
 namespace HnefataflAI.Commons.Utils
 {
@@ -22,13 +26,28 @@ namespace HnefataflAI.Commons.Utils
             }
             return move;
         }
-
         internal static void ValidateMove(Position from, Position to)
         {
             if (from.Col != to.Col && from.Row != to.Row)
             {
                 throw new InvalidInputException(ErrorMessages.INVALID_DESTINATION_POSITION);
             }
+        }
+        public static bool IsDuplicatedMove(List<Move> listMoves, Move move, RuleTypes ruleType)
+        {
+            List<Move> tempMoves = new List<Move>(listMoves)
+            {
+                move
+            };
+            return RuleUtils.GetRule(ruleType).CheckIfHasRepeatedMoves(tempMoves);
+        }
+        public static void OrderMovesByCapture(List<Move> moves, Board board, RuleTypes ruleType)
+        {
+            foreach (Move move in moves)
+            {
+                move.DoesNotCapture = RuleUtils.GetRule(ruleType).CheckIfCaptures(move.Piece, board).Count == 0;
+            }
+            moves.Sort((x, y) => x.DoesNotCapture.CompareTo(y.DoesNotCapture));
         }
     }
 }

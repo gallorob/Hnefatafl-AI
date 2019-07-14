@@ -12,6 +12,21 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -43,11 +58,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI\Bots\IHnefataflBot.cs" />
+    <Compile Include="AI\BoardEvaluator.cs" />
+    <Compile Include="AI\Bots\ITaflBot.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotBasic.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotMinimax.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotMinimaxAB.cs" />
-    <Compile Include="AI\BoardEvaluator.cs" />
+    <Compile Include="AI\Bots\Impl\TaflBotRandom.cs" />
     <Compile Include="AI\MoveValue.cs" />
     <Compile Include="AI\PieceValues.cs" />
     <Compile Include="Commons\DataTypes\Matrix.cs" />
@@ -58,31 +74,35 @@
     <Compile Include="Commons\Logs\MovesLogger.cs" />
     <Compile Include="Commons\Messages.cs" />
     <Compile Include="Commons\Positions\Directions.cs" />
+    <Compile Include="Commons\Serializer\ObjectSerializer.cs" />
     <Compile Include="Commons\Utils\BoardUtils.cs" />
     <Compile Include="Commons\Utils\ListUtils.cs" />
     <Compile Include="Commons\Utils\MoveUtils.cs" />
     <Compile Include="Commons\Utils\PieceColorsUtils.cs" />
     <Compile Include="Commons\Utils\PositionUtils.cs" />
+    <Compile Include="Commons\Utils\RuleUtils.cs" />
     <Compile Include="Games\Board.cs" />
     <Compile Include="Commons\Move.cs" />
     <Compile Include="Commons\PieceColors.cs" />
     <Compile Include="Commons\Positions\Position.cs" />
     <Compile Include="Defaults\DefaultValues.cs" />
     <Compile Include="Games\Engine\IGameEngine.cs" />
-    <Compile Include="AI\RuleEngine\BotEngine.cs" />
-    <Compile Include="Games\Engine\Impl\HnefataflGameEngine.cs" />
+    <Compile Include="Games\Engine\Impl\GameEngineImpl.cs" />
     <Compile Include="Games\Engine\Impl\RuleEngineImpl.cs" />
     <Compile Include="Games\Engine\IRuleEngine.cs" />
     <Compile Include="Games\Game.cs" />
     <Compile Include="Games\GameState\GameStatus.cs" />
     <Compile Include="Games\GameState\Status.cs" />
+    <Compile Include="Games\Rules\Impl\CustomRule.cs" />
+    <Compile Include="Games\Rules\Impl\HnefataflRule.cs" />
+    <Compile Include="Games\Rules\IRule.cs" />
+    <Compile Include="Games\Rules\RuleTypes.cs" />
     <Compile Include="Pieces\Impl\Attacker.cs" />
     <Compile Include="Pieces\Impl\Defender.cs" />
     <Compile Include="Pieces\Impl\King.cs" />
     <Compile Include="Pieces\Impl\Pawn.cs" />
     <Compile Include="Pieces\IPiece.cs" />
     <Compile Include="Player\Impl\HumanPlayer.cs" />
-    <Compile Include="AI\Bots\Impl\TaflBotRandom.cs" />
     <Compile Include="Player\IPlayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,5 +110,18 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
