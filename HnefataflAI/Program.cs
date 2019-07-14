@@ -18,9 +18,9 @@ namespace HnefataflAI
     {
         static void Main()
         {
-            //RunPvPGame();
+            RunPvPGame();
             //RunPvPCGame();
-            RunPCvPCGame();
+            //RunPCvPCGame();
             //RunMovesTest();
             //TestBoardEvaluator();
         }
@@ -37,7 +37,7 @@ namespace HnefataflAI
         static void RunPvPGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            Board board = Defaults.DefaultValues.GetDefaultBrandubhTable();
+            Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             IPlayer player2 = new HumanPlayer(PieceColors.WHITE);
 

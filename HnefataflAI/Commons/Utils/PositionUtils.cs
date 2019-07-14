@@ -13,7 +13,7 @@ namespace HnefataflAI.Commons.Utils
         {
             int row;
             char col;
-            if (input.Length != 2)
+            if (input.Length > 3)
             {
                 throw new InvalidInputException(ErrorMessages.INVALID_INPUT);
             }

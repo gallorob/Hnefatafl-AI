@@ -2,6 +2,7 @@
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Commons.Utils;
+using HnefataflAI.Defaults;
 using HnefataflAI.Pieces;
 using HnefataflAI.Pieces.Impl;
 using System;
@@ -11,10 +12,43 @@ namespace HnefataflAI.Games.Rules.Impl
 {
     class HnefataflRule : IRule
     {
+        /// <summary>
+        /// The Rule type
+        /// </summary>
         public RuleTypes RuleType { get; private set; }
+        /// <summary>
+        /// How many tiles can a pawn move
+        /// </summary>
+        public int PawnMoveLimiter { get; private set; }
+        /// <summary>
+        /// How many tiles can the king move
+        /// </summary>
+        public int KingMoveLimiter { get; private set; }
+        /// <summary>
+        /// How many pieces are needed to capture the king
+        /// </summary>
+        public int KingPiecesForCapture { get; private set; }
+        /// <summary>
+        /// Does the throne count as a capture piece for king as well?
+        /// </summary>
+        public bool IsThroneHostileToAll { get; private set; }
+        /// <summary>
+        /// Does the corner count as a capture piece for king as well?
+        /// </summary>
+        public bool IsCornerHostileToAll { get; private set; }
+        /// <summary>
+        /// How many moves it takes to repeat before losing the game
+        /// </summary>
+        public int MovesRepetition { get; private set; }
         public HnefataflRule()
         {
-            RuleType = RuleTypes.HNEFATAFL;
+            this.RuleType = RuleTypes.HNEFATAFL;
+            this.PawnMoveLimiter = Math.Max(DefaultValues.MAX_COLS, DefaultValues.MAX_ROWS);
+            this.KingMoveLimiter = this.PawnMoveLimiter;
+            this.KingPiecesForCapture = 4;
+            this.IsThroneHostileToAll = true;
+            this.IsCornerHostileToAll = true;
+            this.MovesRepetition = 3;
         }
         public List<IPiece> CheckIfCaptures(IPiece piece, Board board)
         {
@@ -103,11 +137,14 @@ namespace HnefataflAI.Games.Rules.Impl
         }
         public bool CheckIfHasRepeatedMoves(List<Move> moves)
         {
-            if (moves.Count >= 5)
+            bool isRepeated = true;
+            if (moves.Count >= this.MovesRepetition * 2 - 1)
             {
-                return moves[moves.Count - 1].Equals(moves[moves.Count - 3])
-                    &&
-                    moves[moves.Count - 3].Equals(moves[moves.Count - 5]);
+                for (int i = 1; i < this.MovesRepetition; i += 2)
+                {
+                    isRepeated &= moves[moves.Count - i].Equals(moves[moves.Count - i - 2]);
+                }
+                return isRepeated;
             }
             return false;
         }
