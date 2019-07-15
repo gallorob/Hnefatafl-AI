@@ -86,6 +86,8 @@
     <Compile Include="Commons\PieceColors.cs" />
     <Compile Include="Commons\Positions\Position.cs" />
     <Compile Include="Defaults\DefaultValues.cs" />
+    <Compile Include="Games\BoardBuilder.cs" />
+    <Compile Include="Games\BoardTypes.cs" />
     <Compile Include="Games\Engine\IGameEngine.cs" />
     <Compile Include="Games\Engine\Impl\GameEngineImpl.cs" />
     <Compile Include="Games\Engine\Impl\RuleEngineImpl.cs" />

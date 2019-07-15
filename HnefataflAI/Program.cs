@@ -27,37 +27,38 @@ namespace HnefataflAI
         private static void RunPCvPCGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            Board board = Defaults.DefaultValues.GetDefaultBrandubhTable();
+            BoardTypes boardType = BoardTypes.HNEFATAFL_11X11;
             IPlayer player1 = new TaflBotMinimaxAB(PieceColors.BLACK, ruleType);
             ITaflBot player2 = new TaflBotMinimaxAB(PieceColors.WHITE, ruleType);
 
-            Game game = new Game(board, player1, player2, ruleType);
+            Game game = new Game(boardType, player1, player2, ruleType);
             game.StartGame();
         }
         static void RunPvPGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            Board board = Defaults.DefaultValues.GetDefaultHnefataflTable();
+            BoardTypes boardType = BoardTypes.HNEFATAFL_11X11;
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             IPlayer player2 = new HumanPlayer(PieceColors.WHITE);
 
-            Game game = new Game(board, player1, player2, ruleType);
+            Game game = new Game(boardType, player1, player2, ruleType);
             game.StartGame();
         }
         static void RunPvPCGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            Board board = Defaults.DefaultValues.GetDefaultBrandubhTable();
+            BoardTypes boardType = BoardTypes.HNEFATAFL_11X11;
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             ITaflBot player2 = new TaflBotMinimaxAB(PieceColors.WHITE, ruleType);
 
-            Game game = new Game(board, player1, player2, ruleType);
+            Game game = new Game(boardType, player1, player2, ruleType);
             game.StartGame();
         }
         private static void TestBoardEvaluator()
         {
             BoardEvaluator movesEvaluator = new BoardEvaluator();
-            Board board = Defaults.DefaultValues.GetDefaultBrandubhTable();
+            BoardTypes boardType = BoardTypes.BRANDUBH_7X7;
+            Board board = BoardBuilder.GetBoard(boardType);
             int bv = movesEvaluator.EvaluateBoard(board, PieceColors.BLACK);
             int wv = movesEvaluator.EvaluateBoard(board, PieceColors.WHITE);
 
@@ -68,7 +69,7 @@ namespace HnefataflAI
         static void RunMovesTest()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            Board board = Defaults.DefaultValues.GetTestingTable();
+            Board board = BoardBuilder.GetTestingTable();
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             ITaflBot player2 = new TaflBotRandom(PieceColors.WHITE, ruleType);
             IGameEngine gameEngine = new GameEngineImpl(ruleType);

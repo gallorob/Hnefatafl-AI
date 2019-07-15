@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace HnefataflAI.AI.Bots
 {
     /// <summary>
-    /// Interface for the HnefataflBot
+    /// Interface for the ITaflBot
     /// </summary>
     public interface ITaflBot : IPlayer
     {

@@ -5,7 +5,6 @@ using HnefataflAI.Commons.Utils;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.GameState;
-using HnefataflAI.Pieces;
 using HnefataflAI.Player;
 using System;
 using System.Diagnostics;
@@ -22,12 +21,14 @@ namespace HnefataflAI.Games
         private GameStatus GameStatus = new GameStatus(false);
         private PieceColors CurrentlyPlaying = PieceColors.BLACK;
         internal Board Board { get; private set; }
+        internal BoardTypes BoardType { get; private set; }
         internal IPlayer Player1 { get; private set; }
         internal IPlayer Player2 { get; private set; }
         internal IGameEngine GameEngine { get; private set; }
-        public Game(Board board, IPlayer player1, IPlayer player2, RuleTypes ruleType)
+        public Game(BoardTypes boardType, IPlayer player1, IPlayer player2, RuleTypes ruleType)
         {
-            this.Board = board;
+            this.BoardType = boardType;
+            this.Board = BoardBuilder.GetBoard(boardType);
             this.Player1 = player1;
             this.Player2 = player2;
             this.GameEngine = new GameEngineImpl(ruleType);
@@ -110,13 +111,10 @@ namespace HnefataflAI.Games
                 playerMove = ((ITaflBot)player).GetMove(this.Board, this.GameEngine.GetMovesByColor(player.PieceColors, this.Board));
             Move actualMove = this.GameEngine.ProcessPlayerMove(playerMove, this.Board);
             GameLogger.LogMove(this.TurnNumber, player.PieceColors, actualMove);
-            GameLogger.Log(this.Board.ToString());
+            GameLogger.LogBoard(this.Board);
             this.GameEngine.ApplyMove(actualMove, this.Board, player.PieceColors);
             this.GameStatus = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);
-            foreach(IPiece piece in this.GameStatus.CapturedPieces)
-            {
-                GameLogger.LogPieceCapture(player.PieceColors, piece);
-            }
+            GameLogger.LogPiecesCaptures(this.GameStatus.CapturedPieces);
         }
     }
 }

@@ -137,16 +137,7 @@ namespace HnefataflAI.Games.Rules.Impl
         }
         public bool CheckIfHasRepeatedMoves(List<Move> moves)
         {
-            bool isRepeated = true;
-            if (moves.Count >= this.MovesRepetition * 2 - 1)
-            {
-                for (int i = 1; i < this.MovesRepetition; i += 2)
-                {
-                    isRepeated &= moves[moves.Count - i].Equals(moves[moves.Count - i - 2]);
-                }
-                return isRepeated;
-            }
-            return false;
+            return RuleUtils.CheckIfHasRepeatedMoves(moves, this.MovesRepetition);
         }
     }
 }

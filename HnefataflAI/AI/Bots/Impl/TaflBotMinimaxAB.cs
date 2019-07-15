@@ -97,7 +97,7 @@ namespace HnefataflAI.AI.Bots.Impl
                 GameStatus gameStatus = gameEngine.GetGameStatus(move.Piece, board);
                 if (!gameStatus.IsGameOver)
                 {
-                    gameStatus.IsGameOver = MoveUtils.IsDuplicatedMove(this.BotMoves, move, this.RuleType);
+                    gameStatus.IsGameOver = MoveUtils.IsDuplicatedMove(this.BotMoves, move, RuleUtils.GetRule(this.RuleType));
                     gameStatus.Status = Status.LOSS;
                 }
                 // recursive call for the move's sub-tree

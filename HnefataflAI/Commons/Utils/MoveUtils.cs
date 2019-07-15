@@ -33,13 +33,13 @@ namespace HnefataflAI.Commons.Utils
                 throw new InvalidInputException(ErrorMessages.INVALID_DESTINATION_POSITION);
             }
         }
-        public static bool IsDuplicatedMove(List<Move> listMoves, Move move, RuleTypes ruleType)
+        public static bool IsDuplicatedMove(List<Move> listMoves, Move move, IRule rule)
         {
             List<Move> tempMoves = new List<Move>(listMoves)
             {
                 move
             };
-            return RuleUtils.GetRule(ruleType).CheckIfHasRepeatedMoves(tempMoves);
+            return rule.CheckIfHasRepeatedMoves(tempMoves);
         }
         public static void OrderMovesByCapture(List<Move> moves, Board board, RuleTypes ruleType)
         {
