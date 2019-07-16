@@ -1,5 +1,5 @@
 ﻿using HnefataflAI.Commons;
-using HnefataflAI.Commons.Positions;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Games.GameState;
 using HnefataflAI.Games.Rules;
 using HnefataflAI.Pieces;

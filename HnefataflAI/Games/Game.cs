@@ -11,6 +11,7 @@ using System.Diagnostics;
 using HnefataflAI.Games.Rules;
 using HnefataflAI.Player.Impl;
 using HnefataflAI.AI.Bots;
+using HnefataflAI.Games.Boards;
 
 namespace HnefataflAI.Games
 {

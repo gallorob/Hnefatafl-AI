@@ -5,7 +5,7 @@ using HnefataflAI.Commons.Utils;
 using HnefataflAI.Pieces;
 using System.Collections.Generic;
 
-namespace HnefataflAI.Games
+namespace HnefataflAI.Games.Boards
 {
     public class Board
     {

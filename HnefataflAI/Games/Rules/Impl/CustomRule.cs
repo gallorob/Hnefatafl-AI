@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using HnefataflAI.Commons;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Defaults;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
 
 namespace HnefataflAI.Games.Rules.Impl

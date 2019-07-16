@@ -1,5 +1,6 @@
 ﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Positions;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
 using System.Collections.Generic;
 

@@ -1,6 +1,6 @@
 ﻿using HnefataflAI.Commons.Utils;
 using HnefataflAI.Defaults;
-using HnefataflAI.Games;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
 using System;
 using System.Collections.Generic;
@@ -25,22 +25,12 @@ namespace HnefataflAI.Commons.Logs
         {
             if (DefaultValues.LOG_GAME)
             {
-                string toLog;
-                if (DefaultValues.LOG_CYNINGSTAN_STYLE)
-                {
-                    toLog = String.Format("\n{0}-{1}",
-                        move.From,
-                        move.To);
-                }
-                else
-                {
-                    toLog = String.Format("\n[{0}] - {1} moves {2} from {3} to {4}.\n",
-                        turn,
-                        PieceColorsUtils.GetRoleFromPieceColor(pieceColor),
-                        move.Piece.ToString(),
-                        move.From,
-                        move.To);
-                }
+                string toLog = String.Format("[{0}] - {1} moves {2} from {3} to {4}.\n",
+                    turn,
+                    PieceColorsUtils.GetRoleFromPieceColor(pieceColor),
+                    move.Piece.ToString(),
+                    move.From,
+                    move.To);
                 Log(toLog);
             }
         }
@@ -48,22 +38,11 @@ namespace HnefataflAI.Commons.Logs
         {
             if (DefaultValues.LOG_GAME && capturedPieces.Count > 0)
             {
-                String toLog = " captures ";
-                String separator = ", ";
-                if (DefaultValues.LOG_CYNINGSTAN_STYLE)
-                {
-                    toLog = "x";
-                    separator = "/";
-                }
-                toLog += String.Join(separator, capturedPieces.Select(capturedPiece => GetCapturedPieceDescription(capturedPiece)).ToArray());
+                String toLog = String.Format("Captures {0}", String.Join(", ", capturedPieces.Select(capturedPiece => capturedPiece.ToString()).ToArray()));
                 Log(toLog);
             }
         }
-        private static string GetCapturedPieceDescription(IPiece captured)
-        {
-            return DefaultValues.LOG_CYNINGSTAN_STYLE ? captured.Position.ToString() : captured.ToString();
-        }
-        internal static void LogDuration(TimeSpan timeSpan)
+        public static void LogDuration(TimeSpan timeSpan)
         {
             if (DefaultValues.LOG_GAME)
             {
@@ -72,6 +51,32 @@ namespace HnefataflAI.Commons.Logs
                     timeSpan.Minutes,
                     timeSpan.Seconds,
                     timeSpan.Milliseconds / 10);
+                Log(toLog);
+            }
+        }
+        public static void LogCyningstanStyle(Move move, List<IPiece> capturedPieces, bool isSuicidal, bool isWinning, bool isGameOver)
+        {
+            if (DefaultValues.LOG_CYNINGSTAN_STYLE)
+            {
+                string toLog = String.Format("\n{0}-{1}",
+                    move.From,
+                    move.To);
+                if (capturedPieces.Count > 0)
+                {
+                    toLog += String.Format("x{0}", String.Join("/", capturedPieces.Select(capturedPiece => capturedPiece.Position.ToString()).ToArray()));
+                }
+                if (isSuicidal)
+                {
+                    toLog += "--";
+                }
+                else if (isWinning)
+                {
+                    toLog += "+";
+                }
+                else if (isGameOver)
+                {
+                    toLog += "++";
+                }
                 Log(toLog);
             }
         }

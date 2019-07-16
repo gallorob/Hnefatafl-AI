@@ -1,7 +1,7 @@
 ﻿using HnefataflAI.Commons.Positions;
 using HnefataflAI.Pieces.Impl;
 
-namespace HnefataflAI.Games
+namespace HnefataflAI.Games.Boards
 {
     public static class BoardBuilder
     {

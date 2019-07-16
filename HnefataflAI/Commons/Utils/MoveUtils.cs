@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Positions;
-using HnefataflAI.Games;
-using HnefataflAI.Games.Engine.Impl;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Games.Rules;
 
 namespace HnefataflAI.Commons.Utils

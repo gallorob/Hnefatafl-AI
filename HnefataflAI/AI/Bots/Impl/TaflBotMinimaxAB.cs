@@ -2,7 +2,7 @@
 using HnefataflAI.Commons.Logs;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Defaults;
-using HnefataflAI.Games;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.GameState;
@@ -122,10 +122,10 @@ namespace HnefataflAI.AI.Bots.Impl
                         switch (gameStatus.Status)
                         {
                             case Status.LOSS:
-                                moveValue = PieceValues.LossValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                moveValue += PieceValues.LossValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
                                 break;
                             case Status.WIN:
-                                moveValue = PieceValues.WinValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                moveValue += PieceValues.WinValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
                                 break;
                         }
                         MovesLogger.LogEvent(pieceColors, gameStatus.Status, isMaximizing);
@@ -147,10 +147,10 @@ namespace HnefataflAI.AI.Bots.Impl
                         switch (gameStatus.Status)
                         {
                             case Status.LOSS:
-                                moveValue = PieceValues.WinValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                moveValue += PieceValues.WinValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
                                 break;
                             case Status.WIN:
-                                moveValue = PieceValues.LossValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
+                                moveValue += PieceValues.LossValue / (DefaultValues.MINIMAX_DEPTH - depth + 1);
                                 break;
                         }
                         MovesLogger.LogEvent(pieceColors, gameStatus.Status, isMaximizing);

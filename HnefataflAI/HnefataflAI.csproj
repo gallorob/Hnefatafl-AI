@@ -81,13 +81,13 @@
     <Compile Include="Commons\Utils\PieceColorsUtils.cs" />
     <Compile Include="Commons\Utils\PositionUtils.cs" />
     <Compile Include="Commons\Utils\RuleUtils.cs" />
-    <Compile Include="Games\Board.cs" />
+    <Compile Include="Games\Boards\Board.cs" />
     <Compile Include="Commons\Move.cs" />
     <Compile Include="Commons\PieceColors.cs" />
     <Compile Include="Commons\Positions\Position.cs" />
     <Compile Include="Defaults\DefaultValues.cs" />
-    <Compile Include="Games\BoardBuilder.cs" />
-    <Compile Include="Games\BoardTypes.cs" />
+    <Compile Include="Games\Boards\BoardBuilder.cs" />
+    <Compile Include="Games\Boards\BoardTypes.cs" />
     <Compile Include="Games\Engine\IGameEngine.cs" />
     <Compile Include="Games\Engine\Impl\GameEngineImpl.cs" />
     <Compile Include="Games\Engine\Impl\RuleEngineImpl.cs" />

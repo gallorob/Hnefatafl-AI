@@ -1,4 +1,4 @@
-﻿namespace HnefataflAI.Games
+﻿namespace HnefataflAI.Games.Boards
 {
     public enum BoardTypes
     {

@@ -2,7 +2,7 @@
 using HnefataflAI.Commons.Logs;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Defaults;
-using HnefataflAI.Games;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.GameState;

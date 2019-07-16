@@ -11,6 +11,7 @@ using HnefataflAI.AI.Bots.Impl;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.AI;
+using HnefataflAI.Games.Boards;
 
 namespace HnefataflAI
 {

@@ -12,11 +12,11 @@ namespace HnefataflAI.Defaults
         /// <summary>
         /// Maximum number or rows allowed for a board
         /// </summary>
-        public static readonly int MAX_ROWS = 13;
+        public static readonly int MAX_ROWS = 15;
         /// <summary>
         /// Maximum number or columns allowed for a board
         /// </summary>
-        public static readonly int MAX_COLS = 13;
+        public static readonly int MAX_COLS = 15;
         /// <summary>
         /// First column as char
         /// </summary>
@@ -36,7 +36,7 @@ namespace HnefataflAI.Defaults
         /// <summary>
         /// Boolean value to log the board or not
         /// </summary>
-        public static readonly bool LOG_BOARD = false;
+        public static readonly bool LOG_BOARD = true;
         /// <summary>
         /// Boolean value to log the moves or not
         /// </summary>

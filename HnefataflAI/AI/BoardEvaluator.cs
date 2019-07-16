@@ -2,7 +2,7 @@
 using HnefataflAI.Commons.DataTypes;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Commons.Utils;
-using HnefataflAI.Games;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
 using HnefataflAI.Pieces.Impl;
 using System;

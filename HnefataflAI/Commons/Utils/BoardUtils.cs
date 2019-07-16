@@ -1,7 +1,7 @@
 ﻿using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Defaults;
-using HnefataflAI.Games;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
 using HnefataflAI.Pieces.Impl;
 

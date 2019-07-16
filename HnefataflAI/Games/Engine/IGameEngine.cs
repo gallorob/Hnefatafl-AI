@@ -1,4 +1,5 @@
 ﻿using HnefataflAI.Commons;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Games.GameState;
 using HnefataflAI.Pieces;
 using System.Collections.Generic;
