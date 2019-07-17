@@ -25,10 +25,11 @@ namespace HnefataflAI
             //RunMovesTest();
             //TestBoardEvaluator();
         }
+
         private static void RunPCvPCGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            BoardTypes boardType = BoardTypes.HNEFATAFL_11X11;
+            BoardTypes boardType = BoardTypes.COPENHAGEN_HNEFATAFL_11X11;
             IPlayer player1 = new TaflBotMinimaxAB(PieceColors.BLACK, ruleType);
             ITaflBot player2 = new TaflBotMinimaxAB(PieceColors.WHITE, ruleType);
 
@@ -38,7 +39,7 @@ namespace HnefataflAI
         static void RunPvPGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            BoardTypes boardType = BoardTypes.HNEFATAFL_11X11;
+            BoardTypes boardType = BoardTypes.COPENHAGEN_HNEFATAFL_11X11;
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             IPlayer player2 = new HumanPlayer(PieceColors.WHITE);
 
@@ -48,7 +49,7 @@ namespace HnefataflAI
         static void RunPvPCGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            BoardTypes boardType = BoardTypes.HNEFATAFL_11X11;
+            BoardTypes boardType = BoardTypes.COPENHAGEN_HNEFATAFL_11X11;
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             ITaflBot player2 = new TaflBotMinimaxAB(PieceColors.WHITE, ruleType);
 
@@ -58,7 +59,7 @@ namespace HnefataflAI
         private static void TestBoardEvaluator()
         {
             BoardEvaluator movesEvaluator = new BoardEvaluator();
-            BoardTypes boardType = BoardTypes.BRANDUBH_7X7;
+            BoardTypes boardType = BoardTypes.HISTORICAL_HNEFATAFL_7X7;
             Board board = BoardBuilder.GetBoard(boardType);
             int bv = movesEvaluator.EvaluateBoard(board, PieceColors.BLACK);
             int wv = movesEvaluator.EvaluateBoard(board, PieceColors.WHITE);
