@@ -11,6 +11,7 @@ namespace HnefataflAI.Games.Rules
     /// </summary>
     public interface IRule
     {
+        #region Properties
         /// <summary>
         /// The Rule type
         /// </summary>
@@ -39,6 +40,8 @@ namespace HnefataflAI.Games.Rules
         /// How many moves it takes to repeat before losing the game
         /// </summary>
         int MovesRepetition { get; }
+        #endregion
+        #region Methods
         /// <summary>
         /// Check if the king is captured
         /// </summary>
@@ -66,5 +69,7 @@ namespace HnefataflAI.Games.Rules
         /// <param name="moves">The list of moves</param>
         /// <returns>Whether or not the moves are repeated</returns>
         bool CheckIfHasRepeatedMoves(List<Move> moves);
+        bool CheckIfUnderCapture(IPiece piece, Board board);
+        #endregion
     }
 }

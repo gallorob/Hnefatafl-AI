@@ -59,6 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AI\BoardEvaluator.cs" />
+    <Compile Include="AI\Bots\BotTypes.cs" />
+    <Compile Include="AI\Bots\Impl\TaflBotMagic.cs" />
     <Compile Include="AI\Bots\ITaflBot.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotBasic.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotMinimax.cs" />
@@ -76,6 +78,8 @@
     <Compile Include="Commons\Positions\Directions.cs" />
     <Compile Include="Commons\Serializer\ObjectSerializer.cs" />
     <Compile Include="Commons\Utils\BoardUtils.cs" />
+    <Compile Include="Commons\Utils\BotUtils.cs" />
+    <Compile Include="Commons\Utils\CaptureUtils.cs" />
     <Compile Include="Commons\Utils\ListUtils.cs" />
     <Compile Include="Commons\Utils\MoveUtils.cs" />
     <Compile Include="Commons\Utils\PieceColorsUtils.cs" />
@@ -88,6 +92,7 @@
     <Compile Include="Defaults\DefaultValues.cs" />
     <Compile Include="Games\Boards\BoardBuilder.cs" />
     <Compile Include="Games\Boards\BoardTypes.cs" />
+    <Compile Include="Games\ConsoleGameRunner.cs" />
     <Compile Include="Games\Engine\IGameEngine.cs" />
     <Compile Include="Games\Engine\Impl\GameEngineImpl.cs" />
     <Compile Include="Games\Engine\Impl\RuleEngineImpl.cs" />

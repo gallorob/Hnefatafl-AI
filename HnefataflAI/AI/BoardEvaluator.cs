@@ -57,7 +57,7 @@ namespace HnefataflAI.AI
         }
         private bool IsPieceUnderAttakByDirection(IPiece piece, Board board, Directions direction, bool isKing)
         {
-            if (BoardUtils.IsPositionUpdateValid(piece.Position, direction, board.TotalRows, board.TotalCols))
+            if (BoardUtils.IsPositionUpdateValid(piece.Position, direction, board))
             {
                 Position otherPosition = piece.Position.MoveTo(direction);
                 IPiece otherPiece = board.At(otherPosition);
@@ -68,16 +68,16 @@ namespace HnefataflAI.AI
                 else
                 {
                     return !isKing &&
-                        (BoardUtils.IsOnBoardCorner(otherPosition, board.TotalRows, board.TotalCols)
+                        (BoardUtils.IsOnBoardCorner(otherPosition, board)
                         ||
-                        BoardUtils.IsOnThrone(otherPosition, board.TotalRows, board.TotalCols));
+                        BoardUtils.IsOnThrone(otherPosition, board));
                 }
             }
             return false;
         }
         private bool IsKingOnCorner(IPiece king, Board board)
         {
-            return BoardUtils.IsOnBoardCorner(king.Position, board.TotalRows, board.TotalCols);
+            return BoardUtils.IsOnBoardCorner(king.Position, board);
         }
         private int CheckLines(Matrix<IPiece> matrix, int rows, int cols, PieceColors pieceColor)
         {

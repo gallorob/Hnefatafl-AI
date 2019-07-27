@@ -9,7 +9,6 @@ namespace HnefataflAI.Commons
         public IPiece Piece { get; private set; }
         public Position From { get; private set; }
         public Position To { get; private set; }
-        public bool DoesNotCapture { get; set; }
         public Move(IPiece piece, Position from, Position to)
         {
             this.Piece = piece;

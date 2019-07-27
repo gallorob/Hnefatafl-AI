@@ -14,5 +14,6 @@ namespace HnefataflAI.Games.Engine
         List<Move> GetAvailableMoves(PieceColors playerColor, Board board);
         List<Move> GetAvailableMoves(IPiece piece, Board board);
         GameStatus GetGameStatus(IPiece movedPiece, Board board, List<Move> whiteMoves, List<Move> blackMoves);
+        bool CanMove(PieceColors playerColor, Board board);
     }
 }

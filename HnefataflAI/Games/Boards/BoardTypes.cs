@@ -9,6 +9,6 @@
         HISTORICAL_HNEFATAFL_13X13,
         SEABATTLE_9X9,
         SEABATTLE_11X11,
-        SEABATTLE_13X13
+        SEABATTLE_13X13,
     }
 }

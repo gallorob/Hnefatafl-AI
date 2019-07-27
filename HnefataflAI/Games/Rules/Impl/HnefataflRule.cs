@@ -56,18 +56,18 @@ namespace HnefataflAI.Games.Rules.Impl
             List<IPiece> capturedPieces = new List<IPiece>();
             foreach (Directions direction in Enum.GetValues(typeof(Directions)))
             {
-                AddPieceIfNotNull(HasCapturedPiece(piece, board, direction), capturedPieces);
+                ListUtils.AddIfNotNull(HasCapturedPiece(piece, board, direction), capturedPieces);
             }
             return capturedPieces;
         }
         private IPiece HasCapturedPiece(IPiece piece, Board board, Directions direction)
         {
-            if (BoardUtils.IsPositionUpdateValid(piece.Position, direction, board.TotalRows, board.TotalCols))
+            if (BoardUtils.IsPositionUpdateValid(piece.Position, direction, board))
             {
                 IPiece middlePiece = board.At(piece.Position.MoveTo(direction));
                 if (middlePiece != null && middlePiece.PieceColors != piece.PieceColors)
                 {
-                    if (BoardUtils.IsPositionUpdateValid(middlePiece.Position, direction, board.TotalRows, board.TotalCols))
+                    if (BoardUtils.IsPositionUpdateValid(middlePiece.Position, direction, board))
                     {
                         IPiece otherPiece = board.At(middlePiece.Position.MoveTo(direction));
                         if (otherPiece != null)
@@ -78,9 +78,9 @@ namespace HnefataflAI.Games.Rules.Impl
                             }
                         }
                         else if (
-                            BoardUtils.IsOnThrone(middlePiece.Position.MoveTo(direction), board.TotalRows, board.TotalCols)
+                            BoardUtils.IsOnThrone(middlePiece.Position.MoveTo(direction), board)
                             ||
-                            BoardUtils.IsOnBoardCorner(middlePiece.Position.MoveTo(direction), board.TotalRows, board.TotalCols)
+                            BoardUtils.IsOnBoardCorner(middlePiece.Position.MoveTo(direction), board)
                             )
                         {
                             return middlePiece;
@@ -94,13 +94,6 @@ namespace HnefataflAI.Games.Rules.Impl
             }
             return null;
         }
-        private void AddPieceIfNotNull(IPiece piece, List<IPiece> pieces)
-        {
-            if (piece != null)
-            {
-                pieces.Add(piece);
-            }
-        }
         public bool CheckIfKingIsCaptured(IPiece king, Board board)
         {
             bool captured = true;
@@ -112,17 +105,31 @@ namespace HnefataflAI.Games.Rules.Impl
         }
         private bool CheckKingSurroundings(Position kingPosition, Directions direction, Board board)
         {
-            if (BoardUtils.IsPositionUpdateValid(kingPosition, direction, board.TotalRows, board.TotalCols))
+            if (BoardUtils.IsPositionUpdateValid(kingPosition, direction, board))
             {
                 IPiece piece = board.At(kingPosition.MoveTo(direction));
                 return piece != null
                     && piece.PieceColors.Equals(PieceColors.BLACK)
                     ||
-                    (BoardUtils.IsOnThrone(kingPosition.MoveTo(direction), board.TotalRows, board.TotalCols)
+                    (BoardUtils.IsOnThrone(kingPosition.MoveTo(direction), board)
                     ||
-                    BoardUtils.IsOnBoardCorner(kingPosition.MoveTo(direction), board.TotalRows, board.TotalCols));
+                    BoardUtils.IsOnBoardCorner(kingPosition.MoveTo(direction), board));
             }
             return true;
+        }
+        private bool CheckPieceSurroundings(IPiece piece, Directions direction, Board board)
+        {
+            if (BoardUtils.IsPositionUpdateValid(piece.Position, direction, board))
+            {
+                IPiece otherPiece = board.At(piece.Position.MoveTo(direction));
+                return otherPiece != null
+                    && piece.PieceColors != otherPiece.PieceColors
+                    ||
+                    (BoardUtils.IsOnThrone(piece.Position.MoveTo(direction), board)
+                    ||
+                    BoardUtils.IsOnBoardCorner(piece.Position.MoveTo(direction), board));
+            }
+            return false;
         }
         public bool CheckIfMoveIsValid(IPiece piece, Position to)
         {
@@ -139,6 +146,30 @@ namespace HnefataflAI.Games.Rules.Impl
         public bool CheckIfHasRepeatedMoves(List<Move> moves)
         {
             return RuleUtils.CheckIfHasRepeatedMoves(moves, this.MovesRepetition);
+        }
+
+        public bool CheckIfUnderCapture(IPiece piece, Board board)
+        {
+            if (piece is King)
+            {
+                return CheckIfKingUnderCapture(piece, board);
+            }
+            bool captured = false;
+            foreach (Directions direction in Enum.GetValues(typeof(Directions)))
+            {
+                captured |= CheckPieceSurroundings(piece, direction, board);
+            }
+            return captured;
+        }
+
+        public bool CheckIfKingUnderCapture(IPiece king, Board board)
+        {
+            bool captured = false;
+            foreach (Directions direction in Enum.GetValues(typeof(Directions)))
+            {
+                captured |= CheckKingSurroundings(king.Position, direction, board);
+            }
+            return captured;
         }
     }
 }

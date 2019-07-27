@@ -4,6 +4,7 @@ using HnefataflAI.Defaults;
 using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
 using HnefataflAI.Pieces.Impl;
+using System.Collections.Generic;
 
 namespace HnefataflAI.Commons.Utils
 {
@@ -39,53 +40,62 @@ namespace HnefataflAI.Commons.Utils
             }
             return ret;
         }
-        public static bool IsPositionUpdateValid(Position position, Directions direction, int totalRows, int totalCols)
+        public static bool IsPositionUpdateValid(Position position, Directions direction, Board board)
         {
             switch (direction)
             {
                 case Directions.UP:
-                    return position.Row < totalRows;
+                    return position.Row < board.TotalRows;
                 case Directions.DOWN:
                     return position.Row > 1;
                 case Directions.LEFT:
                     return position.Col > DefaultValues.FIRST_COLUMN;
                 case Directions.RIGHT:
-                    return position.Col < DefaultValues.FIRST_COLUMN + totalCols - 1;
+                    return position.Col < DefaultValues.FIRST_COLUMN + board.TotalCols - 1;
                 default:
                     return false;
             }
         }
-        public static bool IsPositionValid(Position position, int totalRows, int totalCols)
+        public static bool IsPositionValid(Position position, Board board)
         {
-            return (position.Row <= totalRows
+            return (position.Row <= board.TotalRows
                 &&
                 position.Row > 0
                 &&
                 position.Col >= DefaultValues.FIRST_COLUMN
                 &&
-                position.Col < DefaultValues.FIRST_COLUMN + totalCols);
+                position.Col < DefaultValues.FIRST_COLUMN + board.TotalCols);
         }
-        public static bool IsOnBoardCorner(Position position, int totalRows, int totalCols)
+        public static bool IsOnBoardCorner(Position position, Board board)
         {
-            return (
-                (position.Col == DefaultValues.FIRST_COLUMN && position.Row == 1)
-                ||
-                (position.Col == DefaultValues.FIRST_COLUMN && position.Row == totalRows)
-                ||
-                (position.Col == DefaultValues.FIRST_COLUMN + totalCols - 1 && position.Row == 1)
-                ||
-                (position.Col == DefaultValues.FIRST_COLUMN + totalCols - 1 && position.Row == totalRows)
-                );
+            bool isOnBoardCorner = false;
+            foreach (Position corner in GetCornersPositions(board))
+            {
+                isOnBoardCorner |= position.Equals(corner);
+            }
+            return isOnBoardCorner;
         }
-        public static bool IsOnThrone(Position position, int totalRows, int totalCols)
+        public static List<Position> GetCornersPositions(Board board)
         {
-            return (position.Col - DefaultValues.FIRST_COLUMN == totalCols / 2
-                &&
-                position.Row == totalRows / 2 + 1);
+            return new List<Position>
+            {
+                new Position(1, DefaultValues.FIRST_COLUMN),
+                new Position(board.TotalRows, DefaultValues.FIRST_COLUMN),
+                new Position(1, (char)(DefaultValues.FIRST_COLUMN + board.TotalCols - 1)),
+                new Position(board.TotalRows, (char)(DefaultValues.FIRST_COLUMN + board.TotalCols - 1))
+            };
         }
-        public static bool CanMoveToPosition(IPiece piece, Position position, int totalRows, int totalCols)
+        public static bool IsOnThrone(Position position, Board board)
         {
-            return (piece is King) || !(IsOnBoardCorner(position, totalRows, totalCols) || IsOnThrone(position, totalRows, totalCols));
+            return position.Equals(GetThronePosition(board));
+        }
+        public static Position GetThronePosition(Board board)
+        {
+            return new Position(board.TotalRows / 2 + 1, (char)(DefaultValues.FIRST_COLUMN + (board.TotalCols / 2)));
+        }
+        public static bool CanMoveToPosition(IPiece piece, Position position, Board board)
+        {
+            return (piece is King) || !(IsOnBoardCorner(position, board) || IsOnThrone(position, board));
         }
     }
 }

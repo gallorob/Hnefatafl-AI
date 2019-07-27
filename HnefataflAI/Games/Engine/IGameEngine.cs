@@ -8,6 +8,7 @@ namespace HnefataflAI.Games.Engine
 {
     public interface IGameEngine
     {
+        IRuleEngine RuleEngine { get; }
         Move ProcessPlayerMove(string[] playerMove, Board board);
         GameStatus GetGameStatus(IPiece movedPiece, Board board);
         List<Move> GetMovesByColor(PieceColors pieceColor, Board board);

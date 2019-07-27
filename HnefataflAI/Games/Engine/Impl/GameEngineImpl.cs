@@ -13,16 +13,16 @@ namespace HnefataflAI.Games.Engine.Impl
 {
     public class GameEngineImpl : IGameEngine
     {
+        public IRuleEngine RuleEngine { get; private set; }
         internal List<Move> WhiteMoves;
         internal List<Move> BlackMoves;
-        internal IRuleEngine RuleEngine;
         internal List<IPiece> CapturedPieces;
         public GameEngineImpl(RuleTypes ruleType)
         {
+            this.RuleEngine = new RuleEngineImpl(RuleUtils.GetRule(ruleType));
             this.WhiteMoves = new List<Move>();
             this.BlackMoves = new List<Move>();
             this.CapturedPieces = new List<IPiece>();
-            this.RuleEngine = new RuleEngineImpl(RuleUtils.GetRule(ruleType));
         }
         public Move ProcessPlayerMove(string[] playerMove, Board board)
         {
@@ -70,7 +70,7 @@ namespace HnefataflAI.Games.Engine.Impl
         private void ValidateMove(Move move, Board board, PieceColors playerColor)
         {
 
-            if (!BoardUtils.IsPositionValid(move.From, board.TotalRows, board.TotalCols))
+            if (!BoardUtils.IsPositionValid(move.From, board))
             {
                 throw new InvalidMoveException(move.From, ErrorMessages.POSITION_OUT_OF_BOARD);
             }
@@ -82,14 +82,14 @@ namespace HnefataflAI.Games.Engine.Impl
             {
                 throw new InvalidMoveException(move, ErrorMessages.INVALID_DESTINATION_PIECE);
             }
-            if (!BoardUtils.CanMoveToPosition(move.Piece, move.To, board.TotalRows, board.TotalCols))
+            if (!BoardUtils.CanMoveToPosition(move.Piece, move.To, board))
             {
                 throw new InvalidMoveException(move, ErrorMessages.INVALID_DESTINATION_POSITION);
             }
         }
         private void ValidatePosition(Position position, Board board)
         {
-            if (!BoardUtils.IsPositionValid(position, board.TotalRows, board.TotalCols))
+            if (!BoardUtils.IsPositionValid(position, board))
             {
                 throw new InvalidMoveException(position, ErrorMessages.POSITION_OUT_OF_BOARD);
             }
@@ -116,6 +116,14 @@ namespace HnefataflAI.Games.Engine.Impl
                 if (!(capturedPiece is King) || (capturedPiece is King && gameStatus.IsGameOver))
                 {
                     ApplyCapture(capturedPiece, board);
+                }
+            }
+            if (!gameStatus.IsGameOver)
+            {
+                if (!this.RuleEngine.CanMove(gameStatus.NextPlayer, board))
+                {
+                    gameStatus.Status = Status.WIN;
+                    gameStatus.IsGameOver = true;
                 }
             }
             return gameStatus;

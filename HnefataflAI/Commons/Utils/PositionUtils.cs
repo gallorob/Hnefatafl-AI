@@ -34,5 +34,21 @@ namespace HnefataflAI.Commons.Utils
             }
             return new Position(row, col);
         }
+        public static Directions GetOppositeDirection(Directions direction)
+        {
+            switch (direction)
+            {
+                case Directions.UP:
+                    return Directions.DOWN;
+                case Directions.DOWN:
+                    return Directions.UP;
+                case Directions.LEFT:
+                    return Directions.RIGHT;
+                case Directions.RIGHT:
+                    return Directions.LEFT;
+                default:
+                    throw new System.Exception();
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ using HnefataflAI.Games.GameState;
 using HnefataflAI.Games.Rules;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HnefataflAI.AI.Bots.Impl
 {
@@ -86,8 +87,8 @@ namespace HnefataflAI.AI.Bots.Impl
             Move bestMove = null;
             int bestValue = isMaximizing ? int.MinValue : int.MaxValue;
             MoveValue bestMoveValue = new MoveValue(bestMove, bestValue);
-            // randomize list so it's not always the same if no best move is found
-            ListUtils.ShuffleList(moves);
+            // order moves in order to reduce number of nodes visited
+            OrderMoves(moves, board);
             foreach (Move move in moves)
             {
                 IGameEngine gameEngine = new GameEngineImpl(this.RuleType);
@@ -103,7 +104,7 @@ namespace HnefataflAI.AI.Bots.Impl
                 // recursive call for the move's sub-tree
                 int moveValue = ComputeBestMoveMinimaxAB(depth - 1,
                     board,
-                    new GameEngineImpl(this.RuleType).RuleEngine.GetAvailableMoves(PieceColorsUtils.GetOppositePieceColor(pieceColors), board),
+                    new GameEngineImpl(this.RuleType).GetMovesByColor(PieceColorsUtils.GetOppositePieceColor(pieceColors), board),
                     alpha,
                     beta,
                     !isMaximizing,
@@ -176,6 +177,15 @@ namespace HnefataflAI.AI.Bots.Impl
                 }
             }
             return bestMoveValue;
+        }
+        private void OrderMoves(List<Move> moves, Board board)
+        {
+            HashSet<Move> orderedMoves = new HashSet<Move>();
+            orderedMoves.UnionWith(MoveUtils.GetCapturingMoves(moves, board, this.RuleType));
+            orderedMoves.UnionWith(MoveUtils.GetEscapingMoves(moves, board, this.RuleType));
+            orderedMoves.UnionWith(moves);
+            moves.Clear();
+            moves.AddRange(orderedMoves.ToList());
         }
     }
 }

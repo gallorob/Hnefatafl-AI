@@ -40,13 +40,29 @@ namespace HnefataflAI.Commons.Utils
             };
             return rule.CheckIfHasRepeatedMoves(tempMoves);
         }
-        public static void OrderMovesByCapture(List<Move> moves, Board board, RuleTypes ruleType)
+        public static List<Move> GetCapturingMoves(List<Move> moves, Board board, RuleTypes ruleType)
         {
+            List<Move> capturingMoves = new List<Move>();
             foreach (Move move in moves)
             {
-                move.DoesNotCapture = RuleUtils.GetRule(ruleType).CheckIfCaptures(move.Piece, board).Count == 0;
+                if (RuleUtils.GetRule(ruleType).CheckIfCaptures(move.Piece, board).Count != 0)
+                {
+                    capturingMoves.Add(move);
+                }
             }
-            moves.Sort((x, y) => x.DoesNotCapture.CompareTo(y.DoesNotCapture));
+            return capturingMoves;
+        }
+        public static List<Move> GetEscapingMoves(List<Move> moves, Board board, RuleTypes ruleType)
+        {
+            List<Move> escapingMoves = new List<Move>();
+            foreach (Move move in moves)
+            {
+                if (RuleUtils.GetRule(ruleType).CheckIfUnderCapture(move.Piece, board))
+                {
+                    escapingMoves.Add(move);
+                }
+            }
+            return escapingMoves;
         }
     }
 }

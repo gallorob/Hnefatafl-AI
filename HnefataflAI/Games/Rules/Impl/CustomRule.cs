@@ -73,5 +73,10 @@ namespace HnefataflAI.Games.Rules.Impl
         {
             throw new NotImplementedException();
         }
+
+        public bool CheckIfUnderCapture(IPiece piece, Board board)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

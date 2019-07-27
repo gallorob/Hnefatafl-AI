@@ -1,5 +1,6 @@
 ﻿using HnefataflAI.Commons.Positions;
 using HnefataflAI.Pieces.Impl;
+using System.Collections.Generic;
 
 namespace HnefataflAI.Games.Boards
 {
@@ -26,9 +27,10 @@ namespace HnefataflAI.Games.Boards
                 case BoardTypes.SEABATTLE_13X13:
                     return GetHistoricalHnefatafl13Table();
                 default:
-                    return null;
+                    return GetTestingTable();
             }
         }
+        #region All possible boards
         /// <summary>
         /// Get the Copenhagen Hnefatafl table
         /// </summary>
@@ -60,7 +62,7 @@ namespace HnefataflAI.Games.Boards
             int[] blackRows = { 11, 11, 11, 11, 11, 10, 8, 8, 7, 7, 6, 6, 6, 6, 5, 5, 4, 4, 2, 1, 1, 1, 1, 1 };
             char[] blackCols = { 'd', 'e', 'f', 'g', 'h', 'f', 'a', 'k', 'a', 'k', 'a', 'b', 'j', 'k', 'a', 'k', 'a', 'k', 'f', 'd', 'e', 'f', 'g', 'h' };
 
-            return BuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
+            return TempBuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
         }
         /// <summary>
         /// Get the Historical Hnefatafl 7x7 table
@@ -89,7 +91,7 @@ namespace HnefataflAI.Games.Boards
             int[] blackRows = { 7, 6, 4, 4, 4, 4, 2, 1 };
             char[] blackCols = { 'd', 'd', 'a', 'b', 'f', 'g', 'd', 'd' };
 
-            return BuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
+            return TempBuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
         }
         /// <summary>
         /// Get the Historical Hnefatafl 9x9 table
@@ -120,7 +122,7 @@ namespace HnefataflAI.Games.Boards
             int[] blackRows = { 9, 9, 9, 8, 6, 6, 5, 5, 5, 5, 4, 4, 2, 1, 1, 1 };
             char[] blackCols = { 'd', 'e', 'f', 'e', 'a', 'i', 'a', 'b', 'h', 'i', 'a', 'i', 'e', 'd', 'e', 'f' };
 
-            return BuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
+            return TempBuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
         }
         /// <summary>
         /// Get the Historical Hnefatafl 11x11 table
@@ -153,7 +155,7 @@ namespace HnefataflAI.Games.Boards
             int[] blackRows = { 11, 11, 11, 10, 10, 9, 7, 7, 7, 7, 6, 6, 6, 6, 5, 5, 5, 5, 3, 2, 2, 1, 1, 1 };
             char[] blackCols = { 'e', 'f', 'g', 'e', 'g', 'f', 'a', 'b', 'j', 'k', 'a', 'c', 'i', 'k', 'a', 'b', 'j', 'k', 'f', 'e', 'g', 'e', 'f', 'g' };
 
-            return BuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
+            return TempBuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
         }
         /// <summary>
         /// Get the Sea Battle 9x9 table
@@ -186,7 +188,7 @@ namespace HnefataflAI.Games.Boards
             int[] blackRows = { 11, 11, 11, 11, 11, 10, 8, 8, 7, 7, 6, 6, 6, 6, 5, 5, 4, 4, 2, 1, 1, 1, 1, 1 };
             char[] blackCols = { 'd', 'e', 'f', 'g', 'h', 'f', 'a', 'k', 'a', 'k', 'a', 'b', 'j', 'k', 'a', 'k', 'a', 'k', 'f', 'd', 'e', 'f', 'g', 'h' };
 
-            return BuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
+            return TempBuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
         }
         /// <summary>
         /// Get the Historical Hnefatafl 13x13 table
@@ -221,8 +223,10 @@ namespace HnefataflAI.Games.Boards
             int[] blackRows = { 13, 13, 13, 13, 13, 12, 12, 11, 9, 9, 8, 8, 8, 8, 7, 7, 7, 7, 6, 6, 6, 6, 5, 5, 3, 2, 2, 1, 1, 1, 1, 1 };
             char[] blackCols = { 'e', 'f', 'g', 'h', 'i', 'f', 'h', 'g', 'a', 'm', 'a', 'b', 'l', 'm', 'a', 'c', 'k', 'm', 'a', 'b', 'l', 'm', 'a', 'm', 'g', 'f', 'h', 'e', 'f', 'g', 'h', 'i' };
 
-            return BuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
+            return TempBuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
         }
+        #endregion
+        #region Builder
         /// <summary>
         /// Build the board with specified parameters
         /// </summary>
@@ -234,25 +238,49 @@ namespace HnefataflAI.Games.Boards
         /// <param name="blackCols">Black's pieces columns</param>
         /// <param name="kingPosition">King's position</param>
         /// <returns>The populated board</returns>
-        private static Board BuildBoard(int boardRows, int boardCols, int[] whiteRows, char[] whiteCols, int[] blackRows, char[] blackCols, Position kingPosition)
+        private static Board TempBuildBoard(int boardRows, int boardCols, int[] whiteRows, char[] whiteCols, int[] blackRows, char[] blackCols, Position kingPosition)
         {
-            Board board = new Board(boardRows, boardCols);
-            // add white pieces
-            King king = new King(kingPosition);
-            board.AddPiece(king, king.Position);
+            List<Position> defenders = new List<Position>();
+            List<Position> attackers = new List<Position>();
             for (int i = 0; i < whiteRows.Length; i++)
             {
-                Defender defender = new Defender(new Position(whiteRows[i], whiteCols[i]));
-                board.AddPiece(defender, defender.Position);
+                defenders.Add(new Position(whiteRows[i], whiteCols[i]));
             }
             // add black pieces
             for (int i = 0; i < blackRows.Length; i++)
             {
-                Attacker attacker = new Attacker(new Position(blackRows[i], blackCols[i]));
-                board.AddPiece(attacker, attacker.Position);
+                attackers.Add(new Position(blackRows[i], blackCols[i]));
+            }
+            return BuildBoard(boardRows, boardCols, kingPosition, defenders, attackers);
+        }
+        /// <summary>
+        /// Build the board with specified parameters
+        /// </summary>
+        /// <param name="boardRows">Number of board's rows</param>
+        /// <param name="boardCols">Number of board's columns</param>
+        /// <param name="kingPosition">King's position</param>
+        /// <param name="defenders">Positions for the defenders</param>
+        /// <param name="attackers">Positions for the attackers</param>
+        /// <returns>The populated board</returns>
+        public static Board BuildBoard(int boardRows, int boardCols, Position kingPosition, List<Position> defenders, List<Position> attackers)
+        {
+            Board board = new Board(boardRows, boardCols);
+            // add defenders pieces
+            King king = new King(kingPosition);
+            board.AddPiece(king);
+            foreach (Position defender in defenders)
+            {
+                board.AddPiece(new Defender(defender));
+            }
+            // add attackers pieces
+            foreach (Position attacker in attackers)
+            {
+                board.AddPiece(new Attacker(attacker));
             }
             return board;
         }
+        #endregion
+        #region Other
         /// <summary>
         /// Prepares a testing board for testing purposes
         /// </summary>
@@ -270,7 +298,8 @@ namespace HnefataflAI.Games.Boards
             int[] blackRows = { 1, 1 };
             char[] blackCols = { 'b', 'c' };
 
-            return BuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
+            return TempBuildBoard(boardRows, boardCols, whiteRows, whiteCols, blackRows, blackCols, kingPosition);
         }
+        #endregion
     }
 }

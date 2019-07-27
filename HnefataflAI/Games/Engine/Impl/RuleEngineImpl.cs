@@ -42,14 +42,14 @@ namespace HnefataflAI.Games.Engine.Impl
         private void MovesByDirection(Directions direction, IPiece piece, List<Move> availableMoves, Board board)
         {
             Position moved = piece.Position;
-            while (BoardUtils.IsPositionUpdateValid(moved, direction, board.TotalRows, board.TotalCols))
+            while (BoardUtils.IsPositionUpdateValid(moved, direction, board))
             {
                 moved = moved.MoveTo(direction);
                 if (board.At(moved) != null)
                 {
                     break;
                 }
-                if (BoardUtils.CanMoveToPosition(piece, moved, board.TotalRows, board.TotalCols))
+                if (BoardUtils.CanMoveToPosition(piece, moved, board))
                 {
                     Move move = new Move(piece, moved);
                     availableMoves.Add(move);
@@ -90,7 +90,7 @@ namespace HnefataflAI.Games.Engine.Impl
             if (!gameStatus.IsGameOver)
             {
                 // winning condition for Defender
-                gameStatus.IsGameOver = movedPiece is King && BoardUtils.IsOnBoardCorner(movedPiece.Position, board.TotalRows, board.TotalCols);
+                gameStatus.IsGameOver = movedPiece is King && BoardUtils.IsOnBoardCorner(movedPiece.Position, board);
                 gameStatus.Status = Status.WIN;
             }
             if (!gameStatus.IsGameOver)
@@ -112,6 +112,12 @@ namespace HnefataflAI.Games.Engine.Impl
                 gameStatus.Status = Status.LOSS;
             }
             return gameStatus;
+        }
+
+        public bool CanMove(PieceColors playerColor, Board board)
+        {
+            return GetAvailableMoves(playerColor, board).Count != 0;
+                //|| Rule.CheckIfHasAvailableMoves();
         }
     }
 }
