@@ -30,7 +30,20 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border x:Name="GridBorder" BorderThickness="1" BorderBrush="Black">
+                                <Border x:Name="GridBorder" BorderThickness="1" BorderBrush="Black" PreviewMouseDown="GridBorder_PreviewMouseDown">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Selected, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                                    <Setter Property="Background" Value="HotPink"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsPossibleMove, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                                    <Setter Property="Background" Value="Lime"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
                                     <Grid>
                                         <Image RenderOptions.BitmapScalingMode="HighQuality"
                                             MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32">
@@ -40,7 +53,7 @@
                                                 </MultiBinding>
                                             </Image.Source>
                                         </Image>
-                                    <Image Source="{Binding Converter={StaticResource PieceConverter}}"
+                                        <Image Source="{Binding Converter={StaticResource PieceConverter}}"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32" />
                                     </Grid>

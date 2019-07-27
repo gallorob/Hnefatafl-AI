@@ -17,7 +17,22 @@ namespace TaflWPF.ViewModel
         {
             get { return m_Piece; }
             set { m_Piece = value; NotifyPropertyChanged(nameof(Piece)); }
-        }       
+        }
+
+		private bool m_Selected;
+		public bool Selected
+		{
+			get { return m_Selected; }
+			set { m_Selected = value; NotifyPropertyChanged(nameof(Selected)); }
+		}
+
+
+		private bool m_IsPossibleMove;
+		public bool IsPossibleMove
+		{
+			get { return m_IsPossibleMove; }
+			set { m_IsPossibleMove = value; NotifyPropertyChanged(nameof(IsPossibleMove)); }
+		}
         /// <summary>
         /// The piece type
         /// </summary>
