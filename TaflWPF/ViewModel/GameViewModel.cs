@@ -30,15 +30,16 @@ namespace TaflWPF.ViewModel
         public BoardViewModel BoardVM { get; private set; }
         internal IGameEngine GameEngine { get; private set; }
         internal Game Game { get; private set; }
-        public MoveCommand MoveCommand { get; private set; }
-        public ObservableCollection<String> GameMoves { get; set; }
+        public ICommand MoveCommand { get; private set; }
+        public ICommand PreviewMouseDownCommand { get; private set; }
+		public ObservableCollection<String> GameMoves { get; set; }
 
-        private readonly String[] _Move = new string[2] { "", "" };
+        private readonly string[] _Move = new string[2] { "", "" };
         private readonly DispatcherTimer DispatcherTimer = new DispatcherTimer();
         private readonly DateTime Started = DateTime.Now;
 
-        private String m_Move;
-        public String Move
+        private string m_Move;
+        public string Move
         {
             get { return m_Move; }
             set { m_Move = value; NotifyPropertyChanged(nameof(Move)); }
@@ -56,23 +57,23 @@ namespace TaflWPF.ViewModel
                 NotifyPropertyChanged(nameof(SelectedPiece));
             }
         }
-        private String m_CurrentPlayer;
-        public String CurrentPlayer
+        private string m_CurrentPlayer;
+        public string CurrentPlayer
         {
             get { return m_CurrentPlayer; }
             set { m_CurrentPlayer = value; NotifyPropertyChanged(nameof(CurrentPlayer)); }
         }
 
-        private String m_Timer;
-        public String Timer
+        private string m_Timer;
+        public string Timer
         {
             get { return m_Timer; }
             set { m_Timer = value; NotifyPropertyChanged(nameof(Timer)); }
         }
 
 
-        private String m_BoardValue;
-        public String BoardValue
+        private string m_BoardValue;
+        public string BoardValue
         {
             get { return m_BoardValue; }
             set { m_BoardValue = value; NotifyPropertyChanged(nameof(BoardValue)); }
@@ -82,8 +83,9 @@ namespace TaflWPF.ViewModel
         #region Constructor
         public GameViewModel(BoardTypes boardType, RuleTypes ruleType)
         {
-            MoveCommand = new MoveCommand(SendMoveToGame);
-            this.GameMoves = new ObservableCollection<String>();
+            MoveCommand = new RelayCommand<string>(SendMoveToGame);
+			PreviewMouseDownCommand = new RelayCommand<object>((sender) => OnPreviewMouseDown(sender));
+			this.GameMoves = new ObservableCollection<string>();
             this.BoardVM = new BoardViewModel(BoardBuilder.GetBoard(boardType));
             this.GameEngine = new GameEngineImpl(ruleType);
             
@@ -105,9 +107,9 @@ namespace TaflWPF.ViewModel
         #endregion
 
         #region Events
-        public void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void OnPreviewMouseDown(object sender)
         {
-            if (sender is Border border && border.DataContext is PieceItemViewModel item)
+			if(sender is MouseButtonEventArgs args && args.Source is Border border && border.DataContext is PieceItemViewModel item)
             {
                 if (item.IsPossibleMove)
                 {
@@ -122,12 +124,11 @@ namespace TaflWPF.ViewModel
                     CalculatePossibleMoves(item);
                 }
                 Move = GetMoveRepresentation();
-                e.Handled = true;
             }
         }
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
-            Timer = String.Format("{0:hh\\:mm\\:ss}", DateTime.Now.Subtract(Started));
+            Timer = string.Format("{0:hh\\:mm\\:ss}", DateTime.Now.Subtract(Started));
         }
         #endregion
 
@@ -154,12 +155,12 @@ namespace TaflWPF.ViewModel
                 }
                 else
                 {
-                    MessageBox.Show(String.Format(Messages.GAMEOVER_TEXT, Game.GameStatus.Reason, PieceColorsUtils.GetRoleFromPieceColor(Game.CurrentlyPlaying), Messages.GAMEOVER_TITLE, MessageBoxButton.OK, MessageBoxImage.Exclamation));
+                    MessageBox.Show(string.Format(Messages.GAMEOVER_TEXT, Game.GameStatus.Reason, PieceColorsUtils.GetRoleFromPieceColor(Game.CurrentlyPlaying), Messages.GAMEOVER_TITLE, MessageBoxButton.OK, MessageBoxImage.Exclamation));
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format(Messages.ERROR_TEXT, ex.Message), Messages.ERROR_TITLE, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(string.Format(Messages.ERROR_TEXT, ex.Message), Messages.ERROR_TITLE, MessageBoxButton.OK, MessageBoxImage.Warning);
                 GameLogger.Log(ex.Message + " " + ex.StackTrace);
             }
         }

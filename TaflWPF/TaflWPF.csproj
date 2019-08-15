@@ -55,11 +55,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Commands\MoveCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Common\Messages.cs" />
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\MethodToValueConverter.cs" />
     <Compile Include="Converter\PositionToImageConverter.cs" />
+    <Compile Include="Helper\CommandHelper.cs" />
     <Compile Include="Utils\GridUtils.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\BoardViewModel.cs" />
@@ -78,6 +79,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\BoardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SideMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Piece\PieceType.cs" />
@@ -139,5 +148,6 @@
     <Resource Include="Resources\commander.png" />
     <Resource Include="Resources\eliteguard.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

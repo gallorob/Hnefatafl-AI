@@ -8,12 +8,12 @@
         mc:Ignorable="d"
         Title="Tafl Dekstop" Icon="Resources\icon.ico" Background="Snow" MinWidth="320" MinHeight="200" Width="800" Height="600">
     <Window.Resources>
-        <!-- Convert an IPiece to BitmapImage -->
-        <converter:PieceToImageConverter x:Key="PieceConverter"/>
-        <!-- Convert a Position to BitmapImage -->
-        <converter:PositionToImageConverter x:Key="PositionConverter"/>
-        <!-- Convert a boolean value to Visibility -->
-        <converter:BooleanToVisibilityConverter x:Key="BooleanConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Views/BoardView.xaml"/>
+                <ResourceDictionary Source="/Views/SideMenuView.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <!-- Window content -->
     <DockPanel>
@@ -31,148 +31,9 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!-- MAIN CONTENT -->
-            <Viewbox StretchDirection="Both" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="800" MaxHeight="800" Grid.Column="0" Grid.Row="0">
-                <!-- BOARD -->
-                <Grid Margin="5,5,5,5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <!-- Display row numbers -->
-                    <ItemsControl ItemsSource="{Binding BoardVM.Rows}" Grid.Row="0" Grid.Column="0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="1"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="{Binding}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <!-- Display columns letters -->
-                    <ItemsControl ItemsSource="{Binding BoardVM.Columns}" Grid.Row="1" Grid.Column="1">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Rows="1"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Label VerticalAlignment="Top" HorizontalAlignment="Center" Content="{Binding}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <!-- Actual board -->
-                    <UniformGrid Margin="2,2,2,2" Grid.Row="0" Grid.Column="1">
-                        <ItemsControl ItemsSource="{Binding BoardVM.Pieces}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <UniformGrid x:Name="BoardGrid" Rows="{Binding BoardVM.RowCount}" Columns="{Binding BoardVM.ColumnCount}"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border x:Name="GridBorder" BorderThickness="1" BorderBrush="Black" PreviewMouseDown="GridBorder_PreviewMouseDown">
-                                        <!-- Underlays for border (background) -->
-                                        <Border.Style>
-                                            <Style TargetType="Border">
-                                                <Setter Property="Background" Value="Transparent"/>
-                                                <Style.Triggers>
-                                                    <!-- Piece under threate underlay -->
-                                                    <DataTrigger Binding="{Binding IsThreatened, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                                                        <Setter Property="Background">
-                                                            <Setter.Value>
-                                                                <ImageBrush ImageSource="pack://application:,,,/Resources/threatened.png" />
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </DataTrigger>
-                                                    <!-- Move underlay-->
-                                                    <DataTrigger Binding="{Binding IsPossibleMove, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                                                        <Setter Property="Background">
-                                                            <Setter.Value>
-                                                                <ImageBrush ImageSource="pack://application:,,,/Resources/move.png" />
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </DataTrigger>
-                                                    <!-- Selection underlay -->
-                                                    <DataTrigger Binding="{Binding Selected, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                                                        <Setter Property="Background">
-                                                            <Setter.Value>
-                                                                <ImageBrush ImageSource="pack://application:,,,/Resources/selection.png" />
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <!-- Piece and tile representation -->
-                                        <Grid>
-                                            <!-- TILE -->
-                                            <Image RenderOptions.BitmapScalingMode="HighQuality"
-                                                MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32">
-                                                <Image.Source>
-                                                    <MultiBinding Converter="{StaticResource PositionConverter}">
-                                                        <Binding ElementName="GridBorder"/>
-                                                        <Binding ElementName="BoardGrid" />
-                                                        <Binding ElementName="hideme" Path="Content.ShowCorners"/>
-                                                    </MultiBinding>
-                                                </Image.Source>
-                                            </Image>
-                                            <!-- PIECE -->
-                                            <Image Source="{Binding Converter={StaticResource PieceConverter}}"
-                                                   RenderOptions.BitmapScalingMode="HighQuality"
-                                                   MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32" />
-                                            <!-- Overlay for piece capture -->
-                                            <Image Source="pack://application:,,,/Resources/captured.png" Opacity="10" Visibility="{Binding Converter={StaticResource BooleanConverter}, Path=IsCaptured}"
-                                                   RenderOptions.BitmapScalingMode="HighQuality"
-                                                   MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32" />
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </UniformGrid>
-                </Grid>
-            </Viewbox>
+            <ContentPresenter Content="{Binding BoardVM}"/>
         </Grid>
         <!-- Side menu -->
-        <Viewbox StretchDirection="DownOnly" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="200" MaxHeight="800" Grid.Column="1" Grid.Row="0">
-            <StackPanel Margin="10" Grid.Column="1" Grid.Row="0">
-                <!-- Currently playing -->
-                <TextBlock Text="Currently playing:" Margin="5" DockPanel.Dock="Top"/>
-                <TextBlock Text="{Binding CurrentPlayer}" Margin="5"/>
-                <!-- Move input -->
-                <TextBlock Text="Enter move: " Margin="5" DockPanel.Dock="Top"/>
-                <TextBox Padding="2" Margin="5" DockPanel.Dock="Top" x:Name="MoveTextInput" Text="{Binding Move, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Content="SEND MOVE" Margin="5" DockPanel.Dock="Top" Command="{Binding MoveCommand}" CommandParameter="{Binding ElementName=MoveTextInput, Path=Text}" />
-                <!-- Move's history -->
-                <TextBlock Text="Game moves' history:" Margin="5"/>
-                <ScrollViewer Margin="5" DockPanel.Dock="Top" MinHeight="200"  MaxHeight="200">
-                    <ItemsControl ItemsSource="{Binding GameMoves}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-                <!-- Game timer -->
-                <TextBlock Text="Game timer: " Margin="5" DockPanel.Dock="Top"/>
-                <TextBlock Text="{Binding Timer}" Margin="5"/>
-                <!-- Board value -->
-                <TextBlock Text="{Binding BoardValue}"/>
-            </StackPanel>
-        </Viewbox>
+        <ContentPresenter Content="{Binding}"/>
     </DockPanel>
 </Window>

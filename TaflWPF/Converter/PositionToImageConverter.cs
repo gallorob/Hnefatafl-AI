@@ -22,7 +22,7 @@ namespace TaflWPF.Converter
                 // get the current border index in the board grid
 				int index = boardGrid.Children.IndexOf(VisualTreeHelper.GetParent(border) as UIElement);
                 // get the board
-                BoardViewModel board = ((GameViewModel)boardGrid.DataContext).BoardVM;
+                BoardViewModel board = (BoardViewModel)boardGrid.DataContext;
                 // convert the index to a Position
                 Position currentPosition = GridUtils.GetPositionFromIndex(index, board.ColumnCount);
                 // check if it's a corner

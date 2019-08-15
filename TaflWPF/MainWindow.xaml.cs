@@ -18,10 +18,5 @@ namespace TaflWPF
 			InitializeComponent();
 			this.DataContext = this.GameVM;
         }
-        private void GridBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            GameVM.OnPreviewMouseDown(sender, e);
-        }
-
     }
 }

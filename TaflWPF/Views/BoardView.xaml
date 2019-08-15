@@ -1,0 +1,128 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:TaflWPF.Views"
+                    xmlns:converter="clr-namespace:TaflWPF.Converter"
+                    xmlns:viewmodel="clr-namespace:TaflWPF.ViewModel"
+                    xmlns:helper="clr-namespace:TaflWPF.Helper">
+    
+    <!-- Convert a Position to BitmapImage -->
+    <converter:PositionToImageConverter x:Key="PositionConverter"/>
+    <!-- Convert an IPiece to BitmapImage -->
+    <converter:PieceToImageConverter x:Key="PieceConverter"/>
+    <!-- Convert a boolean value to Visibility -->
+    <converter:BooleanToVisibilityConverter x:Key="BooleanConverter"/>
+
+    <DataTemplate DataType="{x:Type viewmodel:BoardViewModel}">
+        <Viewbox StretchDirection="Both" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="800" MaxHeight="800" Grid.Column="0" Grid.Row="0">
+            <!-- BOARD -->
+            <Grid Margin="5,5,5,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <!-- Display row numbers -->
+                <ItemsControl ItemsSource="{Binding Rows}" Grid.Row="0" Grid.Column="0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="1"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!-- Display columns letters -->
+                <ItemsControl ItemsSource="{Binding Columns}" Grid.Row="1" Grid.Column="1">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="1"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Label VerticalAlignment="Top" HorizontalAlignment="Center" Content="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!-- Actual board -->
+                <UniformGrid Margin="2,2,2,2" Grid.Row="0" Grid.Column="1">
+                    <ItemsControl ItemsSource="{Binding Pieces}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid x:Name="BoardGrid" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border x:Name="GridBorder" BorderThickness="1" BorderBrush="Black"
+                                        helper:CommandHelper.Command="{Binding Path=DataContext.PreviewMouseDownCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        helper:CommandHelper.EventName="PreviewMouseDown">
+                                    <!-- Underlays for border (background) -->
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <!-- Piece under threate underlay -->
+                                                <DataTrigger Binding="{Binding IsThreatened, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <ImageBrush ImageSource="pack://application:,,,/Resources/threatened.png" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                                <!-- Move underlay-->
+                                                <DataTrigger Binding="{Binding IsPossibleMove, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <ImageBrush ImageSource="pack://application:,,,/Resources/move.png" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                                <!-- Selection underlay -->
+                                                <DataTrigger Binding="{Binding Selected, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <ImageBrush ImageSource="pack://application:,,,/Resources/selection.png" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <!-- Piece and tile representation -->
+                                    <Grid>
+                                        <!-- TILE -->
+                                        <Image RenderOptions.BitmapScalingMode="HighQuality" IsHitTestVisible="False"
+                                                MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32">
+                                            <Image.Source>
+                                                <MultiBinding Converter="{StaticResource PositionConverter}">
+                                                    <Binding ElementName="GridBorder"/>
+                                                    <Binding ElementName="BoardGrid" />
+                                                    <Binding ElementName="hideme" Path="Content.ShowCorners"/>
+                                                </MultiBinding>
+                                            </Image.Source>
+                                        </Image>
+                                        <!-- PIECE -->
+                                        <Image Source="{Binding Converter={StaticResource PieceConverter}}"
+                                                   RenderOptions.BitmapScalingMode="HighQuality" IsHitTestVisible="False"
+                                                   MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32" />
+                                        <!-- Overlay for piece capture -->
+                                        <Image Source="pack://application:,,,/Resources/captured.png" Opacity="10" Visibility="{Binding Converter={StaticResource BooleanConverter}, Path=IsCaptured}"
+                                                   RenderOptions.BitmapScalingMode="HighQuality" IsHitTestVisible="False"
+                                                   MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </UniformGrid>
+            </Grid>
+        </Viewbox>
+    </DataTemplate>
+</ResourceDictionary>

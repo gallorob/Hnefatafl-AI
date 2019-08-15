@@ -43,10 +43,7 @@ namespace HnefataflAI.Commons.Positions
         }
         public override int GetHashCode()
         {
-            var hashCode = 1084646500;
-            hashCode = hashCode * -1521134295 + Row.GetHashCode();
-            hashCode = hashCode * -1521134295 + Col.GetHashCode();
-            return hashCode;
+			return base.GetHashCode();
         }
 
         internal int Subtract(Position other)
