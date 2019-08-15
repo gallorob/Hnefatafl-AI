@@ -19,11 +19,23 @@ namespace TaflWPF.Model.Piece
             {
                 return PieceType.KING;
             }
+            else if (piece is EliteGuard)
+            {
+                return PieceType.ELITEGUARD;
+            }
             else if (piece is Defender)
             {
                 return PieceType.DEFENDER;
             }
-            else return PieceType.ATTACKER;
+            else if (piece is Commander)
+            {
+                return PieceType.COMMANDER;
+            }
+            else if (piece is Attacker)
+            {
+                return PieceType.ATTACKER;
+            }
+            else return PieceType.EMPTY;
         }
     }
 }

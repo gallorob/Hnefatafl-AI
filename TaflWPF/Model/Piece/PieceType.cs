@@ -8,6 +8,8 @@
 		EMPTY,
         ATTACKER,
         DEFENDER,
-        KING
+        KING,
+        ELITEGUARD,
+        COMMANDER
     }
 }

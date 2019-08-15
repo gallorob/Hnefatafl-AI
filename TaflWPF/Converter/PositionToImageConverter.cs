@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HnefataflAI.Commons.Positions;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,6 +7,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using TaflWPF.Utils;
+using TaflWPF.ViewModel;
 
 namespace TaflWPF.Converter
 {
@@ -13,17 +16,27 @@ namespace TaflWPF.Converter
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (values[0] is Border border)
+            // get the current border and the outer board grid
+            if (values[0] is Border border && values[1] is UniformGrid boardGrid && values[2] is bool showCorners)
 			{
-				if (VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(border)) is UniformGrid uniform)
-				{
-					var index = uniform.Children.IndexOf(VisualTreeHelper.GetParent(border) as UIElement);
-
-					if (index == 0 || index == uniform.Columns - 1 || index == uniform.Children.Count - uniform.Columns || index == uniform.Children.Count - 1)
-						return new BitmapImage(new Uri(@"pack://application:,,,/Resources/board_corner.png"));
-				}
-			}
-
+                // get the current border index in the board grid
+				int index = boardGrid.Children.IndexOf(VisualTreeHelper.GetParent(border) as UIElement);
+                // get the board
+                BoardViewModel board = ((GameViewModel)boardGrid.DataContext).BoardVM;
+                // convert the index to a Position
+                Position currentPosition = GridUtils.GetPositionFromIndex(index, board.ColumnCount);
+                // check if it's a corner
+                if (showCorners && board.Corners.Contains(currentPosition))
+                {
+                    return new BitmapImage(new Uri(@"pack://application:,,,/Resources/corner.png"));
+                }
+                // check if it's a throne
+                else if (board.Thrones.Contains(currentPosition))
+                {
+                    return new BitmapImage(new Uri(@"pack://application:,,,/Resources/throne.png"));
+                }
+            }
+            // else, do nothing
 			return null;
 		}
 

@@ -5,6 +5,7 @@ using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.GameState;
 using HnefataflAI.Games.Rules;
+using System;
 using System.Collections.Generic;
 
 namespace HnefataflAI.AI.Bots.Impl
@@ -25,6 +26,8 @@ namespace HnefataflAI.AI.Bots.Impl
         /// The piece color
         /// </summary>
         public PieceColors PieceColors { get; private set; }
+        public String PlayerName { get; private set; }
+        public List<String> AdditionalInfo { get; private set; }
         /// <summary>
         /// The internal GameEngine
         /// </summary>
@@ -43,6 +46,9 @@ namespace HnefataflAI.AI.Bots.Impl
             this.PieceColors = pieceColors;
             this.RuleType = ruleType;
             this.GameEngine = new GameEngineImpl(ruleType);
+            //temporary
+            this.PlayerName = "Bassy";
+            this.AdditionalInfo = new List<String> { "Just a basic player bot" };
         }
         /// <summary>
         /// Only for implementation

@@ -1,101 +1,235 @@
-﻿using HnefataflAI.Commons.Exceptions;
+﻿using HnefataflAI.Commons.DataTypes;
+using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Defaults;
 using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
-using HnefataflAI.Pieces.Impl;
 using System.Collections.Generic;
+using System.Text;
 
 namespace HnefataflAI.Commons.Utils
 {
+    /// <summary>
+    /// Utils class for the board
+    /// </summary>
     public static class BoardUtils
     {
+        /// <summary>
+        /// Update a piece in the board
+        /// </summary>
+        /// <param name="piece">The piece to be updated</param>
+        /// <param name="position">The new piece position</param>
+        /// <param name="board">The board</param>
         public static void UpdatePieceFromMove(IPiece piece, Position position, Board board)
         {
             board.RemovePiece(piece);
             piece.UpdatePosition(position);
             board.AddPiece(piece);
         }
+        /// <summary>
+        /// Check if the board dimensions are valid
+        /// </summary>
+        /// <param name="totalRows">The number of rows</param>
+        /// <param name="totalCols">The number of columns</param>
         public static void CheckBoardDimensions(int totalRows, int totalCols)
         {
-            if (totalRows > DefaultValues.MAX_ROWS || totalCols > DefaultValues.MAX_COLS)
+            if (totalRows < 5 || totalRows > DefaultValues.MAX_ROWS || (totalRows % 2) == 0
+                ||
+                totalCols < 5 || totalCols > DefaultValues.MAX_COLS || (totalCols % 2) == 0)
             {
-                throw new System.Exception(ErrorMessages.INVALID_BOARD);
+                throw new System.Exception(ErrorMessages.INVALID_BOARD_DIMENSION);
             }
         }
+        /// <summary>
+        /// Get the array value of a row
+        /// </summary>
+        /// <param name="numRows">The total number of rows</param>
+        /// <param name="row">The current row</param>
+        /// <returns>The array value of a row</returns>
         public static int GetArrayRow(int numRows, int row)
         {
             return numRows - row;
         }
+        /// <summary>
+        /// Get the array value of a column
+        /// </summary>
+        /// <param name="col">The column</param>
+        /// <returns>The array value of a column</returns>
         public static int GetArrayCol(int col)
         {
             return col - DefaultValues.FIRST_COLUMN;
         }
+        public static Position GetPositionFromArrayValues(int row, int col)
+        {
+            return new Position(row + 1, (char)(col + DefaultValues.FIRST_COLUMN));
+        }
+        /// <summary>
+        /// Get the string representation of the board's columns
+        /// </summary>
+        /// <param name="totalCols">The number of columns</param>
+        /// <returns>The string representation of the board's columns</returns>
         public static string GetBoardColumnsChars(int totalCols)
         {
-            string ret = "";
+            StringBuilder ret = new StringBuilder("");
             for (int i = 0; i < totalCols; i++)
             {
-                ret += string.Format(" {0} ", (char)(System.Convert.ToUInt16(DefaultValues.UPPER_FIRST_COLUMN) + i));
+                ret.AppendFormat(" {0} ", (char)(i + DefaultValues.UPPER_FIRST_COLUMN));
             }
-            return ret;
+            return ret.ToString();
         }
-        public static bool IsPositionUpdateValid(Position position, Directions direction, Board board)
+        /// <summary>
+        /// Check if an update to a position to a given direction is valid in the board
+        /// </summary>
+        /// <param name="position">The starting position</param>
+        /// <param name="direction">The direction to move to</param>
+        /// <param name="board">The board</param>
+        /// <returns>If a position update is valid</returns>
+        public static bool IsPositionMoveValid(Position position, Directions direction, Board board)
         {
-            switch (direction)
-            {
-                case Directions.UP:
-                    return position.Row < board.TotalRows;
-                case Directions.DOWN:
-                    return position.Row > 1;
-                case Directions.LEFT:
-                    return position.Col > DefaultValues.FIRST_COLUMN;
-                case Directions.RIGHT:
-                    return position.Col < DefaultValues.FIRST_COLUMN + board.TotalCols - 1;
-                default:
-                    return false;
-            }
+            return IsPositionValid(position.MoveTo(direction), board);
         }
+        /// <summary>
+        /// Check if a given position is valid in the board
+        /// </summary>
+        /// <param name="position">The position to check</param>
+        /// <param name="board">The board</param>
+        /// <returns>If the position is valid</returns>
         public static bool IsPositionValid(Position position, Board board)
         {
-            return (position.Row <= board.TotalRows
+            return (
+                position.Row <= board.TotalRows
                 &&
                 position.Row > 0
                 &&
                 position.Col >= DefaultValues.FIRST_COLUMN
                 &&
-                position.Col < DefaultValues.FIRST_COLUMN + board.TotalCols);
+                position.Col < DefaultValues.FIRST_COLUMN + board.TotalCols
+                );
         }
-        public static bool IsOnBoardCorner(Position position, Board board)
+        /// <summary>
+        /// Check if a given position is on an edge of the board
+        /// </summary>
+        /// <param name="position">The position to check</param>
+        /// <param name="board">The board</param>
+        /// <returns>If a given position is on an edge</returns>
+        public static bool IsOnEdge(Position position, Board board)
+        {
+            return (
+                position.Row == board.TotalRows
+                ||
+                position.Row == 1
+                ||
+                position.Col == DefaultValues.FIRST_COLUMN
+                ||
+                position.Col == DefaultValues.FIRST_COLUMN + board.TotalCols - 1
+                );
+        }
+        /// <summary>
+        /// Check if a position is on a board's corner
+        /// </summary>
+        /// <param name="position">The position to check</param>
+        /// <param name="board">The board</param>
+        /// <returns>If a position is on a board's corner</returns>
+        public static bool IsOnCorner(Position position, Board board)
         {
             bool isOnBoardCorner = false;
-            foreach (Position corner in GetCornersPositions(board))
+            foreach (Position corner in board.CornerTiles)
             {
                 isOnBoardCorner |= position.Equals(corner);
             }
             return isOnBoardCorner;
         }
-        public static List<Position> GetCornersPositions(Board board)
-        {
-            return new List<Position>
-            {
-                new Position(1, DefaultValues.FIRST_COLUMN),
-                new Position(board.TotalRows, DefaultValues.FIRST_COLUMN),
-                new Position(1, (char)(DefaultValues.FIRST_COLUMN + board.TotalCols - 1)),
-                new Position(board.TotalRows, (char)(DefaultValues.FIRST_COLUMN + board.TotalCols - 1))
-            };
-        }
+        /// <summary>
+        /// Check if a position is on a board's throne
+        /// </summary>
+        /// <param name="position">The position to check</param>
+        /// <param name="board">The board</param>
+        /// <returns>If a position is on a board's throne</returns>
         public static bool IsOnThrone(Position position, Board board)
         {
-            return position.Equals(GetThronePosition(board));
+            bool isOnThrone = false;
+            foreach (Position throne in board.ThroneTiles)
+            {
+                isOnThrone |= position.Equals(throne);
+            }
+            return isOnThrone;
         }
-        public static Position GetThronePosition(Board board)
+        /// <summary>
+        /// Check if a position is an enemy's base camp
+        /// </summary>
+        /// <param name="position">The position to check</param>
+        /// <param name="board">The board</param>
+        /// <param name="pieceColor">The moving piece's color</param>
+        /// <returns>If a position is an enemy's base camp</returns>
+        public static bool IsOnEnemyCamp(Position position, Board board, PieceColors pieceColor)
         {
-            return new Position(board.TotalRows / 2 + 1, (char)(DefaultValues.FIRST_COLUMN + (board.TotalCols / 2)));
+            List<Position> enemyBaseCamp = pieceColor.Equals(PieceColors.WHITE) ? board.AttackerBaseCamps : board.DefenderBaseCamps;
+            bool isOnEnemyBaseCamp = false;
+            foreach (Position baseCamp in enemyBaseCamp)
+            {
+                isOnEnemyBaseCamp |= position.Equals(baseCamp);
+            }
+            return isOnEnemyBaseCamp;
         }
-        public static bool CanMoveToPosition(IPiece piece, Position position, Board board)
+        /// <summary>
+        /// Get the first piece in a direction from the given position
+        /// </summary>
+        /// <param name="board">The board</param>
+        /// <param name="direction">The direction to check</param>
+        /// <param name="position">The starting position</param>
+        /// <returns>The first piece if found, else null</returns>
+        public static IPiece GetFirstPiece(Board board, Directions direction, Position position)
         {
-            return (piece is King) || !(IsOnBoardCorner(position, board) || IsOnThrone(position, board));
+            List<IPiece> pieces = new List<IPiece>();
+            Matrix<IPiece> matrix = board.GetCurrentBoard();
+            int arrRow = board.TotalRows - position.Row;
+            int arrCol = position.Col - DefaultValues.FIRST_COLUMN;
+            switch (direction)
+            {
+                case Directions.DOWN:
+                    pieces.AddRange(matrix.GetCol(arrCol, board.TotalRows - arrRow - 1, arrRow + 1));
+                    break;
+                case Directions.LEFT:
+                    pieces.AddRange(matrix.GetRow(arrRow, arrCol, 0));
+                    break;
+                case Directions.RIGHT:
+                    pieces.AddRange(matrix.GetRow(arrRow, board.TotalCols - arrCol - 1, arrCol + 1));
+                    break;
+                case Directions.UP:
+                    pieces.AddRange(matrix.GetCol(arrCol, arrRow, 0));
+                    break;
+            }
+            // reverse list to get the first piece closest to the position
+            if (direction == Directions.UP || direction == Directions.LEFT)
+            {
+                pieces.Reverse();
+            }
+            // return the first non-null piece if it exists
+            foreach (IPiece piece in pieces)
+            {
+                if (piece != null)
+                {
+                    return piece;
+                }
+            }
+            return null;
+        }
+        public static string GetPositionBoardRepresentation(int row, int col, Board board)
+        {
+            Position toCheck = GetPositionFromArrayValues(row, col);
+            if (board.ThroneTiles.Contains(toCheck))
+            {
+                return " x ";
+            }
+            if (board.CornerTiles.Contains(toCheck))
+            {
+                return " * ";
+            }
+            if (board.AttackerBaseCamps.Contains(toCheck))
+            {
+                return " a ";
+            }
+            return " . ";
         }
     }
 }

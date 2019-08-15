@@ -68,8 +68,10 @@
     <Compile Include="AI\Bots\Impl\TaflBotRandom.cs" />
     <Compile Include="AI\MoveValue.cs" />
     <Compile Include="AI\PieceValues.cs" />
+    <Compile Include="Commons\CaptureRuleSet.cs" />
     <Compile Include="Commons\DataTypes\Matrix.cs" />
     <Compile Include="Commons\Exceptions\ErrorMessages.cs" />
+    <Compile Include="Commons\Exceptions\InvalidBoardException.cs" />
     <Compile Include="Commons\Exceptions\InvalidInputException.cs" />
     <Compile Include="Commons\Exceptions\InvalidMoveException.cs" />
     <Compile Include="Commons\Logs\GameLogger.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Commons\Utils\BotUtils.cs" />
     <Compile Include="Commons\Utils\CaptureUtils.cs" />
     <Compile Include="Commons\Utils\ListUtils.cs" />
+    <Compile Include="Commons\Utils\LoggingUtils.cs" />
     <Compile Include="Commons\Utils\MoveUtils.cs" />
     <Compile Include="Commons\Utils\PieceColorsUtils.cs" />
     <Compile Include="Commons\Utils\PositionUtils.cs" />
@@ -100,12 +103,15 @@
     <Compile Include="Games\Game.cs" />
     <Compile Include="Games\GameState\GameStatus.cs" />
     <Compile Include="Games\GameState\Status.cs" />
-    <Compile Include="Games\Rules\Impl\CustomRule.cs" />
+    <Compile Include="Games\Rules\AbstractRule.cs" />
     <Compile Include="Games\Rules\Impl\HnefataflRule.cs" />
+    <Compile Include="Games\Rules\Impl\TablutRule.cs" />
     <Compile Include="Games\Rules\IRule.cs" />
     <Compile Include="Games\Rules\RuleTypes.cs" />
     <Compile Include="Pieces\Impl\Attacker.cs" />
+    <Compile Include="Pieces\Impl\Commander.cs" />
     <Compile Include="Pieces\Impl\Defender.cs" />
+    <Compile Include="Pieces\Impl\EliteGuard.cs" />
     <Compile Include="Pieces\Impl\King.cs" />
     <Compile Include="Pieces\Impl\Pawn.cs" />
     <Compile Include="Pieces\IPiece.cs" />

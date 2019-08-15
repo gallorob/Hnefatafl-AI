@@ -1,4 +1,6 @@
 ﻿using HnefataflAI.Commons;
+using System;
+using System.Collections.Generic;
 
 namespace HnefataflAI.Player
 {
@@ -11,6 +13,8 @@ namespace HnefataflAI.Player
         /// The player's pieces' color
         /// </summary>
         PieceColors PieceColors { get; }
+        String PlayerName { get; }
+        List<String> AdditionalInfo { get; }
         /// <summary>
         /// Get a player's move
         /// </summary>

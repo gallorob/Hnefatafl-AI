@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HnefataflAI", "HnefataflAI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaflWPF", "TaflWPF\TaflWPF.csproj", "{BFF2402E-911E-4974-BAFE-1F6F5DC1877B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HnefataflAITests", "HnefataflAITests\HnefataflAITests.csproj", "{0D80A585-C39D-4186-8C42-4E3EAFAB1F83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BFF2402E-911E-4974-BAFE-1F6F5DC1877B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFF2402E-911E-4974-BAFE-1F6F5DC1877B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFF2402E-911E-4974-BAFE-1F6F5DC1877B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D80A585-C39D-4186-8C42-4E3EAFAB1F83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D80A585-C39D-4186-8C42-4E3EAFAB1F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D80A585-C39D-4186-8C42-4E3EAFAB1F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D80A585-C39D-4186-8C42-4E3EAFAB1F83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

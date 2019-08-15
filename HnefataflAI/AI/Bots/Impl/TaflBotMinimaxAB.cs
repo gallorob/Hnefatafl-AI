@@ -7,6 +7,7 @@ using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.GameState;
 using HnefataflAI.Games.Rules;
+using HnefataflAI.Player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace HnefataflAI.AI.Bots.Impl
         /// The list of moves played by the bot
         /// </summary>
         private readonly List<Move> BotMoves = new List<Move>();
+        public String PlayerName { get; private set; }
+        public List<String> AdditionalInfo { get; private set; }
         /// <summary>
         /// Constructor for the TaflBotMinimaxAB
         /// </summary>
@@ -39,6 +42,9 @@ namespace HnefataflAI.AI.Bots.Impl
         {
             this.PieceColors = pieceColors;
             this.RuleType = ruleType;
+            //temporary
+            this.PlayerName = "Minyab";
+            this.AdditionalInfo = new List<String> { "A standard minimax with alpha-beta pruning player bot" };
         }
         /// <summary>
         /// Only for implementation
@@ -98,7 +104,7 @@ namespace HnefataflAI.AI.Bots.Impl
                 GameStatus gameStatus = gameEngine.GetGameStatus(move.Piece, board);
                 if (!gameStatus.IsGameOver)
                 {
-                    gameStatus.IsGameOver = MoveUtils.IsDuplicatedMove(this.BotMoves, move, RuleUtils.GetRule(this.RuleType));
+                    gameStatus.IsGameOver = MoveUtils.IsRepeatedMove(this.BotMoves, move, RuleUtils.GetRule(this.RuleType));
                     gameStatus.Status = Status.LOSS;
                 }
                 // recursive call for the move's sub-tree
@@ -181,8 +187,8 @@ namespace HnefataflAI.AI.Bots.Impl
         private void OrderMoves(List<Move> moves, Board board)
         {
             HashSet<Move> orderedMoves = new HashSet<Move>();
-            orderedMoves.UnionWith(MoveUtils.GetCapturingMoves(moves, board, this.RuleType));
-            orderedMoves.UnionWith(MoveUtils.GetEscapingMoves(moves, board, this.RuleType));
+            //orderedMoves.UnionWith(MoveUtils.GetCapturingMoves(moves, board, this.RuleType));
+            //orderedMoves.UnionWith(MoveUtils.GetEscapingMoves(moves, board, this.RuleType));
             orderedMoves.UnionWith(moves);
             moves.Clear();
             moves.AddRange(orderedMoves.ToList());

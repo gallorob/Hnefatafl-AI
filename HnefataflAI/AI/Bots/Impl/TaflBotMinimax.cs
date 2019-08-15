@@ -7,6 +7,7 @@ using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.GameState;
 using HnefataflAI.Games.Rules;
+using System;
 using System.Collections.Generic;
 
 namespace HnefataflAI.AI.Bots.Impl
@@ -29,6 +30,8 @@ namespace HnefataflAI.AI.Bots.Impl
         /// The list of moves played by the bot
         /// </summary>
         private readonly List<Move> BotMoves = new List<Move>();
+        public String PlayerName { get; private set; }
+        public List<String> AdditionalInfo { get; private set; }
         /// <summary>
         /// Constructor for the TaflBotMinimax
         /// </summary>
@@ -37,6 +40,9 @@ namespace HnefataflAI.AI.Bots.Impl
         {
             this.PieceColors = pieceColors;
             this.RuleType = ruleType;
+            //temporary
+            this.PlayerName = "Miny";
+            this.AdditionalInfo = new List<String> { "A standard minimax player bot" };
         }
         /// <summary>
         /// Only for implementation
@@ -96,7 +102,7 @@ namespace HnefataflAI.AI.Bots.Impl
                 GameStatus gameStatus = gameEngine.GetGameStatus(move.Piece, board);
                 if (!gameStatus.IsGameOver)
                 {
-                    gameStatus.IsGameOver = MoveUtils.IsDuplicatedMove(this.BotMoves, move, RuleUtils.GetRule(this.RuleType));
+                    gameStatus.IsGameOver = MoveUtils.IsRepeatedMove(this.BotMoves, move, RuleUtils.GetRule(this.RuleType));
                     gameStatus.Status = Status.LOSS;
                 }
                 // recursive call for the move's sub-tree

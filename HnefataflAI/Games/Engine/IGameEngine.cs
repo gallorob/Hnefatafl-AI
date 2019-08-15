@@ -15,5 +15,6 @@ namespace HnefataflAI.Games.Engine
         void ApplyMove(Move move, Board board, PieceColors playerColor);
         void UndoMove(Move move, Board board, PieceColors playerColor);
         void UndoCaptures(Board board);
+        void UndoCaptures(Board board, List<Move> captures);
     }
 }

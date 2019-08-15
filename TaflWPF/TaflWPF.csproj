@@ -55,9 +55,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\MoveCommand.cs" />
+    <Compile Include="Common\Messages.cs" />
+    <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converter\MethodToValueConverter.cs" />
     <Compile Include="Converter\PositionToImageConverter.cs" />
+    <Compile Include="Utils\GridUtils.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\BoardViewModel.cs" />
+    <Compile Include="ViewModel\GameViewModel.cs" />
     <Compile Include="ViewModel\PieceItemViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -107,26 +113,31 @@
       <Name>HnefataflAI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Resource Include="Resources\a-typical-layout-for-the-11x11-board.png" />
+    <Resource Include="Resources\corner.png" />
+    <Resource Include="Resources\throne.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Resources\attacker.png" />
-    <Resource Include="Resources\board_copenhagen11.png" />
-    <Resource Include="Resources\board_corner.png" />
-    <Resource Include="Resources\board_seabattle13.png" />
-    <Resource Include="Resources\board_tablutbell11.png" />
-    <Resource Include="Resources\board_throne.png" />
     <Resource Include="Resources\defender.png" />
-    <Resource Include="Resources\il_794xN.1263460324_gidm.jpg" />
-    <Resource Include="Resources\il_794xN.1310694857_3m5b.jpg" />
-    <Resource Include="Resources\il_794xN.1814355957_peso.jpg" />
-    <Resource Include="Resources\il_794xN.1814356161_ovcn.jpg" />
-    <Resource Include="Resources\il_fullxfull.1617282762_qjvj.jpg" />
-    <Resource Include="Resources\il_fullxfull.1750010719_lmdx.jpg" />
-    <Resource Include="Resources\il_fullxfull.1814355957_peso.jpg" />
-    <Resource Include="Resources\initial-layout-of-tablut-and-other-9x9-games.png" />
     <Resource Include="Resources\king.png" />
-    <Resource Include="Resources\Nefataffel_1097.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\selection.png" />
+    <Resource Include="Resources\threatened.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\captured.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\move.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\commander.png" />
+    <Resource Include="Resources\eliteguard.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -17,8 +17,10 @@ namespace HnefataflAI.Commons.Utils
             {
                 case RuleTypes.HNEFATAFL:
                     return new HnefataflRule();
+                case RuleTypes.TABLUT:
+                    return new TablutRule();
                 default:
-                    return new CustomRule();
+                    return null;
             }
         }
         /// <summary>
@@ -38,7 +40,7 @@ namespace HnefataflAI.Commons.Utils
                 }
                 return isRepeated;
             }
-            return false;
+            return !isRepeated;
         }
     }
 }

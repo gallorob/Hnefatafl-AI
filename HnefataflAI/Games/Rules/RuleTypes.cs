@@ -6,8 +6,7 @@
     public enum RuleTypes
     {
         HNEFATAFL,
-        BRANDUBH,
-        BERSERK_HNEFATAFL,
+        TABLUT,
 
         CUSTOM
     }

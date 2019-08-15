@@ -71,5 +71,28 @@ namespace HnefataflAI.Games
             GameLogger.LogDuration(timeSpan);
             return message;
         }
+        ///
+        ///     FOR FRONT-END
+        ///
+        public Game(Board board, IPlayer player1, IPlayer player2, IGameEngine gameEngine)
+        {
+            this.Board = board;
+            this.Player1 = player1;
+            this.Player2 = player2;
+            this.GameEngine = gameEngine;
+            this.StopWatch.Start();
+        }
+        public Move PlayTurn(IPlayer player, string rawMove)
+        {
+            string[] playerMove = rawMove.Split('-');
+            Move actualMove = this.GameEngine.ProcessPlayerMove(playerMove, this.Board);
+            GameLogger.LogMove(this.TurnNumber, player.PieceColors, actualMove);
+            GameLogger.LogBoard(this.Board);
+            this.GameEngine.ApplyMove(actualMove, this.Board, player.PieceColors);
+            this.GameStatus = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);
+            GameLogger.LogPiecesCaptures(this.GameStatus.CapturedPieces);
+            this.TurnNumber++;
+            return actualMove;
+        }
     }
 }

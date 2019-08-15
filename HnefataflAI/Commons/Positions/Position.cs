@@ -1,4 +1,6 @@
-﻿namespace HnefataflAI.Commons.Positions
+﻿using System;
+
+namespace HnefataflAI.Commons.Positions
 {
     public struct Position
     {
@@ -45,6 +47,19 @@
             hashCode = hashCode * -1521134295 + Row.GetHashCode();
             hashCode = hashCode * -1521134295 + Col.GetHashCode();
             return hashCode;
+        }
+
+        internal int Subtract(Position other)
+        {
+            if (this.Row == other.Row)
+            {
+                return Math.Abs(this.Col - other.Col);
+            }
+            else if (this.Col == other.Col)
+            {
+                return Math.Abs(this.Row - other.Row);
+            }
+            else return -1;
         }
     }
 }

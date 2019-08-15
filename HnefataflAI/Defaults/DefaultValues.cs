@@ -1,6 +1,4 @@
 ﻿using HnefataflAI.Commons.Positions;
-using HnefataflAI.Games;
-using HnefataflAI.Pieces.Impl;
 
 namespace HnefataflAI.Defaults
 {
@@ -12,11 +10,11 @@ namespace HnefataflAI.Defaults
         /// <summary>
         /// Maximum number or rows allowed for a board
         /// </summary>
-        public static readonly int MAX_ROWS = 15;
+        public static readonly int MAX_ROWS = 19;
         /// <summary>
         /// Maximum number or columns allowed for a board
         /// </summary>
-        public static readonly int MAX_COLS = 15;
+        public static readonly int MAX_COLS = 19;
         /// <summary>
         /// First column as char
         /// </summary>
@@ -32,15 +30,15 @@ namespace HnefataflAI.Defaults
         /// <summary>
         /// Boolean value to log the game or not
         /// </summary>
-        public static readonly bool LOG_GAME = true;
+        public static readonly bool LOG_GAME = false;
         /// <summary>
         /// Boolean value to log the board or not
         /// </summary>
-        public static readonly bool LOG_BOARD = true;
+        public static readonly bool LOG_BOARD = false;
         /// <summary>
         /// Boolean value to log the moves or not
         /// </summary>
-        public static readonly bool LOG_MOVES = true;
+        public static readonly bool LOG_MOVES = false;
         /// <summary>
         /// Boolean value to log the moves' evaluation results or not
         /// </summary>
@@ -48,6 +46,10 @@ namespace HnefataflAI.Defaults
         /// <summary>
         /// Boolean value to log the game with Cyningstan notation
         /// </summary>
-        public static readonly bool LOG_CYNINGSTAN_STYLE = true;
+        public static readonly bool LOG_CYNINGSTAN_STYLE = false;
+        /// <summary>
+        /// A default position that will never be in any board
+        /// </summary>
+        public static readonly Position DefaultPosition = new Position(MAX_ROWS + 1, (char)(FIRST_COLUMN + MAX_COLS + 1));
     }
 }

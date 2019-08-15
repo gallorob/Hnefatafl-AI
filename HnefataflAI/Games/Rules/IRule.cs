@@ -16,31 +16,10 @@ namespace HnefataflAI.Games.Rules
         /// The Rule type
         /// </summary>
         RuleTypes RuleType { get; }
-        /// <summary>
-        /// How many tiles can a pawn move
-        /// </summary>
-        int PawnMoveLimiter { get; }
-        /// <summary>
-        /// How many tiles can the king move
-        /// </summary>
-        int KingMoveLimiter { get; }
-        /// <summary>
-        /// How many pieces are needed to capture the king
-        /// </summary>
-        int KingPiecesForCapture { get; }
-        /// <summary>
-        /// Does the throne count as a capture piece for king as well?
-        /// </summary>
-        bool IsThroneHostileToAll { get; }
-        /// <summary>
-        /// Does the corner count as a capture piece for king as well?
-        /// </summary>
-        bool IsCornerHostileToAll { get; }
-        /// <summary>
-        /// How many moves it takes to repeat before losing the game
-        /// </summary>
-        int MovesRepetition { get; }
+        bool IsCornerEscape { get; }
+        bool IsEdgeEscape { get; }
         #endregion
+
         #region Methods
         /// <summary>
         /// Check if the king is captured
@@ -48,7 +27,7 @@ namespace HnefataflAI.Games.Rules
         /// <param name="king">The King piece</param>
         /// <param name="board">The board</param>
         /// <returns>Whether or not the king is captured</returns>
-        bool CheckIfKingIsCaptured(IPiece king, Board board);
+        //bool CheckIfKingIsCaptured(IPiece king, Board board);
         /// <summary>
         /// CHeck if the piece captures anything on the board
         /// </summary>
@@ -69,7 +48,14 @@ namespace HnefataflAI.Games.Rules
         /// <param name="moves">The list of moves</param>
         /// <returns>Whether or not the moves are repeated</returns>
         bool CheckIfHasRepeatedMoves(List<Move> moves);
-        bool CheckIfUnderCapture(IPiece piece, Board board);
+        bool CheckIfUnderThreat(IPiece piece, Board board);
+        /// <summary>
+        /// Get the moves for a piece in all directions
+        /// </summary>
+        /// <param name="piece">The piece</param>
+        /// <param name="board">The board</param>
+        /// <returns>The moves for a piece in all directions</returns>
+        List<Move> GetMovesForPiece(IPiece piece, Board board);
         #endregion
     }
 }

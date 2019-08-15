@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using HnefataflAI.Games.Rules;
 using HnefataflAI.AI.Bots;
-using HnefataflAI.AI.Bots.Impl;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.AI;
@@ -21,15 +20,18 @@ namespace HnefataflAI
         {
             //RunPvPGame();
             //RunPvPCGame();
-            RunPCvPCGame();
+            //RunPCvPCGame();
             //RunMovesTest();
             //TestBoardEvaluator();
+
+            Console.Out.Write(BoardBuilder.GetBoard(BoardTypes.SERIFFCROSSNOGAPS_13X13));
+            Console.In.Read();
         }
 
         private static void RunPCvPCGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            BoardTypes boardType = BoardTypes.HISTORICAL_HNEFATAFL_7X7;
+            BoardTypes boardType = BoardTypes.BRANDUBH_7X7;
             IPlayer player1 = BotUtils.GetTaflBot(BotTypes.MINIMAXAB, PieceColors.BLACK, ruleType);
             ITaflBot player2 = BotUtils.GetTaflBot(BotTypes.MINIMAXAB, PieceColors.WHITE, ruleType);
 
@@ -40,7 +42,7 @@ namespace HnefataflAI
         static void RunPvPGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            BoardTypes boardType = BoardTypes.COPENHAGEN_HNEFATAFL_11X11;
+            BoardTypes boardType = BoardTypes.BRANDUBH_7X7;
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             IPlayer player2 = new HumanPlayer(PieceColors.WHITE);
 
@@ -51,7 +53,7 @@ namespace HnefataflAI
         static void RunPvPCGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            BoardTypes boardType = BoardTypes.COPENHAGEN_HNEFATAFL_11X11;
+            BoardTypes boardType = BoardTypes.BRANDUBH_7X7;
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             ITaflBot player2 = BotUtils.GetTaflBot(BotTypes.MINIMAXAB, PieceColors.WHITE, ruleType);
 
@@ -62,7 +64,7 @@ namespace HnefataflAI
         private static void TestBoardEvaluator()
         {
             BoardEvaluator movesEvaluator = new BoardEvaluator();
-            BoardTypes boardType = BoardTypes.HISTORICAL_HNEFATAFL_7X7;
+            BoardTypes boardType = BoardTypes.BRANDUBH_7X7;
             Board board = BoardBuilder.GetBoard(boardType);
             int bv = movesEvaluator.EvaluateBoard(board, PieceColors.BLACK);
             int wv = movesEvaluator.EvaluateBoard(board, PieceColors.WHITE);
@@ -74,7 +76,7 @@ namespace HnefataflAI
         static void RunMovesTest()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            Board board = BoardBuilder.GetTestingTable();
+            Board board = BoardBuilder.GetBoard(BoardTypes.ARDRDI_7X7);
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             ITaflBot player2 = BotUtils.GetTaflBot(BotTypes.MINIMAXAB, PieceColors.WHITE, ruleType);
             IGameEngine gameEngine = new GameEngineImpl(ruleType);
@@ -86,26 +88,26 @@ namespace HnefataflAI
             Console.Out.Write("Moves for white:\n");
             foreach (Move move in wmoves)
             {
-                Console.Out.Write(String.Format("{0}\n", move));
+                Console.Out.Write(String.Format("{0}\n", move.MoveRepresentation()));
             }
             Console.Out.Write("Moves for black:\n");
             foreach (Move move in bmoves)
             {
-                Console.Out.Write(String.Format("{0}\n", move));
+                Console.Out.Write(String.Format("{0}\n", move.MoveRepresentation()));
             }
 
-            var newMovesW = MoveUtils.GetCapturingMoves(wmoves, board, RuleTypes.HNEFATAFL);
-            Console.Out.Write("Moves for white:\n");
-            foreach (Move move in newMovesW)
-            {
-                Console.Out.Write(String.Format("{0}\n", move));
-            }
-            var newMovesB = MoveUtils.GetCapturingMoves(bmoves, board, RuleTypes.HNEFATAFL);
-            Console.Out.Write("Moves for black:\n");
-            foreach (Move move in newMovesB)
-            {
-                Console.Out.Write(String.Format("{0}\n", move));
-            }
+            //var newMovesW = MoveUtils.GetCapturingMoves(wmoves, board, RuleTypes.HNEFATAFL);
+            //Console.Out.Write("Moves for white:\n");
+            //foreach (Move move in newMovesW)
+            //{
+            //    Console.Out.Write(String.Format("{0}\n", move.MoveRepresentation()));
+            //}
+            //var newMovesB = MoveUtils.GetCapturingMoves(bmoves, board, RuleTypes.HNEFATAFL);
+            //Console.Out.Write("Moves for black:\n");
+            //foreach (Move move in newMovesB)
+            //{
+            //    Console.Out.Write(String.Format("{0}\n", move.MoveRepresentation()));
+            //}
             Console.In.Read();
         }
     }

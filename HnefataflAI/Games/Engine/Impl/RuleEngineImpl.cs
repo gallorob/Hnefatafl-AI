@@ -1,12 +1,10 @@
 ﻿using HnefataflAI.Commons;
-using HnefataflAI.Commons.Positions;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Games.Boards;
 using HnefataflAI.Games.GameState;
 using HnefataflAI.Games.Rules;
 using HnefataflAI.Pieces;
 using HnefataflAI.Pieces.Impl;
-using System;
 using System.Collections.Generic;
 
 namespace HnefataflAI.Games.Engine.Impl
@@ -32,29 +30,7 @@ namespace HnefataflAI.Games.Engine.Impl
         }
         public List<Move> GetAvailableMoves(IPiece piece, Board board)
         {
-            List<Move> availableMoves = new List<Move>();
-            foreach (Directions direction in Enum.GetValues(typeof(Directions)))
-            {
-                MovesByDirection(direction, piece, availableMoves, board);
-            }
-            return availableMoves;
-        }
-        private void MovesByDirection(Directions direction, IPiece piece, List<Move> availableMoves, Board board)
-        {
-            Position moved = piece.Position;
-            while (BoardUtils.IsPositionUpdateValid(moved, direction, board))
-            {
-                moved = moved.MoveTo(direction);
-                if (board.At(moved) != null)
-                {
-                    break;
-                }
-                if (BoardUtils.CanMoveToPosition(piece, moved, board))
-                {
-                    Move move = new Move(piece, moved);
-                    availableMoves.Add(move);
-                }
-            }
+            return this.Rule.GetMovesForPiece(piece, board);
         }
         public List<IPiece> GetCapturedPieces(IPiece piece, Board board)
         {
@@ -62,10 +38,11 @@ namespace HnefataflAI.Games.Engine.Impl
         }
         public PieceColors GetNextPlayer(IPiece piece, GameStatus gameStatus)
         {
-            if (Rule.RuleType is RuleTypes.BERSERK_HNEFATAFL && gameStatus.CapturedPieces.Count > 0)
-            {
-                return piece.PieceColors;
-            }
+            // todo: to implement
+            //if (Rule.RuleType is RuleTypes.BERSERK_HNEFATAFL && gameStatus.CapturedPieces.Count > 0)
+            //{
+            //    return piece.PieceColors;
+            //}
             return PieceColorsUtils.GetOppositePieceColor(piece.PieceColors);
         }
         public GameStatus GetGameStatus(IPiece movedPiece, Board board, List<Move> whiteMoves, List<Move> blackMoves)
@@ -82,34 +59,46 @@ namespace HnefataflAI.Games.Engine.Impl
                     if (piece is King && !gameStatus.IsGameOver)
                     {
                         // winning condition for Attacker
-                        gameStatus.IsGameOver = Rule.CheckIfKingIsCaptured(piece, board);
+                        gameStatus.IsGameOver = true;// Rule.CheckIfKingIsCaptured(piece, board);
                         gameStatus.Status = Status.WIN;
+                        gameStatus.Reason = "King has been captured";
                     }
                 }
             }
-            if (!gameStatus.IsGameOver)
+            if (!gameStatus.IsGameOver && Rule.IsCornerEscape)
             {
                 // winning condition for Defender
-                gameStatus.IsGameOver = movedPiece is King && BoardUtils.IsOnBoardCorner(movedPiece.Position, board);
+                gameStatus.IsGameOver = movedPiece is King && BoardUtils.IsOnCorner(movedPiece.Position, board);
                 gameStatus.Status = Status.WIN;
+                gameStatus.Reason = "King has escaped (corner)";
+            }
+            if (!gameStatus.IsGameOver && Rule.IsEdgeEscape)
+            {
+                // winning condition for Defender
+                gameStatus.IsGameOver = movedPiece is King && BoardUtils.IsOnEdge(movedPiece.Position, board);
+                gameStatus.Status = Status.WIN;
+                gameStatus.Reason = "King has escaped (edge)";
             }
             if (!gameStatus.IsGameOver)
             {
                 // winning condition for Defender
                 gameStatus.IsGameOver = board.GetPiecesByColor(PieceColors.BLACK).Count == 0;
                 gameStatus.Status = Status.WIN;
+                gameStatus.Reason = "No more attacker pieces";
             }
             if (!gameStatus.IsGameOver)
             {
                 // losing condition for Attacker
                 gameStatus.IsGameOver = Rule.CheckIfHasRepeatedMoves(blackMoves);
                 gameStatus.Status = Status.LOSS;
+                gameStatus.Reason = "Repeated moves for attacker";
             }
             if (!gameStatus.IsGameOver)
             {
                 // losing condition for Defender
                 gameStatus.IsGameOver = Rule.CheckIfHasRepeatedMoves(whiteMoves);
                 gameStatus.Status = Status.LOSS;
+                gameStatus.Reason = "Repeated moves for defender";
             }
             return gameStatus;
         }
@@ -118,6 +107,11 @@ namespace HnefataflAI.Games.Engine.Impl
         {
             return GetAvailableMoves(playerColor, board).Count != 0;
                 //|| Rule.CheckIfHasAvailableMoves();
+        }
+
+        public bool IsPieceThreatened(IPiece piece, Board board)
+        {
+            return Rule.CheckIfUnderThreat(piece, board);
         }
     }
 }

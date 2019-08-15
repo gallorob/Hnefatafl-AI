@@ -14,10 +14,11 @@ namespace HnefataflAI.Pieces.Impl
         public King(Position position)
             : base(position)
         {
-        }/// <summary>
-         /// Get the representing string for the piece
-         /// </summary>
-         /// <returns>The representing string for the piece</returns>
+        }
+        /// <summary>
+        /// Get the representing string for the piece
+        /// </summary>
+        /// <returns>The representing string for the piece</returns>
         public override string PieceRepresentation()
         {
             return " K ";

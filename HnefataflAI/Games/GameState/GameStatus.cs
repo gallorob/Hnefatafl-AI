@@ -17,6 +17,9 @@ namespace HnefataflAI.Games.GameState
         /// The endgame status
         /// </summary>
         public Status Status { get; set; }
+
+        public string Reason { get; set; }
+
         /// <summary>
         /// The captured pieces in the game status
         /// </summary>

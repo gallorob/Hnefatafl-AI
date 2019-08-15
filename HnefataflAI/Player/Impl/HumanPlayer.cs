@@ -1,18 +1,21 @@
 ﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Utils;
 using System;
+using System.Collections.Generic;
 
 namespace HnefataflAI.Player.Impl
 {
     /// <summary>
     /// The human player
     /// </summary>
-    class HumanPlayer : IPlayer
+    public class HumanPlayer : IPlayer
     {
         /// <summary>
         /// The player's pieces' color
         /// </summary>
         public PieceColors PieceColors { get; private set; }
+        public String PlayerName { get; set; }
+        public List<String> AdditionalInfo { get; private set; }
         /// <summary>
         /// Human player constructor
         /// </summary>
@@ -20,6 +23,9 @@ namespace HnefataflAI.Player.Impl
         public HumanPlayer(PieceColors pieceColors)
         {
             this.PieceColors = pieceColors;
+            //temporary
+            this.PlayerName = "Bjorn";
+            this.AdditionalInfo = new List<String> { "Just a puny human player" };
         }
         /// <summary>
         /// Get a player's move

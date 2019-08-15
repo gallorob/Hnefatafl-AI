@@ -36,5 +36,15 @@ namespace HnefataflAI.Commons.Utils
                 list.Add(obj);
             }
         }
+        public static void AddIfNotNull<T>(List<T> objs, List<T> list)
+        {
+            foreach (T obj in objs)
+            {
+                if (obj != null)
+                {
+                    list.Add(obj);
+                }
+            }
+        }
     }
 }

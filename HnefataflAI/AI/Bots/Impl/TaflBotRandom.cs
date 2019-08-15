@@ -20,6 +20,8 @@ namespace HnefataflAI.AI.Bots.Impl
         /// The piece color
         /// </summary>
         public PieceColors PieceColors { get; private set; }
+        public String PlayerName { get; private set; }
+        public List<String> AdditionalInfo { get; private set; }
         /// <summary>
         /// Constructor for the TaflBotRandom
         /// </summary>
@@ -29,6 +31,9 @@ namespace HnefataflAI.AI.Bots.Impl
         {
             this.PieceColors = pieceColors;
             this.RuleType = ruleType;
+            //temporary
+            this.PlayerName = "Rando";
+            this.AdditionalInfo = new List<String> { "Just a random player bot" };
         }
         /// <summary>
         /// Only for implementation

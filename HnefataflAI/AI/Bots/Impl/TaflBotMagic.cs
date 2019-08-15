@@ -20,6 +20,8 @@ namespace HnefataflAI.AI.Bots.Impl
         /// The piece color
         /// </summary>
         public PieceColors PieceColors { get; private set; }
+        public String PlayerName { get; private set; }
+        public List<String> AdditionalInfo { get; private set; }
         /// <summary>
         /// How many times it shuffles the list of moves
         /// </summary>
@@ -40,6 +42,9 @@ namespace HnefataflAI.AI.Bots.Impl
             Random rnd = new Random();
             this.Shuffles = rnd.Next(10);
             this.Index = rnd.Next(42);
+            //temporary
+            this.PlayerName = "Wizard";
+            this.AdditionalInfo = new List<String> { "Just a semi-random player bot" };
         }
         /// <summary>
         /// Shuffle the moves N times and return either the last move or the bot's favourite.

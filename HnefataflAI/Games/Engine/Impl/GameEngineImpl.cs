@@ -82,7 +82,7 @@ namespace HnefataflAI.Games.Engine.Impl
             {
                 throw new InvalidMoveException(move, ErrorMessages.INVALID_DESTINATION_PIECE);
             }
-            if (!BoardUtils.CanMoveToPosition(move.Piece, move.To, board))
+            if (!MoveUtils.CanMoveToPosition(move.Piece, move.To, board))
             {
                 throw new InvalidMoveException(move, ErrorMessages.INVALID_DESTINATION_POSITION);
             }
@@ -102,6 +102,14 @@ namespace HnefataflAI.Games.Engine.Impl
         public void UndoCaptures(Board board)
         {
             foreach(IPiece piece in this.CapturedPieces)
+            {
+                board.AddPiece(piece);
+            }
+            this.CapturedPieces.Clear();
+        }
+        public void UndoCaptures(Board board, List<Move> captures)
+        {
+            foreach (IPiece piece in captures)
             {
                 board.AddPiece(piece);
             }

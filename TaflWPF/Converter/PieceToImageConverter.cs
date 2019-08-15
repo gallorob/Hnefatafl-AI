@@ -16,12 +16,18 @@ namespace TaflWPF.Converter
 
             switch (pvm.PieceType)
             {
+                case PieceType.EMPTY:
+                    return null;
                 case PieceType.KING:
                     return new BitmapImage(new Uri(@"pack://application:,,,/Resources/king.png"));
                 case PieceType.DEFENDER:
                     return new BitmapImage(new Uri(@"pack://application:,,,/Resources/defender.png"));
                 case PieceType.ATTACKER:
                     return new BitmapImage(new Uri(@"pack://application:,,,/Resources/attacker.png"));
+                case PieceType.ELITEGUARD:
+                    return new BitmapImage(new Uri(@"pack://application:,,,/Resources/eliteguard.png"));
+                case PieceType.COMMANDER:
+                    return new BitmapImage(new Uri(@"pack://application:,,,/Resources/commander.png"));
                 default:
                     return null;
             }

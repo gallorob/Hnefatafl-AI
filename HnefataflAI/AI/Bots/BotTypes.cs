@@ -6,6 +6,7 @@
         MAGIC,
         MINIMAX,
         MINIMAXAB,
+        MINIMAXABPARALLEL,
         RANDOM
     }
 }
