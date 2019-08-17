@@ -1,4 +1,5 @@
 ﻿using HnefataflAI.Commons.Positions;
+using System.Collections.Generic;
 
 namespace HnefataflAI.Defaults
 {
@@ -51,5 +52,11 @@ namespace HnefataflAI.Defaults
         /// A default position that will never be in any board
         /// </summary>
         public static readonly Position DefaultPosition = new Position(MAX_ROWS + 1, (char)(FIRST_COLUMN + MAX_COLS + 1));
+        public static readonly Dictionary<int, List<int>> POSITIONS_DICT = new Dictionary<int, List<int>>()
+            {
+                { 2, new List<int>() { 10, 5 } },
+                { 3, new List<int>() { 14, 7, 11 } },
+                { 4, new List<int>() { 8, 4, 2, 1 } }
+            };
     }
 }

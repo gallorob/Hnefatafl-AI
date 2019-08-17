@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Games.Boards;
@@ -35,7 +36,7 @@ namespace HnefataflAI.Commons.Utils
             string[] move = input.ToLower().Split('-');
             if (move.Length != 2)
             {
-                throw new InvalidInputException(ErrorMessages.INVALID_INPUT);
+                throw new CustomGenericException(typeof(MoveUtils).Name, MethodBase.GetCurrentMethod().Name, ErrorMessages.INVALID_INPUT);
             }
             return move;
         }
@@ -48,7 +49,7 @@ namespace HnefataflAI.Commons.Utils
         {
             if (from.Col != to.Col && from.Row != to.Row)
             {
-                throw new InvalidInputException(ErrorMessages.INVALID_DESTINATION_POSITION);
+                throw new CustomGenericException(typeof(MoveUtils).Name, MethodBase.GetCurrentMethod().Name, ErrorMessages.INVALID_DESTINATION_POSITION);
             }
         }
         /// <summary>

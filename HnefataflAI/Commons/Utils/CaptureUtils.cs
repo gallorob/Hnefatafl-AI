@@ -1,10 +1,13 @@
-﻿using HnefataflAI.Commons.Positions;
+﻿using HnefataflAI.Commons.Converter;
+using HnefataflAI.Commons.Exceptions;
+using HnefataflAI.Commons.Positions;
 using HnefataflAI.Defaults;
 using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
 using HnefataflAI.Pieces.Impl;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace HnefataflAI.Commons.Utils
 {
@@ -128,11 +131,11 @@ namespace HnefataflAI.Commons.Utils
         /// <returns></returns>
         public static bool IsPieceThreatened(IPiece piece, Board board, CaptureRuleSet captureRuleSet)
         {
-            if (captureRuleSet.isShieldWallAllowed && BoardUtils.IsOnEdge(piece.Position, board) && CheckAhead(piece, board, PositionUtils.GetEdgeDirection(piece.Position, board), captureRuleSet))
+            if (captureRuleSet.isShieldWallAllowed && BoardUtils.IsOnEdge(piece.Position, board) && ShieldWallUtils.CheckAhead(piece, board, PositionUtils.GetEdgeDirection(piece.Position, board), captureRuleSet))
             {
                 Directions edge = PositionUtils.GetEdgeDirection(piece.Position, board);
                 List<IPiece> bracketingPieces = IsInShieldWall(piece, board, edge, captureRuleSet);
-                return IsShieldWallThreatened(bracketingPieces, piece, board, edge, captureRuleSet);
+                return ShieldWallUtils.IsShieldWallThreatened(bracketingPieces, piece, board, edge, captureRuleSet);
             }
             bool[] immediateThreat = new bool[4];
             bool[] nextMoveThreat = new bool[4];
@@ -163,75 +166,7 @@ namespace HnefataflAI.Commons.Utils
             {
                 return IsThreatened(immediateThreat, nextMoveThreat, captureRuleSet.piecesForPawn);
             }
-        }
-
-        private static bool IsShieldWallThreatened(List<IPiece> bracketingPieces, IPiece piece, Board board, Directions edgeDirection, CaptureRuleSet captureRuleSet)
-        {
-            if (!bracketingPieces.Contains(null))
-            {
-                return false;
-            }
-            else
-            {
-                bool underThreat = false;
-                IPiece bracket = bracketingPieces[0] != null ? bracketingPieces[0] : bracketingPieces[1];
-                if (bracket.PieceColors.Equals(piece.PieceColors))
-                {
-                    return false;
-                }
-                Position otherBracket = GetLastPositionBracket(bracket.Position, bracket.PieceColors, board, edgeDirection);
-                foreach (Directions checkingDirection in PositionUtils.GetClockWiseDirections())
-                {
-                    // get the first piece in range
-                    IPiece checkingPiece = BoardUtils.GetFirstPiece(board, checkingDirection, otherBracket);
-                    if (checkingPiece != null && bracket.PieceColors.Equals(checkingPiece.PieceColors))
-                    {
-                        bool reaches = DoesPieceReachPosition(checkingPiece, otherBracket, board, captureRuleSet);
-                        if (checkingPiece is King)
-                        {
-                            // a piece can be captured by the king only if it's armed
-                            underThreat |= captureRuleSet.isKingArmed && reaches;
-                        }
-                        else
-                        {
-                            underThreat |= reaches;
-                        }
-                    }
-                    // quick exit from foreach loop
-                    if (underThreat)
-                    {
-                        break;
-                    }
-                }
-                return underThreat;
-            }
-        }
-
-        private static Position GetLastPositionBracket(Position bracketPosition, PieceColors bracketColor, Board board, Directions edgeDirection) {
-            IPiece piece = board.At(bracketPosition.MoveTo(PositionUtils.GetClockWiseDirection(edgeDirection)));
-            if (piece != null && piece.PieceColors.Equals(bracketColor))
-            {
-                // check ccw
-                Directions moving = PositionUtils.GetCounterClockWiseDirection(edgeDirection);
-                Position checking = bracketPosition.MoveTo(moving);
-                while (board.At(checking) != null)
-                {
-                    checking = checking.MoveTo(moving);
-                }
-                return checking;
-            }
-            else
-            {
-                // check cw
-                Directions moving = PositionUtils.GetClockWiseDirection(edgeDirection);
-                Position checking = bracketPosition.MoveTo(moving);
-                while (board.At(checking) != null)
-                {
-                    checking = checking.MoveTo(moving);
-                }
-                return checking;
-            }
-        }
+        }    
 
         /// <summary>
         /// 
@@ -246,7 +181,7 @@ namespace HnefataflAI.Commons.Utils
         /// <returns></returns>
         public static bool IsPieceCaptured(IPiece checkingPiece, IPiece movedPiece, Board board, CaptureRuleSet captureRuleSet)
         {
-            if (captureRuleSet.isShieldWallAllowed && BoardUtils.IsOnEdge(checkingPiece.Position, board) && CheckAhead(checkingPiece, board, PositionUtils.GetEdgeDirection(checkingPiece.Position, board), captureRuleSet))
+            if (captureRuleSet.isShieldWallAllowed && BoardUtils.IsOnEdge(checkingPiece.Position, board) && ShieldWallUtils.CheckAhead(checkingPiece, board, PositionUtils.GetEdgeDirection(checkingPiece.Position, board), captureRuleSet))
             {
                 List<IPiece> bracketingPieces = IsShieldWallComplete(checkingPiece, movedPiece, board, PositionUtils.GetEdgeDirection(checkingPiece.Position, board), captureRuleSet);
                 return bracketingPieces.Contains(movedPiece) && !bracketingPieces.Contains(null) && bracketingPieces[0].PieceColors.Equals(movedPiece.PieceColors) && bracketingPieces[1].PieceColors.Equals(movedPiece.PieceColors);
@@ -272,100 +207,7 @@ namespace HnefataflAI.Commons.Utils
 
         public static List<IPiece> IsInShieldWall(IPiece piece, Board board, Directions edgeDirection, CaptureRuleSet captureRuleSet)
         {
-            List<IPiece> bracketingPiece = new List<IPiece>();
-            bool facing = CheckAhead(piece, board, edgeDirection, captureRuleSet);
-            IPiece clockWise = CheckDirection(piece, piece, board, edgeDirection, captureRuleSet, PositionUtils.GetClockWiseDirection);
-            IPiece counterClockWise = CheckDirection(piece, piece, board, edgeDirection, captureRuleSet, PositionUtils.GetCounterClockWiseDirection);
-            if (facing)
-            {
-                bracketingPiece.Add(clockWise);
-                bracketingPiece.Add(counterClockWise);
-            }
-            return bracketingPiece;
-        }
-
-        private static bool CheckAhead(IPiece piece, Board board, Directions edgeDirection, CaptureRuleSet captureRuleSet)
-        {
-            bool facing = false;
-            IPiece inFront = board.At(piece.Position.MoveTo(PositionUtils.GetOppositeDirection(edgeDirection)));
-            if (inFront != null)
-            {
-                facing = !inFront.PieceColors.Equals(piece.PieceColors) && (((inFront is King) && captureRuleSet.isKingArmed) || !(piece is King));
-            }
-            return facing;
-        }
-
-        private static IPiece CheckDirection(IPiece piece, IPiece movedPiece, Board board, Directions edgeDirection, CaptureRuleSet captureRuleSet, Func<Directions, Directions> directionMethod)
-        {
-            bool reached = false;
-            IPiece bracket = null;
-            Position checkingPosition = piece.Position;
-            while (!reached && BoardUtils.IsPositionMoveValid(checkingPosition, directionMethod.Invoke(edgeDirection), board))
-            {
-                Position newPosition = checkingPosition.MoveTo(directionMethod.Invoke(edgeDirection));
-                IPiece checkingPiece = board.At(newPosition);
-                if (checkingPiece != null)
-                {
-                    // reached the end of the line
-                    if (!piece.PieceColors.Equals(checkingPiece.PieceColors))
-                    {
-                        if (checkingPiece is King)
-                        {
-                            if (captureRuleSet.isKingArmed)
-                            {
-                                bracket = checkingPiece;
-                            }
-                            else
-                            {
-                                bracket = null;
-                            }
-                        }
-                        else
-                        {
-                            bracket = checkingPiece;
-                        }
-                        reached = true;
-                    }
-                    else
-                    {
-                        if(!CheckAhead(checkingPiece, board, edgeDirection, captureRuleSet))
-                        {
-                            reached = true;
-                            bracket = checkingPiece;
-                        }
-                    }
-                }
-                else
-                {
-                    if (BoardUtils.IsOnCorner(newPosition, board))
-                    {
-                        if (captureRuleSet.isCornerHostileToPawns)
-                        {
-                            bracket = GetCornerPiece(movedPiece.PieceColors);
-                        }
-                    }
-                    else
-                    {
-                        reached = true;
-                        bracket = null;
-                    }
-                }
-                // update position
-                checkingPosition = newPosition;
-            }
-            return bracket;
-        }
-
-        private static IPiece GetCornerPiece(PieceColors pieceColors)
-        {
-            if (pieceColors.Equals(PieceColors.BLACK))
-            {
-                return new Attacker(DefaultValues.DefaultPosition);
-            }
-            else
-            {
-                return new Defender(DefaultValues.DefaultPosition);
-            }
+            return ShieldWallUtils.GetShieldWallBrackets(piece, piece, board, edgeDirection, captureRuleSet, true);
         }
 
         /// <summary>
@@ -376,16 +218,7 @@ namespace HnefataflAI.Commons.Utils
         /// <returns>If the shieldwall is complete</returns>
         public static List<IPiece> IsShieldWallComplete(IPiece pivot, IPiece movedPiece, Board board, Directions edgeDirection, CaptureRuleSet captureRuleSet)
         {
-            List<IPiece> bracketingPieces = new List<IPiece>();
-            bool facing = CheckAhead(pivot, board, edgeDirection, captureRuleSet);
-            IPiece clockWise = CheckDirection(pivot, movedPiece, board, edgeDirection, captureRuleSet, PositionUtils.GetClockWiseDirection);
-            IPiece counterClockWise = CheckDirection(pivot, movedPiece, board, edgeDirection, captureRuleSet, PositionUtils.GetCounterClockWiseDirection);
-            if (facing)
-            {
-                ListUtils.AddIfNotNull(clockWise, bracketingPieces);
-                ListUtils.AddIfNotNull(counterClockWise, bracketingPieces);
-            }
-            return bracketingPieces;
+            return ShieldWallUtils.GetShieldWallBrackets(pivot, movedPiece, board, edgeDirection, captureRuleSet, false);
         }
 
         #endregion
@@ -398,92 +231,52 @@ namespace HnefataflAI.Commons.Utils
         /// <returns>If a piece is captured</returns>
         static bool IsCaptured(bool[] sides, int n)
         {
-            switch (n)
+            int side = ArrayToSingleValueConverter.Convert(sides);
+            if (DefaultValues.POSITIONS_DICT.ContainsKey(n))
             {
-                // never used atm
-                case 1:
-                    return sides[0] || sides[1] || sides[2] || sides[3];
-                // custodian capture
-                case 2:
-                    return (sides[0] && sides[2]) || (sides[1] && sides[3]);
-                // king next to edge or throne
-                case 3:
-                    return (sides[0] && sides[1] && sides[2]) || (sides[1] && sides[2] && sides[3]) || (sides[2] && sides[3] && sides[0]);
-                // roaming king
-                case 4:
-                    return sides[0] && sides[1] && sides[2] && sides[3];
-                // uncapturable piece (any n>4)
-                default:
-                    return false;
+                foreach (int num in DefaultValues.POSITIONS_DICT[n])
+                {
+                    if ((side & num) == num)
+                    {
+                        return true;
+                    }
+                }
             }
+            return false;
         }
         static bool IsThreatened(bool[] immediateThreat, bool[] nextMoveThreat, int n)
         {
-            switch (n)
+            int effectiveValue = ArrayToSingleValueConverter.Convert(immediateThreat) ^ ArrayToSingleValueConverter.Convert(nextMoveThreat);
+            if (DefaultValues.POSITIONS_DICT.ContainsKey(n))
             {
-                // never used atm
-                case 1:
-                    return immediateThreat[0] || immediateThreat[1] || immediateThreat[2] || immediateThreat[3]
-                        ||
-                        immediateThreat[0] || immediateThreat[1] || immediateThreat[2] || immediateThreat[3];
-                // custodian capture threat
-                case 2:
-                    return (immediateThreat[0] && nextMoveThreat[2])
-                        ||
-                        (immediateThreat[1] && nextMoveThreat[3])
-                        ||
-                        (immediateThreat[2] && nextMoveThreat[0])
-                        ||
-                        (immediateThreat[3] && nextMoveThreat[1]);
-                // king next to edge or throne
-                case 3:
-                    return (immediateThreat[0] && immediateThreat[1] && nextMoveThreat[2])
-                        ||
-                        (nextMoveThreat[1] && immediateThreat[2] && immediateThreat[3])
-                        ||
-                        (immediateThreat[1] && nextMoveThreat[2] && immediateThreat[3])
-                        ||
-                        (immediateThreat[1] && immediateThreat[2] && nextMoveThreat[3])
-                        ||
-                        (nextMoveThreat[1] && immediateThreat[2] && immediateThreat[3])
-                        ||
-                        (immediateThreat[1] && nextMoveThreat[2] && immediateThreat[3])
-                        ||
-                        (immediateThreat[2] && immediateThreat[3] && nextMoveThreat[0])
-                        ||
-                        (immediateThreat[2] && immediateThreat[3] && nextMoveThreat[0])
-                        ||
-                        (nextMoveThreat[2] && immediateThreat[3] && immediateThreat[0])
-                        ||
-                        (immediateThreat[2] && nextMoveThreat[3] && immediateThreat[0]);
-                // roaming king
-                case 4:
-                    return (immediateThreat[0] && immediateThreat[1] && immediateThreat[2] && nextMoveThreat[3])
-                        ||
-                        (immediateThreat[0] && immediateThreat[1] && nextMoveThreat[2] && immediateThreat[3])
-                        ||
-                        (immediateThreat[0] && nextMoveThreat[1] && immediateThreat[2] && immediateThreat[3])
-                        ||
-                        (nextMoveThreat[0] && immediateThreat[1] && immediateThreat[2] && immediateThreat[3]);
-                default:
-                    return false;
+                foreach (int num in DefaultValues.POSITIONS_DICT[n])
+                {
+                    if ((effectiveValue & num) == num)
+                    {
+                        return true;
+                    }
+                }
             }
+            return false;
         }
-        static int GetOppositeIndex(int i)
+        /// <summary>
+        /// Get the opposite index for the cross checking (0-3 only)
+        /// </summary>
+        /// <remarks>
+        /// 0 (00) -> 2 (10)
+        /// 1 (01) -> 3 (11)
+        /// 2 (10) -> 0 (10)
+        /// 3 (11) -> 1 (01)
+        /// </remarks>
+        /// <param name="idx">The index</param>
+        /// <returns></returns>
+        static int GetOppositeIndex(int idx)
         {
-            switch (i)
+            if (idx > 3)
             {
-                case 0:
-                    return 2;
-                case 1:
-                    return 3;
-                case 2:
-                    return 0;
-                case 3:
-                    return 1;
-                default:
-                    throw new Exception("Unexpected index reached");
+                throw new CustomGenericException(typeof(CaptureUtils).Name, MethodBase.GetCurrentMethod().Name, string.Format("Unexpected index reached: {0}", idx));
             }
+            return (((idx >> 1) ^ 1) << 1) | (idx & 1);
         }
         private static int GetNumberOfPiecesForKing(Position kingPosition, Board board, CaptureRuleSet captureRuleSet)
         {
@@ -516,7 +309,8 @@ namespace HnefataflAI.Commons.Utils
             return captureRuleSet.piecesForKingOnBoard;
         }
 
-        private static bool DoesPieceReachPosition(IPiece piece, Position position, Board board, CaptureRuleSet captureRuleSet)
+        // todo: redo with moveutils
+        public static bool DoesPieceReachPosition(IPiece piece, Position position, Board board, CaptureRuleSet captureRuleSet)
         {
             bool canLand = true;
             bool canTraverse = true;

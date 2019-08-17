@@ -69,7 +69,9 @@
     <Compile Include="AI\MoveValue.cs" />
     <Compile Include="AI\PieceValues.cs" />
     <Compile Include="Commons\CaptureRuleSet.cs" />
+    <Compile Include="Commons\Converter\ArrayToSingleValueConverter.cs" />
     <Compile Include="Commons\DataTypes\Matrix.cs" />
+    <Compile Include="Commons\Exceptions\CustomGenericException.cs" />
     <Compile Include="Commons\Exceptions\ErrorMessages.cs" />
     <Compile Include="Commons\Exceptions\InvalidBoardException.cs" />
     <Compile Include="Commons\Exceptions\InvalidInputException.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Commons\Utils\PieceColorsUtils.cs" />
     <Compile Include="Commons\Utils\PositionUtils.cs" />
     <Compile Include="Commons\Utils\RuleUtils.cs" />
+    <Compile Include="Commons\Utils\ShieldWallUtils.cs" />
     <Compile Include="Games\Boards\Board.cs" />
     <Compile Include="Commons\Move.cs" />
     <Compile Include="Commons\PieceColors.cs" />

@@ -5,6 +5,7 @@ using HnefataflAI.Defaults;
 using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace HnefataflAI.Commons.Utils
@@ -37,7 +38,7 @@ namespace HnefataflAI.Commons.Utils
                 ||
                 totalCols < 5 || totalCols > DefaultValues.MAX_COLS || (totalCols % 2) == 0)
             {
-                throw new System.Exception(ErrorMessages.INVALID_BOARD_DIMENSION);
+                throw new CustomGenericException(typeof(BoardUtils).Name, MethodBase.GetCurrentMethod().Name, ErrorMessages.INVALID_BOARD_DIMENSION);
             }
         }
         /// <summary>

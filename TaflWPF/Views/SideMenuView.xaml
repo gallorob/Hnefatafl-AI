@@ -29,6 +29,8 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
+                <!-- Copy move's history to clipboard -->
+                <Button Content="Copy to clipboard" Margin="5" DockPanel.Dock="Top" Command="{Binding CopyCommand}"/>
                 <!-- Game timer -->
                 <TextBlock Text="Game timer: " Margin="5" DockPanel.Dock="Top"/>
                 <TextBlock Text="{Binding Timer}" Margin="5"/>

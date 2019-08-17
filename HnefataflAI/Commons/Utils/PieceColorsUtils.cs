@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HnefataflAI.Commons.Exceptions;
+using System;
+using System.Reflection;
 
 namespace HnefataflAI.Commons.Utils
 {
@@ -13,7 +15,7 @@ namespace HnefataflAI.Commons.Utils
                 case PieceColors.WHITE:
                     return PieceColors.BLACK;
                 default:
-                    throw new ArgumentException("Invalid piece color");
+                    throw new CustomGenericException(typeof(PieceColorsUtils).Name, MethodBase.GetCurrentMethod().Name, string.Format("Invalid piece color: {0}", pieceColors));
             }
         }
         public static string GetRoleFromPieceColor(PieceColors pieceColors)
@@ -25,7 +27,7 @@ namespace HnefataflAI.Commons.Utils
                 case PieceColors.WHITE:
                     return "Defender"; 
                 default:
-                    throw new ArgumentException("Invalid piece color");
+                    throw new CustomGenericException(typeof(PieceColorsUtils).Name, MethodBase.GetCurrentMethod().Name, string.Format("Invalid piece color: {0}", pieceColors));
             }
         }
     }

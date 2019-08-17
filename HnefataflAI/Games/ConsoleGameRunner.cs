@@ -49,7 +49,7 @@ namespace HnefataflAI.Games
                 Game.PlayTurn(player);
                 Console.Clear();
             }
-            catch (Exception e) when (e is InvalidMoveException || e is InvalidInputException)
+            catch (Exception e) when (e is InvalidMoveException || e is InvalidInputException || e is CustomGenericException)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine(Messages.PRESS_TO_CONTINUE);

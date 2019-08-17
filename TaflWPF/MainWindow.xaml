@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TaflWPF"
         xmlns:converter="clr-namespace:TaflWPF.Converter"
         mc:Ignorable="d"
-        Title="Tafl Dekstop" Icon="Resources\icon.ico" Background="Snow" MinWidth="320" MinHeight="200" Width="800" Height="600">
+        Title="Tafl Dekstop" Icon="Resources\icon.ico" Background="Snow" MinWidth="320" MinHeight="200" Width="720" Height="650">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -17,8 +17,6 @@
     </Window.Resources>
     <!-- Window content -->
     <DockPanel>
-        <!-- TODO: ask Bardaky for a better workaround -->
-        <Label Content="{Binding BoardVM}" Name="hideme" Visibility="Hidden" Height="0" Width="0"/>
         <!-- Main Content -->
         <Grid>
             <Grid.ColumnDefinitions>
@@ -32,6 +30,7 @@
             </Grid.RowDefinitions>
             <!-- MAIN CONTENT -->
             <ContentPresenter Content="{Binding BoardVM}"/>
+            <Label Content="Version 0.1-Alpha"/>
         </Grid>
         <!-- Side menu -->
         <ContentPresenter Content="{Binding}"/>

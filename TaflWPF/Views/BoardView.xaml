@@ -104,7 +104,7 @@
                                                 <MultiBinding Converter="{StaticResource PositionConverter}">
                                                     <Binding ElementName="GridBorder"/>
                                                     <Binding ElementName="BoardGrid" />
-                                                    <Binding ElementName="hideme" Path="Content.ShowCorners"/>
+                                                    <Binding Path="GameVM.BoardVM.ShowCorners" RelativeSource="{RelativeSource AncestorType=Window}"/>
                                                 </MultiBinding>
                                             </Image.Source>
                                         </Image>

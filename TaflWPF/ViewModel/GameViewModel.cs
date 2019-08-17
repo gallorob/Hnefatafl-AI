@@ -19,7 +19,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using TaflWPF.Commands;
-using TaflWPF.Common;
+using TaflWPF.Properties;
 using TaflWPF.Utils;
 
 namespace TaflWPF.ViewModel
@@ -32,6 +32,7 @@ namespace TaflWPF.ViewModel
         internal Game Game { get; private set; }
         public ICommand MoveCommand { get; private set; }
         public ICommand PreviewMouseDownCommand { get; private set; }
+        public ICommand CopyCommand { get; private set; }
 		public ObservableCollection<String> GameMoves { get; set; }
 
         private readonly string[] _Move = new string[2] { "", "" };
@@ -85,6 +86,7 @@ namespace TaflWPF.ViewModel
         {
             MoveCommand = new RelayCommand<string>(SendMoveToGame);
 			PreviewMouseDownCommand = new RelayCommand<object>((sender) => OnPreviewMouseDown(sender));
+            CopyCommand = new RelayCommand(CopyToClipboard);
 			this.GameMoves = new ObservableCollection<string>();
             this.BoardVM = new BoardViewModel(BoardBuilder.GetBoard(boardType));
             this.GameEngine = new GameEngineImpl(ruleType);
@@ -155,14 +157,19 @@ namespace TaflWPF.ViewModel
                 }
                 else
                 {
-                    MessageBox.Show(string.Format(Messages.GAMEOVER_TEXT, Game.GameStatus.Reason, PieceColorsUtils.GetRoleFromPieceColor(Game.CurrentlyPlaying), Messages.GAMEOVER_TITLE, MessageBoxButton.OK, MessageBoxImage.Exclamation));
+                    MessageBox.Show(string.Format(Resources.GameOverText, Game.GameStatus.Reason, PieceColorsUtils.GetRoleFromPieceColor(Game.CurrentlyPlaying), Resources.GameOverTitle, MessageBoxButton.OK, MessageBoxImage.Exclamation));
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Messages.ERROR_TEXT, ex.Message), Messages.ERROR_TITLE, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(string.Format(Resources.ErrorText, ex.Message), Resources.ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
                 GameLogger.Log(ex.Message + " " + ex.StackTrace);
             }
+        }
+        private void CopyToClipboard()
+        {
+            string text = string.Join("\n", GameMoves);
+            Clipboard.SetText(text);
         }
         public void CalculatePossibleMoves(PieceItemViewModel item)
         {
@@ -179,8 +186,6 @@ namespace TaflWPF.ViewModel
         public void CheckPieceUnderThreat()
         {
             BoardVM.Pieces.ToList().ForEach(piece => piece.IsThreatened = piece.Piece != null
-                &&
-                piece.Piece.PieceColors.Equals(Game.CurrentlyPlaying)
                 &&
                 GameEngine.RuleEngine.IsPieceThreatened(piece.Piece, BoardVM.Board));
         }
@@ -203,7 +208,7 @@ namespace TaflWPF.ViewModel
         #region Other
         public String GetMoveRepresentation()
         {
-            return String.Format(Messages.MOVE, _Move[0].ToLower(), _Move[1].ToLower());
+            return String.Format(Resources.MoveString, _Move[0].ToLower(), _Move[1].ToLower());
         }
         private IPlayer GetPlayer()
         {
@@ -211,12 +216,12 @@ namespace TaflWPF.ViewModel
         }
         private void UpdateCurrentPlayer()
         {
-            CurrentPlayer = String.Format(Messages.CURRENTPLAYER, GetPlayer().PlayerName, PieceColorsUtils.GetRoleFromPieceColor(Game.CurrentlyPlaying));
+            CurrentPlayer = String.Format(Resources.CurrentPlayer, GetPlayer().PlayerName, PieceColorsUtils.GetRoleFromPieceColor(Game.CurrentlyPlaying));
         }
         private void UpdateBoardValue()
         {
             BoardEvaluator boardEvaluator = new BoardEvaluator();
-            BoardValue = String.Format(Messages.BOARDVALUE, boardEvaluator.EvaluateBoard(BoardVM.Board, Game.CurrentlyPlaying));
+            BoardValue = String.Format(Resources.BoardValue, boardEvaluator.EvaluateBoard(BoardVM.Board, Game.CurrentlyPlaying));
         }
         #endregion
     }
