@@ -53,7 +53,8 @@ namespace TaflWPF.ViewModel
                     Position = piece != null ? piece.Position : GridUtils.GetPositionFromIndex(i, ColumnCount),
                     IsThreatened = piece != null ? piece.IsThreatened : false
                 };
-                this.Pieces.Add(pieceVM);
+				pieceVM.PositionType = Board.CornerTiles.Contains(pieceVM.Position) ? PositionType.CORNER : Board.ThroneTiles.Contains(pieceVM.Position) ? PositionType.THRONE : PositionType.DEFAULT;
+				this.Pieces.Add(pieceVM);
             }
         }
         public void RefreshBoard()

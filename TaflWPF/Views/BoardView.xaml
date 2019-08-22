@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:TaflWPF.Views"
                     xmlns:converter="clr-namespace:TaflWPF.Converter"
                     xmlns:viewmodel="clr-namespace:TaflWPF.ViewModel"
                     xmlns:helper="clr-namespace:TaflWPF.Helper">
@@ -11,6 +10,19 @@
     <converter:PieceToImageConverter x:Key="PieceConverter"/>
     <!-- Convert a boolean value to Visibility -->
     <converter:BooleanToVisibilityConverter x:Key="BooleanConverter"/>
+
+    <converter:SwitchConverter x:Key="SwitchConverter">
+        <converter:SwitchConverterCase When="KING" Then="/Resources/king.png"/>
+        <converter:SwitchConverterCase When="DEFENDER" Then="/Resources/defender.png"/>
+        <converter:SwitchConverterCase When="ATTACKER" Then="/Resources/attacker.png"/>
+        <converter:SwitchConverterCase When="ELITEGUARD" Then="/Resources/eliteguard.png"/>
+        <converter:SwitchConverterCase When="COMMANDER" Then="/Resources/commander.png"/>
+    </converter:SwitchConverter>
+
+    <converter:SwitchConverter x:Key="PositionSwitchConverter">
+        <converter:SwitchConverterCase When="CORNER" Then="/Resources/corner.png"/>
+        <converter:SwitchConverterCase When="THRONE" Then="/Resources/throne.png"/>
+    </converter:SwitchConverter>
 
     <DataTemplate DataType="{x:Type viewmodel:BoardViewModel}">
         <Viewbox StretchDirection="Both" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="800" MaxHeight="800">
@@ -98,18 +110,12 @@
                                     <!-- Piece and tile representation -->
                                     <Grid>
                                         <!-- TILE -->
-                                        <Image RenderOptions.BitmapScalingMode="HighQuality" IsHitTestVisible="False"
+                                        <Image Source="{Binding PositionType, Converter={StaticResource PositionSwitchConverter}}"
+                                               RenderOptions.BitmapScalingMode="HighQuality" IsHitTestVisible="False"
                                                 MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32">
-                                            <Image.Source>
-                                                <MultiBinding Converter="{StaticResource PositionConverter}">
-                                                    <Binding ElementName="GridBorder"/>
-                                                    <Binding ElementName="BoardGrid" />
-                                                    <Binding Path="GameVM.BoardVM.ShowCorners" RelativeSource="{RelativeSource AncestorType=Window}"/>
-                                                </MultiBinding>
-                                            </Image.Source>
                                         </Image>
                                         <!-- PIECE -->
-                                        <Image Source="{Binding Converter={StaticResource PieceConverter}}"
+                                        <Image Source="{Binding PieceType, Converter={StaticResource SwitchConverter}}"
                                                    RenderOptions.BitmapScalingMode="HighQuality" IsHitTestVisible="False"
                                                    MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32" />
                                         <!-- Overlay for piece capture -->

@@ -78,6 +78,7 @@
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\MethodToValueConverter.cs" />
     <Compile Include="Converter\PositionToImageConverter.cs" />
+    <Compile Include="Converter\SwitchConverter.cs" />
     <Compile Include="Helper\CommandHelper.cs" />
     <Compile Include="Utils\GridUtils.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />

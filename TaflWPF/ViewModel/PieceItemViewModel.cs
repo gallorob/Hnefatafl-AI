@@ -4,6 +4,12 @@ using TaflWPF.Model.Piece;
 
 namespace TaflWPF.ViewModel
 {
+	public enum PositionType
+	{
+		DEFAULT,
+		CORNER,
+		THRONE
+	}
     /// <summary>
     /// View Model class for the game piece
     /// </summary>
@@ -60,11 +66,17 @@ namespace TaflWPF.ViewModel
         {
             get { return m_Position; }
             set { m_Position = value; NotifyPropertyChanged(nameof(Position)); }
-        }
-        /// <summary>
-        /// The piece type
-        /// </summary>
-        public PieceType PieceType { get { return PieceUtils.GetPieceType(this.Piece); } }
+		}
+		private PositionType m_PositionType = PositionType.DEFAULT;
+		public PositionType PositionType
+		{
+			get { return m_PositionType; }
+			set { m_PositionType = value; NotifyPropertyChanged(nameof(PositionType)); }
+		}
+		/// <summary>
+		/// The piece type
+		/// </summary>
+		public PieceType PieceType { get { return PieceUtils.GetPieceType(this.Piece); } }
         /// <summary>
         /// The piece informations
         /// </summary>

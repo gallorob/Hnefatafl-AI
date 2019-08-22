@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -21,12 +22,12 @@ namespace TaflWPF.Helper
         /// <summary>
         /// The new Command property to attach to the DependencyObject
         /// </summary>
-        public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterAttached("Command", typeof(ICommand), typeof(CommandHelper), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterAttached("Command", typeof(ICommand), typeof(CommandHelper), new PropertyMetadata(null));
 
         /// <summary>
         /// The new EventName property to attach to the DependencyObject
         /// </summary>
-        public static readonly DependencyProperty EventNameProperty = DependencyProperty.RegisterAttached("EventName", typeof(string), typeof(CommandHelper), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits, EventNameChanged));
+        public static readonly DependencyProperty EventNameProperty = DependencyProperty.RegisterAttached("EventName", typeof(string), typeof(CommandHelper), new PropertyMetadata(null, EventNameChanged));
 
         /// <summary>
         /// Get the EventName
@@ -74,6 +75,11 @@ namespace TaflWPF.Helper
             // Sanity check (1): Make sure the NewValue is not null and is a string
             if (eventArgs.NewValue != null && eventArgs.NewValue is string name)
             {
+				if (dependencyObject is FrameworkElement element)
+					element.Unloaded += Element_Unloaded;
+				else
+					throw new FormatException("Item must be of type FrameworkElement");
+
                 // cycle through all events of the dependencyObject
                 foreach (var objEvent in dependencyObject.GetType().GetEvents())
                 {
@@ -168,18 +174,30 @@ namespace TaflWPF.Helper
                                     oldEvent.RemoveEventHandler(dependencyObject, Handlers[dependencyObject][old]);
                                     // and remove the entry from the dictionary
                                     Handlers.Remove(dependencyObject);
-                                }
+								}
                             }
                         }
                     }
                 }
             }
         }
-        /// <summary>
-        /// Define the behaviour of a custom event handler
-        /// </summary>
-        /// <param name="sender">The sender</param>
-        /// <param name="args">The event arguments</param>
+
+		private static void Element_Unloaded(object sender, RoutedEventArgs e)
+		{
+			if(sender is DependencyObject dependencyObject)
+				if (Handlers.ContainsKey(dependencyObject))
+					foreach(var handler in Handlers[dependencyObject])
+					{
+						dependencyObject.GetType().GetEvent(handler.Key).RemoveEventHandler(dependencyObject, handler.Value);
+						Handlers.Remove(dependencyObject);
+					}
+		}
+
+		/// <summary>
+		/// Define the behaviour of a custom event handler
+		/// </summary>
+		/// <param name="sender">The sender</param>
+		/// <param name="args">The event arguments</param>
 		private static void ExecuteCommand(DependencyObject sender, object args)
         {
             // check the dictionary entry for the dependency object sender
