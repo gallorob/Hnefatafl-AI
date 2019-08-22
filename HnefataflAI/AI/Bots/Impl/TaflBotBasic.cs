@@ -68,7 +68,7 @@ namespace HnefataflAI.AI.Bots.Impl
             {
                 // update board with the move
                 this.GameEngine.ApplyMove(move, board, PieceColors);
-                GameStatus gameStatus = this.GameEngine.GetGameStatus(move.Piece, board);
+                GameStatus gameStatus = this.GameEngine.GetGameStatus(move, board);
                 // evaluate the new board status
                 int moveValue = this.MovesEvaluator.EvaluateBoard(board, PieceColors);
                 if (gameStatus.IsGameOver && gameStatus.Status is Status.WIN)

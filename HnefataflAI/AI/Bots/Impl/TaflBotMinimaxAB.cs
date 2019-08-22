@@ -84,7 +84,7 @@ namespace HnefataflAI.AI.Bots.Impl
                 // update board with the move
                 GameEngine.ApplyMove(move, board, pieceColors);
                 // check if it reached an endgame point
-                GameStatus gameStatus = GameEngine.GetGameStatus(move.Piece, board);
+                GameStatus gameStatus = GameEngine.GetGameStatus(move, board);
                 if (!gameStatus.IsGameOver)
                 {
                     gameStatus.IsGameOver = MoveUtils.IsRepeatedMove(this.BotMoves, move, Rule);

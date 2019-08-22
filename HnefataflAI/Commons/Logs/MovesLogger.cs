@@ -75,11 +75,11 @@ namespace HnefataflAI.Commons.Logs
         }
         public static void Log(string message)
         {
-            using (streamwriter streamwriter = new streamwriter(filepath, true))
-            {
-                streamwriter.writeline(message);
-                streamwriter.close();
-            }
+            //using (StreamWriter streamwriter = new StreamWriter(FilePath, true))
+            //{
+            //    streamwriter.WriteLine(message);
+            //    streamwriter.Close();
+            //}
         }
     }
 }

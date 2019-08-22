@@ -45,7 +45,7 @@ namespace HnefataflAI.Games
             GameLogger.LogMove(this.TurnNumber, player.PieceColors, actualMove);
             GameLogger.LogBoard(this.Board);
             this.GameEngine.ApplyMove(actualMove, this.Board, player.PieceColors);
-            this.GameStatus = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);
+            this.GameStatus = this.GameEngine.GetGameStatus(actualMove, this.Board);
             this.GameEngine.RuleEngine.UpdatePiecesThreatLevel(this.Board);
             GameLogger.LogPiecesCaptures(this.GameStatus.CapturedPieces);
             this.TurnNumber++;
@@ -90,7 +90,7 @@ namespace HnefataflAI.Games
             GameLogger.LogMove(this.TurnNumber, player.PieceColors, actualMove);
             GameLogger.LogBoard(this.Board);
             this.GameEngine.ApplyMove(actualMove, this.Board, player.PieceColors);
-            this.GameStatus = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);
+            this.GameStatus = this.GameEngine.GetGameStatus(actualMove, this.Board);
             this.GameEngine.RuleEngine.UpdatePiecesThreatLevel(this.Board);
             GameLogger.LogPiecesCaptures(this.GameStatus.CapturedPieces);
             this.TurnNumber++;

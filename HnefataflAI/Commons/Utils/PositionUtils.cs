@@ -174,14 +174,14 @@ namespace HnefataflAI.Commons.Utils
                 {
                     for (int i = 1; i < start.Subtract(end); i++)
                     {
-                        range.Add(new Position(start.Row + i, start.Col));
+                        range.Add(new Position(start.Row - i, start.Col));
                     }
                 }
                 else
                 {
                     for (int i = 1; i < start.Subtract(end); i++)
                     {
-                        range.Add(new Position(start.Row, (char)(start.Col + i)));
+                        range.Add(new Position(start.Row, (char)(start.Col - i)));
                     }
                 }
             }
@@ -191,14 +191,14 @@ namespace HnefataflAI.Commons.Utils
                 {
                     for (int i = 1; i < end.Subtract(start); i++)
                     {
-                        range.Add(new Position(end.Row + i, end.Col));
+                        range.Add(new Position(start.Row + i, end.Col));
                     }
                 }
                 else
                 {
                     for (int i = 1; i < end.Subtract(start); i++)
                     {
-                        range.Add(new Position(end.Row, (char)(end.Col + i)));
+                        range.Add(new Position(end.Row, (char)(start.Col + i)));
                     }
                 }
             }

@@ -64,6 +64,7 @@
     <Compile Include="AI\BoardEvaluator.cs" />
     <Compile Include="AI\Bots\ATaflBot.cs" />
     <Compile Include="AI\Bots\BotTypes.cs" />
+    <Compile Include="AI\Bots\Impl\TaflBotParallelMinimax.cs" />
     <Compile Include="AI\Bots\ITaflBot.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotBasic.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotMinimax.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="AI\PieceValues.cs" />
     <Compile Include="Commons\CaptureRuleSet.cs" />
     <Compile Include="Commons\Converter\ArrayToSingleValueConverter.cs" />
+    <Compile Include="Commons\DataTypes\ConcurrentHashSet.cs" />
     <Compile Include="Commons\DataTypes\Matrix.cs" />
     <Compile Include="Commons\Exceptions\CustomGenericException.cs" />
     <Compile Include="Commons\Exceptions\ErrorMessages.cs" />

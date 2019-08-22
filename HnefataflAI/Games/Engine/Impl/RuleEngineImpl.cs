@@ -45,8 +45,9 @@ namespace HnefataflAI.Games.Engine.Impl
             //}
             return PieceColorsUtils.GetOppositePieceColor(piece.PieceColors);
         }
-        public GameStatus GetGameStatus(IPiece movedPiece, Board board, List<Move> whiteMoves, List<Move> blackMoves)
+        public GameStatus GetGameStatus(Move move, Board board, List<Move> whiteMoves, List<Move> blackMoves)
         {
+            IPiece movedPiece = board.At(move.To);
             List<IPiece> capturedPieces = GetCapturedPieces(movedPiece, board);
             GameStatus gameStatus = new GameStatus(false);
             gameStatus.CapturedPieces.AddRange(capturedPieces);

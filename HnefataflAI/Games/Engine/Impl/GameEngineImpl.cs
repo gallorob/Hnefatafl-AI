@@ -40,32 +40,39 @@ namespace HnefataflAI.Games.Engine.Impl
             }
             return new Move(movedPiece, from, to);
         }
-        public void ApplyMove(Move move, Board board, PieceColors playerColor)
+        public void ApplyMove(Move move, Board board, PieceColors playerColor, bool fromBot = false)
         {
             ValidateMove(move, board, playerColor, RuleEngine.Rule.GetMoveRuleSet());
-            switch (move.Piece.PieceColors)
+            IPiece piece = board.At(move.From);
+            if (!fromBot)
             {
-                case PieceColors.BLACK:
-                    this.BlackMoves.Add(move);
-                    break;
-                case PieceColors.WHITE:
-                    this.WhiteMoves.Add(move);
-                    break;
+                switch (piece.PieceColors)
+                {
+                    case PieceColors.BLACK:
+                        this.BlackMoves.Add(move);
+                        break;
+                    case PieceColors.WHITE:
+                        this.WhiteMoves.Add(move);
+                        break;
+                }
             }
-            BoardUtils.UpdatePieceFromMove(move.Piece, move.To, board);
+            BoardUtils.UpdatePieceFromMove(move.From, move.To, board);
         }
-        public void UndoMove(Move move, Board board, PieceColors playerColor)
+        public void UndoMove(Move move, Board board, PieceColors playerColor, bool fromBot = false)
         {
-            switch (playerColor)
+            if (!fromBot)
             {
-                case PieceColors.BLACK:
-                    this.BlackMoves.Remove(move);
-                    break;
-                case PieceColors.WHITE:
-                    this.WhiteMoves.Remove(move);
-                    break;
+                switch (playerColor)
+                {
+                    case PieceColors.BLACK:
+                        this.BlackMoves.Remove(move);
+                        break;
+                    case PieceColors.WHITE:
+                        this.WhiteMoves.Remove(move);
+                        break;
+                }
             }
-            BoardUtils.UpdatePieceFromMove(move.Piece, move.From, board);
+            BoardUtils.UpdatePieceFromMove(move.To, move.From, board);
         }
         private void ValidateMove(Move move, Board board, PieceColors playerColor, MoveRuleSet moveRuleSet)
         {
@@ -73,7 +80,8 @@ namespace HnefataflAI.Games.Engine.Impl
             {
                 throw new InvalidMoveException(move.From, ErrorMessages.POSITION_OUT_OF_BOARD);
             }
-            if (!move.Piece.PieceColors.Equals(playerColor))
+            IPiece piece = board.At(move.From);
+            if (!piece.PieceColors.Equals(playerColor))
             {
                 throw new InvalidMoveException(move, ErrorMessages.OPPONENT_PIECE);
             }
@@ -81,7 +89,7 @@ namespace HnefataflAI.Games.Engine.Impl
             {
                 throw new InvalidMoveException(move, ErrorMessages.INVALID_DESTINATION_PIECE);
             }
-            if (!MoveUtils.CanMoveToPosition(move.Piece, move.To, board, moveRuleSet))
+            if (!MoveUtils.CanMoveToPosition(piece, move.To, board, moveRuleSet))
             {
                 throw new InvalidMoveException(move, ErrorMessages.INVALID_DESTINATION_POSITION);
             }
@@ -115,9 +123,9 @@ namespace HnefataflAI.Games.Engine.Impl
                 this.CapturedPieces.Remove(piece);
             }
         }
-        public GameStatus GetGameStatus(IPiece movedPiece, Board board)
+        public GameStatus GetGameStatus(Move move, Board board)
         {
-            GameStatus gameStatus = this.RuleEngine.GetGameStatus(movedPiece, board, this.WhiteMoves, this.BlackMoves);
+            GameStatus gameStatus = this.RuleEngine.GetGameStatus(move, board, this.WhiteMoves, this.BlackMoves);
             foreach (IPiece capturedPiece in gameStatus.CapturedPieces)
             {
                 if (!(capturedPiece is King) || (capturedPiece is King && gameStatus.IsGameOver))

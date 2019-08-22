@@ -57,7 +57,7 @@ namespace HnefataflAI
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
             BoardTypes boardType = BoardTypes.ARDRDI_7X7;
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
-            ITaflBot player2 = BotUtils.GetTaflBot(BotTypes.MINIMAXAB, PieceColors.WHITE, ruleType);
+            ITaflBot player2 = BotUtils.GetTaflBot(BotTypes.PARALLELMINIMAX, PieceColors.WHITE, ruleType);
 
             Game game = new Game(boardType, player1, player2, ruleType);
             ConsoleGameRunner consoleGameRunner = new ConsoleGameRunner(game);

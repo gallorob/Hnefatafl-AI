@@ -18,7 +18,7 @@ namespace HnefataflAI.Commons.Utils
             return String.Format("[{0}] - {1} moves {2} from {3} to {4}.",
                 turn,
                 PieceColorsUtils.GetRoleFromPieceColor(pieceColor),
-                move.Piece.ToString(),
+                "",//move.Piece.ToString(),
                 move.From,
                 move.To);
         }

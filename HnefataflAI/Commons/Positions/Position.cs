@@ -67,11 +67,11 @@ namespace HnefataflAI.Commons.Positions
         {
             if (this.Row == other.Row)
             {
-                return Math.Abs(this.Col - other.Col);
+                return this.Col - other.Col;
             }
             else if (this.Col == other.Col)
             {
-                return Math.Abs(this.Row - other.Row);
+                return this.Row - other.Row;
             }
             else return -1;
         }

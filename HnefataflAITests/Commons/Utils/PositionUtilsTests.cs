@@ -25,5 +25,22 @@ namespace HnefataflAI.Commons.Utils.Tests
                 Assert.AreEqual(expected[i], result[i]);
             }
         }
+        [TestMethod()]
+        public void GetPositionsRange2Test()
+        {
+            Position start = new Position(1, 'b');
+            Position end = new Position(1, 'e');
+            List<Position> expected = new List<Position>
+            {
+                new Position(1, 'c'),
+                new Position(1, 'd')
+            };
+            List<Position> result = PositionUtils.GetPositionsRange(start, end);
+            Assert.AreEqual(expected.Count, result.Count);
+            for (int i = 0; i < expected.Count; i++)
+            {
+                Assert.AreEqual(expected[i], result[i]);
+            }
+        }
     }
 }

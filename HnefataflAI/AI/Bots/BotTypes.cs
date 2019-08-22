@@ -4,6 +4,7 @@
     {
         BASIC,
         MINIMAX,
+        PARALLELMINIMAX,
         MINIMAXAB,
         RANDOM
     }

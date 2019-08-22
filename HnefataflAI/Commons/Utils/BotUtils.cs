@@ -16,6 +16,8 @@ namespace HnefataflAI.Commons.Utils
                     return new TaflBotBasic(pieceColor, ruleType);
                 case BotTypes.MINIMAX:
                     return new TaflBotMinimax(pieceColor, ruleType);
+                case BotTypes.PARALLELMINIMAX:
+                    return new TaflBotParallelMinimax(pieceColor, ruleType);
                 case BotTypes.MINIMAXAB:
                     return new TaflBotMinimaxAB(pieceColor, ruleType);
                 case BotTypes.RANDOM:
