@@ -40,12 +40,13 @@ namespace HnefataflAI.Games
             if (player is HumanPlayer)
                 playerMove = player.GetMove();
             else
-                playerMove = ((ITaflBot)player).GetMove(this.Board, this.GameEngine.GetMovesByColor(player.PieceColors, this.Board));
+                playerMove = ((ITaflBot)player).GetMove(this.Board);
             Move actualMove = this.GameEngine.ProcessPlayerMove(playerMove, this.Board);
             GameLogger.LogMove(this.TurnNumber, player.PieceColors, actualMove);
             GameLogger.LogBoard(this.Board);
             this.GameEngine.ApplyMove(actualMove, this.Board, player.PieceColors);
             this.GameStatus = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);
+            this.GameEngine.RuleEngine.UpdatePiecesThreatLevel(this.Board);
             GameLogger.LogPiecesCaptures(this.GameStatus.CapturedPieces);
             this.TurnNumber++;
         }
@@ -90,6 +91,7 @@ namespace HnefataflAI.Games
             GameLogger.LogBoard(this.Board);
             this.GameEngine.ApplyMove(actualMove, this.Board, player.PieceColors);
             this.GameStatus = this.GameEngine.GetGameStatus(actualMove.Piece, this.Board);
+            this.GameEngine.RuleEngine.UpdatePiecesThreatLevel(this.Board);
             GameLogger.LogPiecesCaptures(this.GameStatus.CapturedPieces);
             this.TurnNumber++;
             return actualMove;

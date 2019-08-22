@@ -6,6 +6,7 @@ using HnefataflAI.Defaults;
 using HnefataflAI.Pieces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace HnefataflAI.Games.Boards
 {
@@ -57,10 +58,15 @@ namespace HnefataflAI.Games.Boards
 			this.TotalCols = numCols;
 			this.board = new Matrix<IPiece>(numRows, numCols);
             this.AttackerBaseCamps = new List<Position>();
-            this.DefenderBaseCamps = new List<Position>();
             this.CornerTiles = new List<Position>();
             this.ThroneTiles = new List<Position>();
         }
+
+        public Position GetCenterPosition()
+        {
+            return new Position(this.TotalRows / 2 + 1, (char)(DefaultValues.FIRST_COLUMN + (this.TotalCols / 2)));
+        }
+
         /// <summary>
         /// Add the default 4 corners to the board
         /// </summary>
@@ -90,7 +96,7 @@ namespace HnefataflAI.Games.Boards
         {
             List<Position> thrones = new List<Position>
             {
-                new Position(this.TotalRows / 2 + 1, (char)(DefaultValues.FIRST_COLUMN + (this.TotalCols / 2)))
+                GetCenterPosition()
             };
             this.AddThroneTiles(thrones);
         }
@@ -108,7 +114,6 @@ namespace HnefataflAI.Games.Boards
 		public void AddBaseCamps()
         {
             this.AddBaseCamps(this.AttackerBaseCamps, PieceColors.BLACK);
-            this.AddBaseCamps(this.DefenderBaseCamps, PieceColors.WHITE);
         }
         /// <summary>
         /// Add the base camps for a player to the board.
@@ -218,19 +223,38 @@ namespace HnefataflAI.Games.Boards
         /// <returns>The string representation of the board</returns>
 		public override string ToString()
 		{
-			string result = System.String.Format("\t{0}\n\r", BoardUtils.GetBoardColumnsChars(this.TotalCols));
+            StringBuilder result = new StringBuilder();
+            result.AppendFormat("\t\t{0}\n\r", BoardUtils.GetBoardColumnsChars(this.TotalCols));
 			for (int i = 0; i < this.TotalRows; i++)
 			{
-				result += this.TotalRows - i + "\t";
+				result.AppendFormat("{0}\t", this.TotalRows - i + "\t");
 				for (int j = 0; j < this.TotalCols; j++)
 				{
 					IPiece piece = this.board.At(i, j);
-					result += piece == null ? BoardUtils.GetPositionBoardRepresentation(i, j, this) : piece.PieceRepresentation();
+                    result.Append(piece == null ? BoardUtils.GetPositionBoardRepresentation(i, j, this) : piece.PieceRepresentation());
 				}
-				result += "\n\r";
+                result.Append("\n\r");
 			}
-			return result;
+			return result.ToString();
 		}
+
+        public string AsString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach(IPiece piece in GetPiecesWithNull())
+            {
+                if (piece is null)
+                {
+                    stringBuilder.Append(".");
+                }
+                else
+                {
+                    stringBuilder.Append(piece.PieceRepresentation());
+                }
+            }
+            return stringBuilder.ToString().Replace(" ", "");
+        }
+
 		#endregion
 	}
 }

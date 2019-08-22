@@ -59,7 +59,7 @@ namespace HnefataflAI.Games.Engine.Impl
                     if (piece is King && !gameStatus.IsGameOver)
                     {
                         // winning condition for Attacker
-                        gameStatus.IsGameOver = true;// Rule.CheckIfKingIsCaptured(piece, board);
+                        gameStatus.IsGameOver = true;
                         gameStatus.Status = Status.WIN;
                         gameStatus.Reason = "King has been captured";
                     }
@@ -100,18 +100,38 @@ namespace HnefataflAI.Games.Engine.Impl
                 gameStatus.Status = Status.LOSS;
                 gameStatus.Reason = "Repeated moves for defender";
             }
+            if (!gameStatus.IsGameOver)
+            {
+                if (!CanMove(gameStatus.NextPlayer, board))
+                {
+                    gameStatus.Status = Status.WIN;
+                    gameStatus.IsGameOver = true;
+                    gameStatus.Reason = string.Format("No available moves for {0}", PieceColorsUtils.GetRoleFromPieceColor(gameStatus.NextPlayer));
+                }
+            }
+            if (!gameStatus.IsGameOver && Rule.AllowEncirclement)
+            {
+                if (RuleUtils.CheckIfHasEncircled(board))
+                {
+                    gameStatus.Status = Status.WIN;
+                    gameStatus.IsGameOver = true;
+                    gameStatus.Reason = "Attacker has successfully encircled the defender!";
+                }
+            }
             return gameStatus;
         }
 
         public bool CanMove(PieceColors playerColor, Board board)
         {
             return GetAvailableMoves(playerColor, board).Count != 0;
-                //|| Rule.CheckIfHasAvailableMoves();
         }
 
-        public bool IsPieceThreatened(IPiece piece, Board board)
+        public void UpdatePiecesThreatLevel(Board board)
         {
-            return Rule.CheckIfUnderThreat(piece, board);
+            foreach (IPiece piece in board.GetPieces())
+            {
+                piece.IsThreatened = Rule.CheckIfUnderThreat(piece, board);
+            }
         }
     }
 }

@@ -149,7 +149,9 @@
     <value>ERROR</value>
   </data>
   <data name="GameOverText" xml:space="preserve">
-    <value>Game over!\nCause: {0}\nWinner: {1}</value>
+    <value>Game over!
+Cause: {0}
+Winner: {1}</value>
   </data>
   <data name="GameOverTitle" xml:space="preserve">
     <value>GAME OVER</value>
@@ -174,5 +176,8 @@
   </data>
   <data name="throne" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\throne.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="win" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\win.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

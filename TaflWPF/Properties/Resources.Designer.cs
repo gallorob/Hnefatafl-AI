@@ -157,7 +157,9 @@ namespace TaflWPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Game over!\nCause: {0}\nWinner: {1}.
+        ///   Looks up a localized string similar to Game over!
+        ///Cause: {0}
+        ///Winner: {1}.
         /// </summary>
         internal static string GameOverText {
             get {
@@ -239,6 +241,16 @@ namespace TaflWPF.Properties {
         internal static System.Drawing.Bitmap throne {
             get {
                 object obj = ResourceManager.GetObject("throne", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap win {
+            get {
+                object obj = ResourceManager.GetObject("win", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

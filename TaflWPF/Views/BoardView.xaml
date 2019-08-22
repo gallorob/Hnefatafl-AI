@@ -13,7 +13,7 @@
     <converter:BooleanToVisibilityConverter x:Key="BooleanConverter"/>
 
     <DataTemplate DataType="{x:Type viewmodel:BoardViewModel}">
-        <Viewbox StretchDirection="Both" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="800" MaxHeight="800" Grid.Column="0" Grid.Row="0">
+        <Viewbox StretchDirection="Both" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="800" MaxHeight="800">
             <!-- BOARD -->
             <Grid Margin="5,5,5,5">
                 <Grid.ColumnDefinitions>
@@ -51,7 +51,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <!-- Actual board -->
-                <UniformGrid Margin="2,2,2,2" Grid.Row="0" Grid.Column="1">
+                <UniformGrid Margin="2,2,2,2" Grid.Row="0" Grid.Column="1" Background="BurlyWood">
                     <ItemsControl ItemsSource="{Binding Pieces}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -113,7 +113,11 @@
                                                    RenderOptions.BitmapScalingMode="HighQuality" IsHitTestVisible="False"
                                                    MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32" />
                                         <!-- Overlay for piece capture -->
-                                        <Image Source="pack://application:,,,/Resources/captured.png" Opacity="10" Visibility="{Binding Converter={StaticResource BooleanConverter}, Path=IsCaptured}"
+                                        <Image Source="pack://application:,,,/Resources/captured.png" Visibility="{Binding Converter={StaticResource BooleanConverter}, Path=IsCaptured}"
+                                                   RenderOptions.BitmapScalingMode="HighQuality" IsHitTestVisible="False"
+                                                   MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32" />
+                                        <!-- Overlay for king escape -->
+                                        <Image Source="pack://application:,,,/Resources/win.png" Visibility="{Binding Converter={StaticResource BooleanConverter}, Path=HasEscaped}"
                                                    RenderOptions.BitmapScalingMode="HighQuality" IsHitTestVisible="False"
                                                    MinWidth="16" MinHeight="16" MaxWidth="32" MaxHeight="32" />
                                     </Grid>

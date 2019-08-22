@@ -19,6 +19,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using TaflWPF.Commands;
+using TaflWPF.Model.Piece;
 using TaflWPF.Properties;
 using TaflWPF.Utils;
 
@@ -93,7 +94,7 @@ namespace TaflWPF.ViewModel
             
             // temporarily assign different names
             HumanPlayer player1 = new HumanPlayer(PieceColors.BLACK);
-            HumanPlayer player2 = new HumanPlayer(PieceColors.WHITE) { PlayerName = "Sigfrid" };
+            HumanPlayer player2 = new HumanPlayer(PieceColors.WHITE, "Sigfrid");
 
             this.Game = new Game(BoardVM.Board, player1, player2, GameEngine);
             this.Move = GetMoveRepresentation();
@@ -141,10 +142,6 @@ namespace TaflWPF.ViewModel
             {
                 IPlayer playing = GetPlayer();
                 Move playedMove = Game.PlayTurn(playing, move.ToLower());
-                RefreshCaptured();
-                BoardVM.RefreshBoard();
-                CheckIfPieceWasCaptured();
-                CheckPieceUnderThreat();
 
                 // TODO isSuicidal and isWinning should be obtained from GameStatus
                 GameMoves.Add(LoggingUtils.LogCyningstanStyle(playedMove, Game.GameStatus.CapturedPieces, false, false, Game.GameStatus.IsGameOver));
@@ -154,11 +151,19 @@ namespace TaflWPF.ViewModel
                     Game.CurrentlyPlaying = Game.GameStatus.NextPlayer;
                     UpdateCurrentPlayer();
                     UpdateBoardValue();
+
+                    _Move[0] = "";
+                    _Move[1] = "";
+                    Move = GetMoveRepresentation();
                 }
                 else
                 {
                     MessageBox.Show(string.Format(Resources.GameOverText, Game.GameStatus.Reason, PieceColorsUtils.GetRoleFromPieceColor(Game.CurrentlyPlaying), Resources.GameOverTitle, MessageBoxButton.OK, MessageBoxImage.Exclamation));
                 }
+                RefreshCaptured();
+                BoardVM.RefreshBoard();
+                CheckIfPieceWasCaptured();
+                CheckKingHasEscaped();
             }
             catch (Exception ex)
             {
@@ -183,11 +188,13 @@ namespace TaflWPF.ViewModel
                 }
             }
         }
-        public void CheckPieceUnderThreat()
+        public void CheckKingHasEscaped()
         {
-            BoardVM.Pieces.ToList().ForEach(piece => piece.IsThreatened = piece.Piece != null
-                &&
-                GameEngine.RuleEngine.IsPieceThreatened(piece.Piece, BoardVM.Board));
+            PieceItemViewModel king = BoardVM.Pieces.ToList().Where(piece => piece.PieceType.Equals(PieceType.KING)).FirstOrDefault();
+            if (king != null)
+            {
+                king.HasEscaped = Game.GameStatus.IsGameOver && Game.CurrentlyPlaying.Equals(PieceColors.WHITE);
+            }
         }
         public void CheckIfPieceWasCaptured()
         {

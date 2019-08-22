@@ -34,8 +34,8 @@ namespace HnefataflAI.Games
         }
         public void PlayerPlay(IPlayer player)
         {
-            try
-            {
+            //try
+            //{
                 switch (player.PieceColors)
                 {
                     case PieceColors.BLACK:
@@ -48,15 +48,15 @@ namespace HnefataflAI.Games
                 Console.WriteLine(Game.Board);
                 Game.PlayTurn(player);
                 Console.Clear();
-            }
-            catch (Exception e) when (e is InvalidMoveException || e is InvalidInputException || e is CustomGenericException)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(Messages.PRESS_TO_CONTINUE);
-                Console.ReadKey();
-                Console.Clear();
-                PlayerPlay(player);
-            }
+            //}
+            //catch (Exception e) when (e is InvalidMoveException || e is InvalidInputException || e is CustomGenericException)
+            //{
+            //    Console.WriteLine(e.Message);
+            //    Console.WriteLine(Messages.PRESS_TO_CONTINUE);
+            //    Console.ReadKey();
+            //    Console.Clear();
+            //    PlayerPlay(player);
+            //}
         }
         private void DisplayGameOver()
         {

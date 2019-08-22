@@ -5,8 +5,8 @@ using HnefataflAI.Defaults;
 using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
 using HnefataflAI.Pieces.Impl;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace HnefataflAI.Commons.Utils
@@ -94,7 +94,7 @@ namespace HnefataflAI.Commons.Utils
                     foreach (Directions checkingDirection in PositionUtils.GetClockWiseDirections())
                     {
                         // get the first piece in range
-                        IPiece checkingPiece = BoardUtils.GetFirstPiece(board, checkingDirection, adjacentPosition);
+                        IPiece checkingPiece = BoardUtils.GetFirstPieceFromPosition(board, checkingDirection, adjacentPosition);
                         if (checkingPiece != null && !piece.PieceColors.Equals(checkingPiece.PieceColors))
                         {
                             bool reaches = DoesPieceReachPosition(checkingPiece, adjacentPosition, board, captureRuleSet);
@@ -187,19 +187,31 @@ namespace HnefataflAI.Commons.Utils
                 return bracketingPieces.Contains(movedPiece) && !bracketingPieces.Contains(null) && bracketingPieces[0].PieceColors.Equals(movedPiece.PieceColors) && bracketingPieces[1].PieceColors.Equals(movedPiece.PieceColors);
             }
             bool[] sides = new bool[4];
+            bool[] moved = new bool[4];
             int i = 0;
             foreach (Directions direction in PositionUtils.GetClockWiseDirections())
             {
                 sides[i] = IsPieceUnderThreat(checkingPiece, board, direction, captureRuleSet);
+                // keep memory of where the moved piece is
+                if (BoardUtils.IsPositionMoveValid(checkingPiece.Position, direction, board))
+                {
+                    Position adjacentPosition = checkingPiece.Position.MoveTo(direction);
+                    IPiece adjacentPiece = board.At(adjacentPosition);
+                    if (adjacentPiece != null && adjacentPiece.Equals(movedPiece))
+                    {
+                        moved[i] = true;
+                    }
+                }
+
                 i++;
             }
             if (checkingPiece is King)
             {
-                return IsCaptured(sides, 4);
+                return IsCaptured(sides, moved, 4);
             }
             else
             {
-                return IsCaptured(sides, 2);
+                return IsCaptured(sides, moved, 2);
             }
         }
 
@@ -207,7 +219,7 @@ namespace HnefataflAI.Commons.Utils
 
         public static List<IPiece> IsInShieldWall(IPiece piece, Board board, Directions edgeDirection, CaptureRuleSet captureRuleSet)
         {
-            return ShieldWallUtils.GetShieldWallBrackets(piece, piece, board, edgeDirection, captureRuleSet, true);
+            return ShieldWallUtils.GetShieldWallBrackets(piece, piece, board, edgeDirection, captureRuleSet);
         }
 
         /// <summary>
@@ -218,7 +230,7 @@ namespace HnefataflAI.Commons.Utils
         /// <returns>If the shieldwall is complete</returns>
         public static List<IPiece> IsShieldWallComplete(IPiece pivot, IPiece movedPiece, Board board, Directions edgeDirection, CaptureRuleSet captureRuleSet)
         {
-            return ShieldWallUtils.GetShieldWallBrackets(pivot, movedPiece, board, edgeDirection, captureRuleSet, false);
+            return ShieldWallUtils.GetShieldWallBrackets(pivot, movedPiece, board, edgeDirection, captureRuleSet);
         }
 
         #endregion
@@ -227,14 +239,15 @@ namespace HnefataflAI.Commons.Utils
         /// Check if a piece is captured
         /// </summary>
         /// <param name="sides">Sides (true -> enemy, false -> empty tile)</param>
+        /// <param name="moved"></param>
         /// <param name="n">The number of sides needed to be blocked</param>
         /// <returns>If a piece is captured</returns>
-        static bool IsCaptured(bool[] sides, int n)
+        static bool IsCaptured(bool[] sides, bool[] moved, int n)
         {
-            int side = ArrayToSingleValueConverter.Convert(sides);
-            if (DefaultValues.POSITIONS_DICT.ContainsKey(n))
+            int side = ArrayToSingleValueConverter.Convert(sides, moved);
+            if (DefaultValues.CAPTURES_DICT.ContainsKey(n))
             {
-                foreach (int num in DefaultValues.POSITIONS_DICT[n])
+                foreach (int num in DefaultValues.CAPTURES_DICT[n])
                 {
                     if ((side & num) == num)
                     {
@@ -246,10 +259,10 @@ namespace HnefataflAI.Commons.Utils
         }
         static bool IsThreatened(bool[] immediateThreat, bool[] nextMoveThreat, int n)
         {
-            int effectiveValue = ArrayToSingleValueConverter.Convert(immediateThreat) ^ ArrayToSingleValueConverter.Convert(nextMoveThreat);
-            if (DefaultValues.POSITIONS_DICT.ContainsKey(n))
+            int effectiveValue = ArrayToSingleValueConverter.Convert(immediateThreat, nextMoveThreat);
+            if (DefaultValues.THREATS_DICT.ContainsKey(n))
             {
-                foreach (int num in DefaultValues.POSITIONS_DICT[n])
+                foreach (int num in DefaultValues.THREATS_DICT[n])
                 {
                     if ((effectiveValue & num) == num)
                     {
@@ -309,61 +322,12 @@ namespace HnefataflAI.Commons.Utils
             return captureRuleSet.piecesForKingOnBoard;
         }
 
-        // todo: redo with moveutils
         public static bool DoesPieceReachPosition(IPiece piece, Position position, Board board, CaptureRuleSet captureRuleSet)
         {
-            bool canLand = true;
-            bool canTraverse = true;
-            if (BoardUtils.IsOnThrone(position, board))
-            {
-                if (piece is King)
-                {
-                    canLand = captureRuleSet.canKingLandOnThrone;
-                }
-                else
-                {
-                    canLand = captureRuleSet.canPawnLandOnThrone;
-                }
-            }
-            else if (BoardUtils.IsOnCorner(position, board))
-            {
-                if (piece is King)
-                {
-                    canLand = captureRuleSet.canKingLandOnCorner;
-                }
-                else
-                {
-                    canLand = captureRuleSet.canPawnLandOnCorner;
-                }
-            }
-            if (canLand)
-            {
-                List<Position> rangePosition = PositionUtils.GetPositionsRange(piece.Position, position);
-                foreach (Position checking in rangePosition)
-                {
-                    if (BoardUtils.IsOnThrone(position, board))
-                    {
-                        if (piece is King)
-                        {
-                            canTraverse = captureRuleSet.canKingTraverseThrone;
-                        }
-                        else
-                        {
-                            canTraverse = captureRuleSet.canPawnTraverseThrone;
-                        }
-                    }
-                }
-            }
-            if (piece is King)
-            {
-                return canLand && canTraverse && piece.Position.Subtract(position) <= captureRuleSet.kingMovesLimiter;
-            }
-            // if piece is commander
-            // if piece is elite guard
-            else
-            {
-                return canLand && canTraverse && piece.Position.Subtract(position) <= captureRuleSet.pawnMovesLimiter;
-            }
+            Directions direction = PositionUtils.GetPositionsDirection(piece.Position, position);
+            List<Move> moves = MoveUtils.GetMovesForPiece(piece, board, direction, captureRuleSet.moveRuleSet);
+            Move validMove = moves.Where(move => move.To.Equals(position)).FirstOrDefault();
+            return validMove != null;
         }
     }
 }

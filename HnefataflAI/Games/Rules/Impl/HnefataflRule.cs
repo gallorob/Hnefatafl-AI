@@ -18,10 +18,6 @@ namespace HnefataflAI.Games.Rules.Impl
             CanPawnLandOnCorner = false;
             CanPawnLandOnEnemyBaseCamps = true;
             CanPawnLandBackOnOwnBaseCamp = true;
-            CanKingTraverseThrone = true;
-            CanPawnTraverseThrone = false;
-            CanKingTraverseEnemyBaseCamps = true;
-            CanPawnTraverseEnemyBaseCamps = true;
 
             PiecesForPawn = 2;
             PiecesForKingOnThrone = 4;
@@ -43,6 +39,10 @@ namespace HnefataflAI.Games.Rules.Impl
             IsCornerEscape = true;
 
             MovesRepetition = 3;
+
+            AllowEncirclement = false;
+            AllowDrawForts = false;
+            AllowExitForts = false;
         }
     }
 }

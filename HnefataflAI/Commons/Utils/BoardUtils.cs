@@ -4,6 +4,7 @@ using HnefataflAI.Commons.Positions;
 using HnefataflAI.Defaults;
 using HnefataflAI.Games.Boards;
 using HnefataflAI.Pieces;
+using HnefataflAI.Pieces.Impl;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -27,6 +28,15 @@ namespace HnefataflAI.Commons.Utils
             piece.UpdatePosition(position);
             board.AddPiece(piece);
         }
+
+        public static void UpdatePieceFromMove(Position from, Position to, Board board)
+        {
+            IPiece piece = board.At(from);
+            board.RemovePiece(piece);
+            piece.UpdatePosition(to);
+            board.AddPiece(piece);
+        }
+
         /// <summary>
         /// Check if the board dimensions are valid
         /// </summary>
@@ -160,13 +170,11 @@ namespace HnefataflAI.Commons.Utils
         /// </summary>
         /// <param name="position">The position to check</param>
         /// <param name="board">The board</param>
-        /// <param name="pieceColor">The moving piece's color</param>
         /// <returns>If a position is an enemy's base camp</returns>
-        public static bool IsOnEnemyCamp(Position position, Board board, PieceColors pieceColor)
+        public static bool IsOnEnemyCamp(Position position, Board board)
         {
-            List<Position> enemyBaseCamp = pieceColor.Equals(PieceColors.WHITE) ? board.AttackerBaseCamps : board.DefenderBaseCamps;
             bool isOnEnemyBaseCamp = false;
-            foreach (Position baseCamp in enemyBaseCamp)
+            foreach (Position baseCamp in board.AttackerBaseCamps)
             {
                 isOnEnemyBaseCamp |= position.Equals(baseCamp);
             }
@@ -179,7 +187,7 @@ namespace HnefataflAI.Commons.Utils
         /// <param name="direction">The direction to check</param>
         /// <param name="position">The starting position</param>
         /// <returns>The first piece if found, else null</returns>
-        public static IPiece GetFirstPiece(Board board, Directions direction, Position position)
+        public static IPiece GetFirstPieceFromPosition(Board board, Directions direction, Position position)
         {
             List<IPiece> pieces = new List<IPiece>();
             Matrix<IPiece> matrix = board.GetCurrentBoard();
@@ -215,6 +223,57 @@ namespace HnefataflAI.Commons.Utils
             }
             return null;
         }
+        /// <summary>
+        /// Return the first piece found in a given direction at a row/column N
+        /// </summary>
+        /// <param name="board">The board</param>
+        /// <param name="direction">The direction in which to check</param>
+        /// <param name="n">The row/column number</param>
+        /// <returns>The first piece if found, else null</returns>
+        public static IPiece GetFirstPieceInDirection(Board board, Directions direction, int n)
+        {
+            List<IPiece> pieces = new List<IPiece>();
+            Matrix<IPiece> matrix = board.GetCurrentBoard();
+            switch (direction)
+            {
+                case Directions.UP:
+                case Directions.DOWN:
+                    pieces.AddRange(matrix.GetCol(n));
+                    break;
+                case Directions.RIGHT:
+                case Directions.LEFT:
+                    pieces.AddRange(matrix.GetRow(n));
+                    break;
+            }
+            // reverse list to get the first piece closest to the position
+            if (direction == Directions.UP || direction == Directions.LEFT)
+            {
+                pieces.Reverse();
+            }
+            // return the first non-null piece if it exists
+            foreach (IPiece piece in pieces)
+            {
+                if (piece != null)
+                {
+                    return piece;
+                }
+            }
+            return null;
+        }
+        public static List<IPiece> GetPieceNeighbouringPieces(IPiece piece, Board board)
+        {
+            List<IPiece> neighbours = new List<IPiece>();
+            foreach (Directions direction in PositionUtils.GetAllClockWiseDirections())
+            {
+                if (IsPositionMoveValid(piece.Position, direction, board))
+                {
+                    Position newPosition = piece.Position.MoveTo(direction);
+                    IPiece neighbour = board.At(newPosition);
+                    neighbours.Add(neighbour);
+                }
+            }
+            return neighbours;
+        }
         public static string GetPositionBoardRepresentation(int row, int col, Board board)
         {
             Position toCheck = GetPositionFromArrayValues(row, col);
@@ -231,6 +290,49 @@ namespace HnefataflAI.Commons.Utils
                 return " a ";
             }
             return " . ";
+        }
+        public static Board DuplicateBoard(Board board)
+        {
+            int boardCols = board.TotalCols;
+            Board newBoard = new Board(board.TotalRows, boardCols);
+            newBoard.AddThroneTiles(board.ThroneTiles);
+            newBoard.AddCornerTiles(board.CornerTiles);
+            newBoard.AddBaseCamps(board.AttackerBaseCamps, PieceColors.BLACK);
+            char[] oldBoard = board.AsString().ToCharArray();
+            for (int i = 0; i < oldBoard.Length; i++)
+            {
+                char c = oldBoard[i];
+                if (c != '.')
+                {
+                    if (c == 'K')
+                    {
+                        newBoard.AddPiece(new King(GetPositionFromIndex(i, boardCols)));
+                    }
+                    else if (c == 'D')
+                    {
+                        newBoard.AddPiece(new Defender(GetPositionFromIndex(i, boardCols)));
+                    }
+                    else if (c == 'A')
+                    {
+                        newBoard.AddPiece(new Attacker(GetPositionFromIndex(i, boardCols)));
+                    }
+                    else if (c == 'G')
+                    {
+                        newBoard.AddPiece(new EliteGuard(GetPositionFromIndex(i, boardCols)));
+                    }
+                    else if (c == 'C')
+                    {
+                        newBoard.AddPiece(new Commander(GetPositionFromIndex(i, boardCols)));
+                    }
+                }
+            }
+            return newBoard;
+        }
+        private static Position GetPositionFromIndex(int index, int boardCols)
+        {
+            int actualCol = index % boardCols;
+            int actualRow = boardCols - (index / boardCols);
+            return new Position(actualRow, (char)(DefaultValues.FIRST_COLUMN + actualCol));
         }
     }
 }

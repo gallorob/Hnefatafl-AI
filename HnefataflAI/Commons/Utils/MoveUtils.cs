@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Positions;
 using HnefataflAI.Games.Boards;
 using HnefataflAI.Games.Rules;
 using HnefataflAI.Pieces;
+using HnefataflAI.Pieces.Impl;
 
 namespace HnefataflAI.Commons.Utils
 {
@@ -73,17 +73,24 @@ namespace HnefataflAI.Commons.Utils
         /// <param name="piece">The moving piece</param>
         /// <param name="board">The board</param>
         /// <param name="direction">The direction the piece is moving</param>
-        /// <param name="moveLimiter">The maximum number of moves the piece can make in the direction</param>
-        /// <param name="canMoveOnThrone">If the piece can move on the throne</param>
-        /// <param name="canMoveOnCorner">If the piece can move on the board corner</param>
-        /// <param name="canMoveOnEnemyBaseCamp">If the piece can move on the enemy base camp</param>
-        /// <param name="canMoveOnBaseCamp">If the piece can move on an ally base camp</param>
+        /// <param name="moveRuleSet">The move rule set</param>
         /// <returns>The moves for a piece in a given direction</returns>
-        public static List<Move> GetMovesForPiece(IPiece piece, Board board, Directions direction, int moveLimiter, bool canMoveOnThrone, bool canMoveOnCorner, bool canMoveOnEnemyBaseCamp, bool canMoveOnBaseCamp)
+        public static List<Move> GetMovesForPiece(IPiece piece, Board board, Directions direction, MoveRuleSet moveRuleSet)
         {
             int counter = 0;
             List<Move> availableMoves = new List<Move>();
             Position moved = piece.Position;
+            int moveLimiter;
+            if (piece is King)
+            {
+                moveLimiter = moveRuleSet.kingMovesLimiter;
+            }
+            // commander
+            // elite guard
+            else
+            {
+                moveLimiter = moveRuleSet.pawnMovesLimiter;
+            }
             while (counter < moveLimiter && BoardUtils.IsPositionMoveValid(moved, direction, board))
             {
                 moved = moved.MoveTo(direction);
@@ -93,7 +100,7 @@ namespace HnefataflAI.Commons.Utils
                 {
                     break;
                 }
-                if (CanMoveToPosition(piece, moved, board, canMoveOnThrone, canMoveOnCorner, canMoveOnEnemyBaseCamp, canMoveOnBaseCamp))
+                if (CanMoveToPosition(piece, moved, board, moveRuleSet))
                 {
                     Move move = new Move(piece, moved);
                     availableMoves.Add(move);
@@ -107,54 +114,45 @@ namespace HnefataflAI.Commons.Utils
         /// <param name="piece">The moving piece</param>
         /// <param name="position">The destination position</param>
         /// <param name="board">The board</param>
-        /// <param name="canMoveOnThrone">If the piece can move on the throne</param>
-        /// <param name="canMoveOnCorner">If the piece can move on the corner</param>
-        /// <param name="canMoveOnEnemyBaseCamp">If the piece can move on the enemy base camp</param>
-        /// <param name="canMoveOnBaseCamp">If the piece can move on an ally base camp</param>
+        /// <param name="moveRuleSet">The move rule set</param>
         /// <returns>If a piece can move to a position</returns>
-        public static bool CanMoveToPosition(IPiece piece, Position position, Board board, bool canMoveOnThrone = true, bool canMoveOnCorner = true, bool canMoveOnEnemyBaseCamp = true, bool canMoveOnBaseCamp = true)
+        public static bool CanMoveToPosition(IPiece piece, Position position, Board board, MoveRuleSet moveRuleSet)
         {
             if (BoardUtils.IsOnThrone(position, board))
             {
-                return canMoveOnThrone;
+                if (piece is King)
+                {
+                    return moveRuleSet.canKingLandOnThrone;
+                }
+                // commander
+                // elite guard
+                return moveRuleSet.canPawnLandOnThrone;
             }
             else if (BoardUtils.IsOnCorner(position, board))
             {
-                return canMoveOnCorner;
+                if (piece is King)
+                {
+                    return moveRuleSet.canKingLandOnCorner;
+                }
+                // commander
+                // elite guard
+                return moveRuleSet.canPawnLandOnCorner;
             }
-            else if (BoardUtils.IsOnEnemyCamp(position, board, piece.PieceColors))
+            else if (BoardUtils.IsOnEnemyCamp(position, board))
             {
-                return canMoveOnEnemyBaseCamp;
-            }
-            else if (BoardUtils.IsOnEnemyCamp(position, board, PieceColorsUtils.GetOppositePieceColor(piece.PieceColors)))
-            {
-                return canMoveOnBaseCamp;
+                if (piece is King)
+                {
+                    return moveRuleSet.canKingLandOnEnemyBaseCamps;
+                }
+                // commander
+                // elite guard
+                if (piece.PieceColors.Equals(PieceColors.BLACK))
+                {
+                    return moveRuleSet.canPawnLandBackOnOwnBaseCamp;
+                }
+                return moveRuleSet.canPawnLandOnEnemyBaseCamps;
             }
             else return true;
         }
-        //public static List<Move> GetCapturingMoves(List<Move> moves, Board board, RuleTypes ruleType)
-        //{
-        //    List<Move> capturingMoves = new List<Move>();
-        //    foreach (Move move in moves)
-        //    {
-        //        if (RuleUtils.GetRule(ruleType).CheckIfCaptures(move.Piece, board).Count != 0)
-        //        {
-        //            capturingMoves.Add(move);
-        //        }
-        //    }
-        //    return capturingMoves;
-        //}
-        //public static List<Move> GetEscapingMoves(List<Move> moves, Board board, RuleTypes ruleType)
-        //{
-        //    List<Move> escapingMoves = new List<Move>();
-        //    foreach (Move move in moves)
-        //    {
-        //        if (RuleUtils.GetRule(ruleType).CheckIfUnderCapture(move.Piece, board))
-        //        {
-        //            escapingMoves.Add(move);
-        //        }
-        //    }
-        //    return escapingMoves;
-        //}
     }
 }

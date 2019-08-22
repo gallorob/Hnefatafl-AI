@@ -5,43 +5,20 @@ using HnefataflAI.Pieces;
 using HnefataflAI.Pieces.Impl;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HnefataflAI.Commons.Utils
 {
     public static class ShieldWallUtils
     {
-        public static List<IPiece> GetShieldWallBrackets(IPiece pivot, IPiece moved, Board board, Directions edgeDirection, CaptureRuleSet captureRuleSet, bool allowNull)
+        public static List<IPiece> GetShieldWallBrackets(IPiece pivot, IPiece moved, Board board, Directions edgeDirection, CaptureRuleSet captureRuleSet)
         {
             List<IPiece> bracketingPieces = new List<IPiece>();
             if (CheckAhead(pivot, board, edgeDirection, captureRuleSet))
             {
                 IPiece bracket1 = CheckDirection(pivot, moved, board, edgeDirection, captureRuleSet, PositionUtils.GetClockWiseDirection);
                 IPiece bracket2 = CheckDirection(pivot, moved, board, edgeDirection, captureRuleSet, PositionUtils.GetCounterClockWiseDirection);
-                if (bracket1 == null)
-                {
-                    if (allowNull)
-                    {
-                        bracketingPieces.Add(bracket1);
-                    }
-                }
-                else
-                {
-                    bracketingPieces.Add(bracket1);
-                }
-                if (bracket2 == null)
-                {
-                    if (allowNull)
-                    {
-                        bracketingPieces.Add(bracket2);
-                    }
-                }
-                else
-                {
-                    bracketingPieces.Add(bracket2);
-                }
+                bracketingPieces.Add(bracket1);
+                bracketingPieces.Add(bracket2);
             }
             return bracketingPieces;
         }
@@ -139,6 +116,11 @@ namespace HnefataflAI.Commons.Utils
             {
                 bool underThreat = false;
                 IPiece bracket = bracketingPieces[0] ?? bracketingPieces[1];
+                // handle both bracketing pieces null
+                if (bracket == null)
+                {
+                    return false;
+                }
                 if (bracket.PieceColors.Equals(piece.PieceColors))
                 {
                     return false;
@@ -147,7 +129,7 @@ namespace HnefataflAI.Commons.Utils
                 foreach (Directions checkingDirection in PositionUtils.GetClockWiseDirections())
                 {
                     // get the first piece in range
-                    IPiece checkingPiece = BoardUtils.GetFirstPiece(board, checkingDirection, otherBracket);
+                    IPiece checkingPiece = BoardUtils.GetFirstPieceFromPosition(board, checkingDirection, otherBracket);
                     if (checkingPiece != null && bracket.PieceColors.Equals(checkingPiece.PieceColors))
                     {
                         bool reaches = CaptureUtils.DoesPieceReachPosition(checkingPiece, otherBracket, board, captureRuleSet);

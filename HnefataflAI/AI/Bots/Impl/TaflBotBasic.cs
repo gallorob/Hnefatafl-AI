@@ -5,7 +5,6 @@ using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.GameState;
 using HnefataflAI.Games.Rules;
-using System;
 using System.Collections.Generic;
 
 namespace HnefataflAI.AI.Bots.Impl
@@ -16,18 +15,8 @@ namespace HnefataflAI.AI.Bots.Impl
     /// Its algorithm is a simple board evaluation in its current turn.
     /// </remarks>
     /// </summary>
-    class TaflBotBasic : ITaflBot
+    class TaflBotBasic : ATaflBot
     {
-        /// <summary>
-        /// The rule type for the bot
-        /// </summary>
-        public RuleTypes RuleType { get; private set; }
-        /// <summary>
-        /// The piece color
-        /// </summary>
-        public PieceColors PieceColors { get; private set; }
-        public String PlayerName { get; private set; }
-        public List<String> AdditionalInfo { get; private set; }
         /// <summary>
         /// The internal GameEngine
         /// </summary>
@@ -44,19 +33,12 @@ namespace HnefataflAI.AI.Bots.Impl
         public TaflBotBasic(PieceColors pieceColors, RuleTypes ruleType)
         {
             this.PieceColors = pieceColors;
-            this.RuleType = ruleType;
+            this.Rule = RuleUtils.GetRule(ruleType);
             this.GameEngine = new GameEngineImpl(ruleType);
+            this.BotType = BotTypes.BASIC;
             //temporary
             this.PlayerName = "Bassy";
-            this.AdditionalInfo = new List<String> { "Just a basic player bot" };
-        }
-        /// <summary>
-        /// Only for implementation
-        /// </summary>
-        /// <returns>Nothing; throws NotImplementedException</returns>
-        public string[] GetMove()
-        {
-            throw new System.NotImplementedException();
+            this.AdditionalInfo = new List<string> { "Just a basic player bot" };
         }
         /// <summary>
         /// Get the best move as a user input
@@ -64,9 +46,9 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <param name="board">The board</param>
         /// <param name="moves">The list of all possible moves</param>
         /// <returns>The best move as a user input</returns>
-        public string[] GetMove(Board board, List<Move> moves)
+        public override string[] GetMove(Board board)
         {
-            Move bestMove = ComputeBestMove(board, moves);
+            Move bestMove = ComputeBestMove(board);
             return MoveUtils.MoveAsInput(bestMove);
         }
         /// <summary>
@@ -75,10 +57,11 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <param name="board">The current board state</param>
         /// <param name="moves">The list of all possible moves</param>
         /// <returns>The best move in the current turn</returns>
-        public Move ComputeBestMove(Board board, List<Move> moves)
+        public Move ComputeBestMove(Board board)
         {
             Move bestMove = null;
             int bestMoveValue = int.MinValue;
+            List<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
             // randomize list so it's not always the same if no best move is found
             ListUtils.ShuffleList(moves);
             foreach (Move move in moves)
@@ -104,8 +87,6 @@ namespace HnefataflAI.AI.Bots.Impl
                 // revert board's state
                 this.GameEngine.UndoMove(move, board, PieceColors);
                 this.GameEngine.UndoCaptures(board);
-                // reset the moved piece's position to its original value
-                move.Piece.UpdatePosition(move.From);
             }
             return bestMove;
         }

@@ -3,10 +3,8 @@
     public enum BotTypes
     {
         BASIC,
-        MAGIC,
         MINIMAX,
         MINIMAXAB,
-        MINIMAXABPARALLEL,
         RANDOM
     }
 }

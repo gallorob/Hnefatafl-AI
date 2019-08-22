@@ -14,26 +14,14 @@ using System.Linq;
 
 namespace HnefataflAI.AI.Bots.Impl
 {
-    class TaflBotMinimaxAB : ITaflBot
+    class TaflBotMinimaxAB : ATaflBot
     {
-        /// <summary>
-        /// The rule type for the bot
-        /// </summary>
-        public RuleTypes RuleType { get; private set; }
-        /// <summary>
-        /// The piece color
-        /// </summary>
-        public PieceColors PieceColors { get; private set; }
         /// <summary>
         /// The internal BoardEvaluator
         /// </summary>
         private readonly BoardEvaluator MovesEvaluator = new BoardEvaluator();
-        /// <summary>
-        /// The list of moves played by the bot
-        /// </summary>
+        private readonly IGameEngine GameEngine;
         private readonly List<Move> BotMoves = new List<Move>();
-        public String PlayerName { get; private set; }
-        public List<String> AdditionalInfo { get; private set; }
         /// <summary>
         /// Constructor for the TaflBotMinimaxAB
         /// </summary>
@@ -41,18 +29,12 @@ namespace HnefataflAI.AI.Bots.Impl
         public TaflBotMinimaxAB(PieceColors pieceColors, RuleTypes ruleType)
         {
             this.PieceColors = pieceColors;
-            this.RuleType = ruleType;
+            this.Rule = RuleUtils.GetRule(ruleType);
+            this.BotType = BotTypes.MINIMAXAB;
+            this.GameEngine = new GameEngineImpl(ruleType);
             //temporary
             this.PlayerName = "Minyab";
             this.AdditionalInfo = new List<String> { "A standard minimax with alpha-beta pruning player bot" };
-        }
-        /// <summary>
-        /// Only for implementation
-        /// </summary>
-        /// <returns>Nothing; throws NotImplementedException</returns>
-        public string[] GetMove()
-        {
-            throw new System.NotImplementedException();
         }
         /// <summary>
         /// Get the best move as a user input
@@ -60,8 +42,10 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <param name="board">The board</param>
         /// <param name="moves">The list of all possible moves</param>
         /// <returns>The best move as a user input</returns>
-        public string[] GetMove(Board board, List<Move> moves)
+        public override string[] GetMove(Board board)
         {
+            List<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
+            MovesLogger.Log(string.Format("Started decision making for {0}...", PieceColors));
             MoveValue bestMove = ComputeBestMoveMinimaxAB(DefaultValues.MINIMAX_DEPTH, board, moves, int.MinValue, int.MaxValue, true, this.PieceColors);
             MovesLogger.LogMove(bestMove.Move, bestMove.Value);
             this.BotMoves.Add(bestMove.Move);
@@ -97,28 +81,27 @@ namespace HnefataflAI.AI.Bots.Impl
             OrderMoves(moves, board);
             foreach (Move move in moves)
             {
-                IGameEngine gameEngine = new GameEngineImpl(this.RuleType);
                 // update board with the move
-                gameEngine.ApplyMove(move, board, pieceColors);
+                GameEngine.ApplyMove(move, board, pieceColors);
                 // check if it reached an endgame point
-                GameStatus gameStatus = gameEngine.GetGameStatus(move.Piece, board);
+                GameStatus gameStatus = GameEngine.GetGameStatus(move.Piece, board);
                 if (!gameStatus.IsGameOver)
                 {
-                    gameStatus.IsGameOver = MoveUtils.IsRepeatedMove(this.BotMoves, move, RuleUtils.GetRule(this.RuleType));
+                    gameStatus.IsGameOver = MoveUtils.IsRepeatedMove(this.BotMoves, move, Rule);
                     gameStatus.Status = Status.LOSS;
                 }
                 // recursive call for the move's sub-tree
                 int moveValue = ComputeBestMoveMinimaxAB(depth - 1,
                     board,
-                    new GameEngineImpl(this.RuleType).GetMovesByColor(PieceColorsUtils.GetOppositePieceColor(pieceColors), board),
+                    GameEngine.GetMovesByColor(PieceColorsUtils.GetOppositePieceColor(pieceColors), board),
                     alpha,
                     beta,
-                    !isMaximizing,
-                    PieceColorsUtils.GetOppositePieceColor(pieceColors)
+                    gameStatus.NextPlayer.Equals(this.PieceColors),
+                    gameStatus.NextPlayer
                     ).Value;
                 // revert board's state
-                gameEngine.UndoMove(move, board, pieceColors);
-                gameEngine.UndoCaptures(board);
+                GameEngine.UndoMove(move, board, pieceColors);
+                GameEngine.UndoCaptures(board, gameStatus.CapturedPieces);
                 // two different cases if we're simulating our turn or the opponent's
                 if (isMaximizing)
                 {

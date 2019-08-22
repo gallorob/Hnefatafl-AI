@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HnefataflAI.Commons.Positions
 {
@@ -28,6 +29,22 @@ namespace HnefataflAI.Commons.Positions
                     break;
                 case Directions.RIGHT:
                     newPosition.Col++;
+                    break;
+                case Directions.UPRIGHT:
+                    newPosition.Row++;
+                    newPosition.Col++;
+                    break;
+                case Directions.DOWNRIGHT:
+                    newPosition.Row--;
+                    newPosition.Col++;
+                    break;
+                case Directions.DOWNLEFT:
+                    newPosition.Row--;
+                    newPosition.Col--;
+                    break;
+                case Directions.UPLEFT:
+                    newPosition.Row++;
+                    newPosition.Col--;
                     break;
             }
             return newPosition;

@@ -45,7 +45,7 @@ namespace HnefataflAI.AI
         private bool IsPieceUnderAttack(IPiece piece, Board board)
         {
             bool underAttack = false;
-            foreach (Directions direction in Enum.GetValues(typeof(Directions)))
+            foreach (Directions direction in PositionUtils.GetClockWiseDirections())
             {
                 underAttack = IsPieceUnderAttakByDirection(piece, board, direction, piece is King);
                 if (underAttack)

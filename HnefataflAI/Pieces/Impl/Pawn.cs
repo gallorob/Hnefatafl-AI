@@ -16,6 +16,7 @@ namespace HnefataflAI.Pieces.Impl
         /// The piece's position
         /// </summary>
         public Position Position { get; internal set; }
+        public bool IsThreatened { get; set; }
         /// <summary>
         /// Update the piece's position
         /// </summary>
@@ -31,6 +32,20 @@ namespace HnefataflAI.Pieces.Impl
         public virtual string PieceRepresentation()
         {
             return " P ";
+        }
+        public override bool Equals(object obj)
+        {
+            if (obj is Pawn other)
+            {
+                return this.PieceColors.Equals(other.PieceColors)
+                    &&
+                    this.Position.Equals(other.Position);
+            }
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

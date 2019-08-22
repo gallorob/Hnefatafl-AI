@@ -42,7 +42,7 @@ namespace HnefataflAI.Games.Engine.Impl
         }
         public void ApplyMove(Move move, Board board, PieceColors playerColor)
         {
-            ValidateMove(move, board, playerColor);
+            ValidateMove(move, board, playerColor, RuleEngine.Rule.GetMoveRuleSet());
             switch (move.Piece.PieceColors)
             {
                 case PieceColors.BLACK:
@@ -67,9 +67,8 @@ namespace HnefataflAI.Games.Engine.Impl
             }
             BoardUtils.UpdatePieceFromMove(move.Piece, move.From, board);
         }
-        private void ValidateMove(Move move, Board board, PieceColors playerColor)
+        private void ValidateMove(Move move, Board board, PieceColors playerColor, MoveRuleSet moveRuleSet)
         {
-
             if (!BoardUtils.IsPositionValid(move.From, board))
             {
                 throw new InvalidMoveException(move.From, ErrorMessages.POSITION_OUT_OF_BOARD);
@@ -82,7 +81,7 @@ namespace HnefataflAI.Games.Engine.Impl
             {
                 throw new InvalidMoveException(move, ErrorMessages.INVALID_DESTINATION_PIECE);
             }
-            if (!MoveUtils.CanMoveToPosition(move.Piece, move.To, board))
+            if (!MoveUtils.CanMoveToPosition(move.Piece, move.To, board, moveRuleSet))
             {
                 throw new InvalidMoveException(move, ErrorMessages.INVALID_DESTINATION_POSITION);
             }
@@ -107,15 +106,15 @@ namespace HnefataflAI.Games.Engine.Impl
             }
             this.CapturedPieces.Clear();
         }
-        public void UndoCaptures(Board board, List<Move> captures)
+        // todo: test if it works with AI
+        public void UndoCaptures(Board board, List<IPiece> captures)
         {
             foreach (IPiece piece in captures)
             {
                 board.AddPiece(piece);
+                this.CapturedPieces.Remove(piece);
             }
-            this.CapturedPieces.Clear();
         }
-
         public GameStatus GetGameStatus(IPiece movedPiece, Board board)
         {
             GameStatus gameStatus = this.RuleEngine.GetGameStatus(movedPiece, board, this.WhiteMoves, this.BlackMoves);
@@ -126,6 +125,7 @@ namespace HnefataflAI.Games.Engine.Impl
                     ApplyCapture(capturedPiece, board);
                 }
             }
+            // todo: move to rule engine
             if (!gameStatus.IsGameOver)
             {
                 if (!this.RuleEngine.CanMove(gameStatus.NextPlayer, board))

@@ -16,6 +16,7 @@ namespace HnefataflAI.Pieces
         /// The piece's position
         /// </summary>
         Position Position { get; }
+        bool IsThreatened { get; set; }
         /// <summary>
         /// Update the piece's position
         /// </summary>

@@ -1,7 +1,9 @@
 ﻿using HnefataflAI.Commons.Utils;
 using HnefataflAI.Defaults;
+using HnefataflAI.Games.Boards;
 using HnefataflAI.Games.GameState;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace HnefataflAI.Commons.Logs
@@ -21,6 +23,22 @@ namespace HnefataflAI.Commons.Logs
                     move.ToString(),
                     moveValue,
                     player.ToString());
+                Log(toLog);
+            }
+        }
+        public static void LogMove(PieceColors player, int depth, Move bestMove, int bestMoveValue, bool isMaximizing, Move move, int moveValue, Board board)
+        {
+            if (DefaultValues.LOG_MOVES_EVAL)
+            {
+                string toLog = String.Format("{7}\n{6} - {0} at depth {1} - Best move: {2} ({3}) - Evaluated move: {4} ({5})",
+                    isMaximizing ? "Max." : "Min",
+                    depth,
+                    bestMove is null ? "null" : bestMove.ToString(),
+                    bestMoveValue,
+                    move.ToString(),
+                    moveValue,
+                    player.ToString(),
+                    board.ToString());
                 Log(toLog);
             }
         }
@@ -57,10 +75,10 @@ namespace HnefataflAI.Commons.Logs
         }
         public static void Log(string message)
         {
-            using (StreamWriter streamWriter = new StreamWriter(FilePath, true))
+            using (streamwriter streamwriter = new streamwriter(filepath, true))
             {
-                streamWriter.WriteLine(message);
-                streamWriter.Close();
+                streamwriter.writeline(message);
+                streamwriter.close();
             }
         }
     }

@@ -1,6 +1,8 @@
 ﻿using HnefataflAI.AI.Bots;
 using HnefataflAI.AI.Bots.Impl;
+using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Games.Rules;
+using System.Reflection;
 
 namespace HnefataflAI.Commons.Utils
 {
@@ -12,8 +14,6 @@ namespace HnefataflAI.Commons.Utils
             {
                 case BotTypes.BASIC:
                     return new TaflBotBasic(pieceColor, ruleType);
-                case BotTypes.MAGIC:
-                    return new TaflBotMagic(pieceColor, ruleType);
                 case BotTypes.MINIMAX:
                     return new TaflBotMinimax(pieceColor, ruleType);
                 case BotTypes.MINIMAXAB:
@@ -21,7 +21,7 @@ namespace HnefataflAI.Commons.Utils
                 case BotTypes.RANDOM:
                     return new TaflBotRandom(pieceColor, ruleType);
                 default:
-                    return null;
+                    throw new CustomGenericException(typeof(BotUtils).Name, MethodBase.GetCurrentMethod().Name, string.Format("Unsupported BOT Type, got: {0}", botType));
             }
         }
     }

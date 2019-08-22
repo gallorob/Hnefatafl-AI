@@ -3,6 +3,7 @@ using HnefataflAI.Commons.Positions;
 using HnefataflAI.Defaults;
 using HnefataflAI.Games.Boards;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace HnefataflAI.Commons.Utils
 {
@@ -43,12 +44,20 @@ namespace HnefataflAI.Commons.Utils
             {
                 case Directions.UP:
                     return Directions.DOWN;
-                case Directions.DOWN:
-                    return Directions.UP;
-                case Directions.LEFT:
-                    return Directions.RIGHT;
+                case Directions.UPRIGHT:
+                    return Directions.DOWNLEFT;
                 case Directions.RIGHT:
                     return Directions.LEFT;
+                case Directions.DOWNRIGHT:
+                    return Directions.UPLEFT;
+                case Directions.DOWN:
+                    return Directions.UP;
+                case Directions.DOWNLEFT:
+                    return Directions.UPRIGHT;
+                case Directions.LEFT:
+                    return Directions.RIGHT;
+                case Directions.UPLEFT:
+                    return Directions.DOWNRIGHT;
                 default:
                     throw new System.Exception("[GetOppositeDirection] - Unexpected direction");
             }
@@ -115,6 +124,40 @@ namespace HnefataflAI.Commons.Utils
                 Directions.DOWN,
                 Directions.LEFT
             };
+        }
+        public static List<Directions> GetAllClockWiseDirections()
+        {
+            return new List<Directions>()
+            {
+                Directions.UP,
+                Directions.UPRIGHT,
+                Directions.RIGHT,
+                Directions.DOWNRIGHT,
+                Directions.DOWN,
+                Directions.DOWNLEFT,
+                Directions.LEFT,
+                Directions.UPLEFT                
+            };
+        }
+        public static Directions GetPositionsDirection(Position start, Position target)
+        {
+            if (start.Row > target.Row)
+            {
+                return Directions.DOWN;
+            }
+            if (start.Row < target.Row)
+            {
+                return Directions.UP;
+            }
+            if (start.Col > target.Col)
+            {
+                return Directions.LEFT;
+            }
+            if (start.Col < target.Col)
+            {
+                return Directions.RIGHT;
+            }
+            throw new CustomGenericException(typeof(PositionUtils).Name, MethodBase.GetCurrentMethod().Name, string.Format("Unexpected positions: Start={0} Target={1}", start, target));
         }
         /// <summary>
         /// Get the ranges of positions from start to end (excluded)

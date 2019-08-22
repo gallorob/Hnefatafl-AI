@@ -1,6 +1,8 @@
 ﻿using HnefataflAI.Commons;
 using HnefataflAI.Commons.Utils;
 using HnefataflAI.Games.Boards;
+using HnefataflAI.Games.Engine;
+using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.Rules;
 using System;
 using System.Collections.Generic;
@@ -10,18 +12,9 @@ namespace HnefataflAI.AI.Bots.Impl
     /// <summary>
     /// A Hnefatafl bot that plays random valid moves
     /// </summary>
-    class TaflBotRandom : ITaflBot
+    class TaflBotRandom : ATaflBot
     {
-        /// <summary>
-        /// The rule type for the bot
-        /// </summary>
-        public RuleTypes RuleType { get; private set; }
-        /// <summary>
-        /// The piece color
-        /// </summary>
-        public PieceColors PieceColors { get; private set; }
-        public String PlayerName { get; private set; }
-        public List<String> AdditionalInfo { get; private set; }
+        private readonly IGameEngine GameEngine;
         /// <summary>
         /// Constructor for the TaflBotRandom
         /// </summary>
@@ -30,18 +23,12 @@ namespace HnefataflAI.AI.Bots.Impl
         public TaflBotRandom(PieceColors pieceColors, RuleTypes ruleType)
         {
             this.PieceColors = pieceColors;
-            this.RuleType = ruleType;
+            this.Rule = RuleUtils.GetRule(ruleType);
+            this.GameEngine = new GameEngineImpl(ruleType);
+            this.BotType = BotTypes.RANDOM;
             //temporary
             this.PlayerName = "Rando";
-            this.AdditionalInfo = new List<String> { "Just a random player bot" };
-        }
-        /// <summary>
-        /// Only for implementation
-        /// </summary>
-        /// <returns>Nothing; throws NotImplementedException</returns>
-        public string[] GetMove()
-        {
-            throw new System.NotImplementedException();
+            this.AdditionalInfo = new List<string> { "Just a random player bot" };
         }
         /// <summary>
         /// Get a random move as a user input
@@ -49,8 +36,9 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <param name="board">The board</param>
         /// <param name="moves">The list of all possible moves</param>
         /// <returns>A move as a user input</returns>
-        public string[] GetMove(Board board, List<Move> moves)
+        public override string[] GetMove(Board board)
         {
+            List<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
             Random rnd = new Random();
             int index = rnd.Next(moves.Count);
             return MoveUtils.MoveAsInput(moves[index]);

@@ -11,6 +11,8 @@ using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.AI;
 using HnefataflAI.Games.Boards;
+using HnefataflAI.Pieces;
+using System.Diagnostics;
 
 namespace HnefataflAI
 {
@@ -19,13 +21,13 @@ namespace HnefataflAI
         static void Main()
         {
             //RunPvPGame();
-            //RunPvPCGame();
+            RunPvPCGame();
             //RunPCvPCGame();
             //RunMovesTest();
             //TestBoardEvaluator();
 
-            Console.Out.Write(BoardBuilder.GetBoard(BoardTypes.SERIFFCROSSNOGAPS_13X13));
-            Console.In.Read();
+            //Console.Out.Write(BoardBuilder.GetBoard(BoardTypes.SERIFFCROSSNOGAPS_13X13));
+            //Console.In.Read();
         }
 
         private static void RunPCvPCGame()
@@ -53,7 +55,7 @@ namespace HnefataflAI
         static void RunPvPCGame()
         {
             RuleTypes ruleType = RuleTypes.HNEFATAFL;
-            BoardTypes boardType = BoardTypes.BRANDUBH_7X7;
+            BoardTypes boardType = BoardTypes.ARDRDI_7X7;
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
             ITaflBot player2 = BotUtils.GetTaflBot(BotTypes.MINIMAXAB, PieceColors.WHITE, ruleType);
 

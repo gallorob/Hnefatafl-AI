@@ -58,7 +58,7 @@ namespace HnefataflAI.Commons.Utils.Tests
         public void IsPieceThreatenedDefenderDoesntReachTest()
         {
             CaptureRuleSet HnefataflCaptureRuleSet = new HnefataflRule().GetCaptureRuleSet();
-            HnefataflCaptureRuleSet.pawnMovesLimiter = 1;
+            HnefataflCaptureRuleSet.moveRuleSet.pawnMovesLimiter = 1;
 
             /// 	 A  B  C  D  E  F  G 
             /// 7	 *  .  .  .  .  .  * 
@@ -219,7 +219,7 @@ namespace HnefataflAI.Commons.Utils.Tests
         {
             CaptureRuleSet HnefataflCaptureRuleSet = new HnefataflRule().GetCaptureRuleSet();
             HnefataflCaptureRuleSet.isKingArmed = true;
-            HnefataflCaptureRuleSet.canKingLandOnThrone = false;
+            HnefataflCaptureRuleSet.moveRuleSet.canKingLandOnThrone = false;
 
             ///          A  B  C  D  E  F  G
             /// 7        *  .  .  K  .  .  *
@@ -243,7 +243,7 @@ namespace HnefataflAI.Commons.Utils.Tests
         {
             CaptureRuleSet HnefataflCaptureRuleSet = new HnefataflRule().GetCaptureRuleSet();
             HnefataflCaptureRuleSet.isKingArmed = true;
-            HnefataflCaptureRuleSet.canKingLandOnThrone = false;
+            HnefataflCaptureRuleSet.moveRuleSet.canKingLandOnThrone = false;
 
             ///          A  B  C  D  E  F  G
             /// 7        *  .  .  .  .  .  *
@@ -271,7 +271,7 @@ namespace HnefataflAI.Commons.Utils.Tests
         {
             CaptureRuleSet HnefataflCaptureRuleSet = new HnefataflRule().GetCaptureRuleSet();
             HnefataflCaptureRuleSet.isKingArmed = true;
-            HnefataflCaptureRuleSet.canKingLandOnThrone = false;
+            HnefataflCaptureRuleSet.moveRuleSet.canKingLandOnThrone = false;
 
             ///          A  B  C  D  E  F  G
             /// 7        *  .  .  .  .  .  *

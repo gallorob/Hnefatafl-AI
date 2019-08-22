@@ -17,14 +17,7 @@
         public bool isShieldWallAllowed = false;
         public bool isKingDefeatedInShieldWall = false;
         public bool isKingArmed = false;
-        public int kingMovesLimiter = 11;
-        public int pawnMovesLimiter = 11;
-        public bool canPawnLandOnThrone = false;
-        public bool canKingLandOnThrone = true;
-        public bool canPawnLandOnCorner = false;
-        public bool canKingLandOnCorner = true;
-        public bool canPawnTraverseThrone = true;
-        public bool canKingTraverseThrone = true;
+        public MoveRuleSet moveRuleSet = null;
 
         public CaptureRuleSet() { }
 

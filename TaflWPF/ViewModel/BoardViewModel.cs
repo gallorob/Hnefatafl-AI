@@ -50,7 +50,8 @@ namespace TaflWPF.ViewModel
                 IPiece piece = pieces[i];
                 PieceItemViewModel pieceVM = new PieceItemViewModel(pieces[i], i)
                 {
-                    Position = piece != null ? piece.Position : GridUtils.GetPositionFromIndex(i, ColumnCount)
+                    Position = piece != null ? piece.Position : GridUtils.GetPositionFromIndex(i, ColumnCount),
+                    IsThreatened = piece != null ? piece.IsThreatened : false
                 };
                 this.Pieces.Add(pieceVM);
             }
@@ -62,12 +63,11 @@ namespace TaflWPF.ViewModel
             for (int i = 0; i < pieces.Count; i++)
             {
                 IPiece piece = pieces[i];
-                PieceItemViewModel pieceVM = this.Pieces[i];
                 PieceItemViewModel newPieceVM = new PieceItemViewModel(pieces[i], i)
                 {
-                    Position = piece != null ? piece.Position : GridUtils.GetPositionFromIndex(i, ColumnCount)
+                    Position = piece != null ? piece.Position : GridUtils.GetPositionFromIndex(i, ColumnCount),
+                    IsThreatened = piece != null ? piece.IsThreatened : false
                 };
-                newPieceVM.IsThreatened = pieceVM.IsThreatened;
                 newPieces.Add(newPieceVM);
             }
             Pieces.Clear();

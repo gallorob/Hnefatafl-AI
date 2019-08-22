@@ -4,9 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaflWPF"
-        xmlns:converter="clr-namespace:TaflWPF.Converter"
         mc:Ignorable="d"
-        Title="Tafl Dekstop" Icon="Resources\icon.ico" Background="Snow" MinWidth="320" MinHeight="200" Width="720" Height="650">
+        Title="Tafl Dekstop" Icon="Resources\icon.ico" Background="WhiteSmoke" MinWidth="320" MinHeight="200" Width="720" Height="650">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -29,10 +28,12 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!-- MAIN CONTENT -->
-            <ContentPresenter Content="{Binding BoardVM}"/>
-            <Label Content="Version 0.1-Alpha"/>
+            <Label Content="Version 0.1-Alpha" Grid.Row="0"/>
+            <Grid>
+                <ContentPresenter Content="{Binding BoardVM}" Grid.Column="0" Grid.Row="0"/>
+            </Grid>
+            <!-- Side menu -->
+            <ContentPresenter Content="{Binding}" Grid.Column="1" Grid.Row="0"/>
         </Grid>
-        <!-- Side menu -->
-        <ContentPresenter Content="{Binding}"/>
     </DockPanel>
 </Window>

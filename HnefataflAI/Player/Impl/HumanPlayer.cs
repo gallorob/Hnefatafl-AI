@@ -14,7 +14,7 @@ namespace HnefataflAI.Player.Impl
         /// The player's pieces' color
         /// </summary>
         public PieceColors PieceColors { get; private set; }
-        public String PlayerName { get; set; }
+        public String PlayerName { get; private set; }
         public List<String> AdditionalInfo { get; private set; }
         /// <summary>
         /// Human player constructor
@@ -23,8 +23,18 @@ namespace HnefataflAI.Player.Impl
         public HumanPlayer(PieceColors pieceColors)
         {
             this.PieceColors = pieceColors;
-            //temporary
             this.PlayerName = "Bjorn";
+            this.AdditionalInfo = new List<String> { "Just a puny human player" };
+        }
+        /// <summary>
+        /// Human player constructor with custom name
+        /// </summary>
+        /// <param name="pieceColors">The player's pieces' color</param>
+        /// <param name="playerName">The player name</param>
+        public HumanPlayer(PieceColors pieceColors, string playerName)
+        {
+            this.PieceColors = pieceColors;
+            this.PlayerName = playerName;
             this.AdditionalInfo = new List<String> { "Just a puny human player" };
         }
         /// <summary>

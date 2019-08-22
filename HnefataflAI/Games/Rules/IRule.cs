@@ -18,6 +18,7 @@ namespace HnefataflAI.Games.Rules
         RuleTypes RuleType { get; }
         bool IsCornerEscape { get; }
         bool IsEdgeEscape { get; }
+        bool AllowEncirclement { get; }
         #endregion
 
         #region Methods
@@ -56,6 +57,8 @@ namespace HnefataflAI.Games.Rules
         /// <param name="board">The board</param>
         /// <returns>The moves for a piece in all directions</returns>
         List<Move> GetMovesForPiece(IPiece piece, Board board);
+        CaptureRuleSet GetCaptureRuleSet();
+        MoveRuleSet GetMoveRuleSet();
         #endregion
     }
 }

@@ -4,8 +4,8 @@
                     xmlns:viewmodel="clr-namespace:TaflWPF.ViewModel">
 
     <DataTemplate DataType="{x:Type viewmodel:GameViewModel}">
-        <Viewbox StretchDirection="DownOnly" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="200" MaxHeight="800" Grid.Column="1" Grid.Row="0">
-            <StackPanel Margin="10" Grid.Column="1" Grid.Row="0">
+        <Viewbox StretchDirection="DownOnly" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="200" MaxHeight="800">
+            <StackPanel Margin="10" Background="LightGray">
                 <!-- Currently playing -->
                 <TextBlock Text="Currently playing:" Margin="5" DockPanel.Dock="Top"/>
                 <TextBlock Text="{Binding CurrentPlayer}" Margin="5"/>

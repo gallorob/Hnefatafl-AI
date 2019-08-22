@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HnefataflAI.Commons;
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Commons.Positions;
@@ -25,11 +24,6 @@ namespace HnefataflAI.Games.Rules
         public bool CanPawnLandOnCorner { get; protected set; }
         public bool CanPawnLandOnEnemyBaseCamps { get; protected set; }
         public bool CanPawnLandBackOnOwnBaseCamp { get; protected set; }
-            // traversing
-        public bool CanKingTraverseThrone { get; protected set; }
-        public bool CanPawnTraverseThrone { get; protected set; }
-        public bool CanKingTraverseEnemyBaseCamps { get; protected set; }
-        public bool CanPawnTraverseEnemyBaseCamps { get; protected set; }
         // capturing
         public int PiecesForPawn { get; protected set; }
         public int PiecesForKingOnThrone { get; protected set; }
@@ -56,6 +50,10 @@ namespace HnefataflAI.Games.Rules
         public bool IsCornerEscape { get; protected set; }
         // losing situation
         public int MovesRepetition { get; protected set; }
+        // other
+        public bool AllowEncirclement { get; protected set; }
+        public bool AllowDrawForts { get; protected set; }
+        public bool AllowExitForts { get; protected set; }
         #endregion
 
         public virtual List<IPiece> CheckIfCaptures(IPiece piece, Board board)
@@ -64,7 +62,7 @@ namespace HnefataflAI.Games.Rules
             bool isKingArmed = false;
             if ((piece is King && isKingArmed) || !(piece is King))
             {
-                foreach (Directions direction in Enum.GetValues(typeof(Directions)))
+                foreach (Directions direction in PositionUtils.GetClockWiseDirections())
                 {
                     ListUtils.AddIfNotNull(HasCapturedPiece(piece, board, direction), capturedPieces);
                 }
@@ -82,7 +80,11 @@ namespace HnefataflAI.Games.Rules
                 if (otherPiece != null && CaptureUtils.IsPieceCaptured(otherPiece, piece, board, captureRuleSet))
                 {
                     // SHIELDWALL CAPTURE
-                    if (BoardUtils.IsOnEdge(otherPiece.Position, board) && captureRuleSet.isShieldWallAllowed)
+                    if (BoardUtils.IsOnEdge(otherPiece.Position, board)
+                        &&
+                        captureRuleSet.isShieldWallAllowed
+                        &&
+                        ShieldWallUtils.GetShieldWallBrackets(otherPiece, piece, board, PositionUtils.GetEdgeDirection(otherPiece.Position, board), captureRuleSet).Count == 2)
                     {
                         List<IPiece> anchors = CaptureUtils.IsShieldWallComplete(otherPiece, piece, board, PositionUtils.GetEdgeDirection(otherPiece.Position, board), captureRuleSet);
                         List<Position> range = PositionUtils.GetPositionsRange(anchors[0].Position, anchors[1].Position);
@@ -132,16 +134,9 @@ namespace HnefataflAI.Games.Rules
         public virtual List<Move> GetMovesForPiece(IPiece piece, Board board)
         {
             List<Move> availableMoves = new List<Move>();
-            foreach (Directions direction in Enum.GetValues(typeof(Directions)))
+            foreach (Directions direction in PositionUtils.GetClockWiseDirections())
             {
-                if (piece is King)
-                {
-                    availableMoves.AddRange(MoveUtils.GetMovesForPiece(piece, board, direction, this.KingMovesLimiter, this.CanKingLandOnThrone, this.CanKingLandOnCorner, this.CanKingLandOnEnemyBaseCamps, true));
-                }
-                else
-                {
-                    availableMoves.AddRange(MoveUtils.GetMovesForPiece(piece, board, direction, this.PawnMovesLimiter, this.CanPawnLandOnThrone, this.CanPawnLandOnCorner, this.CanKingLandOnEnemyBaseCamps, this.CanPawnLandBackOnOwnBaseCamp));
-                }
+                availableMoves.AddRange(MoveUtils.GetMovesForPiece(piece, board, direction, GetMoveRuleSet()));
             }
             return availableMoves;
         }
@@ -164,9 +159,26 @@ namespace HnefataflAI.Games.Rules
                 piecesForKingNextToThrone = this.PiecesForKingNextToThrone,
                 piecesForKingOnBoard = this.PiecesForKingOnBoard,
                 piecesForKingOnEdge = this.PiecesForKingOnEdge,
-                piecesForKingOnThrone = this.PiecesForKingOnThrone
+                piecesForKingOnThrone = this.PiecesForKingOnThrone,
+                moveRuleSet = this.GetMoveRuleSet()
             };
             return captureRuleSet;
+        }
+        public virtual MoveRuleSet GetMoveRuleSet()
+        {
+            MoveRuleSet moveRuleSet = new MoveRuleSet
+            {
+                canKingLandOnCorner = this.CanKingLandOnCorner,
+                canKingLandOnThrone = this.CanKingLandOnThrone,
+                canPawnLandOnCorner = this.CanPawnLandOnCorner,
+                canPawnLandOnThrone = this.CanPawnLandOnThrone,
+                kingMovesLimiter = this.KingMovesLimiter,
+                pawnMovesLimiter = this.PawnMovesLimiter,
+                canKingLandOnEnemyBaseCamps = this.CanKingLandOnEnemyBaseCamps,
+                canPawnLandOnEnemyBaseCamps = this.CanPawnLandOnEnemyBaseCamps,
+                canPawnLandBackOnOwnBaseCamp = this.CanPawnLandBackOnOwnBaseCamp
+            };
+            return moveRuleSet;
         }
     }
 }

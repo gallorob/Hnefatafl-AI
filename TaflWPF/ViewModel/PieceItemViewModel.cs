@@ -1,8 +1,6 @@
 ﻿using HnefataflAI.Commons.Positions;
 using HnefataflAI.Pieces;
-using System.Windows;
 using TaflWPF.Model.Piece;
-using TaflWPF.Utils;
 
 namespace TaflWPF.ViewModel
 {
@@ -44,6 +42,13 @@ namespace TaflWPF.ViewModel
             get { return m_IsThreatened; }
             set { m_IsThreatened = value; NotifyPropertyChanged(nameof(IsThreatened)); }
         }
+
+        private bool m_HasEscaped;
+        public bool HasEscaped
+        {
+            get { return m_HasEscaped; }
+            set { m_HasEscaped = value; NotifyPropertyChanged(nameof(HasEscaped)); }
+        }
         private int m_Index;
         public int Index
         {
@@ -63,7 +68,7 @@ namespace TaflWPF.ViewModel
         /// <summary>
         /// The piece informations
         /// </summary>
-        public string PieceInfo { get { return this.Piece.ToString(); } }
+        public string PieceInfo { get { return this.Piece?.ToString(); } }
         /// <summary>
         /// Constructor
         /// </summary>
