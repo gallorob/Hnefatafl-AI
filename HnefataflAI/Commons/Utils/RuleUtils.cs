@@ -133,10 +133,10 @@ namespace HnefataflAI.Commons.Utils
         public static bool IsInDrawFort(Board board, CaptureRuleSet captureRuleSet)
         {
             IPiece king = board.GetPieces().Where(piece => piece is King).First();
-            List<Move> kingMoves = new List<Move>();
+            HashSet<Move> kingMoves = new HashSet<Move>();
             foreach (Directions direction in PositionUtils.GetClockWiseDirections())
             {
-                kingMoves.AddRange(MoveUtils.GetMovesForPiece(king, board, direction, captureRuleSet.moveRuleSet));
+                SetUtils<Move>.AddRange(kingMoves, MoveUtils.GetMovesForPiece(king, board, direction, captureRuleSet.moveRuleSet));
             }
             if (kingMoves.Count == 0)
             {
@@ -148,10 +148,10 @@ namespace HnefataflAI.Commons.Utils
         public static bool IsInExitFort(Board board, CaptureRuleSet captureRuleSet)
         {
             IPiece king = board.GetPieces().Where(piece => piece is King).First();
-            List<Move> kingMoves = new List<Move>();
+            HashSet<Move> kingMoves = new HashSet<Move>();
             foreach (Directions direction in PositionUtils.GetClockWiseDirections())
             {
-                kingMoves.AddRange(MoveUtils.GetMovesForPiece(king, board, direction, captureRuleSet.moveRuleSet));
+                SetUtils<Move>.AddRange(kingMoves, MoveUtils.GetMovesForPiece(king, board, direction, captureRuleSet.moveRuleSet));
             }
             // make sure either the king is on edge, has at least a move and one of his moves reaches the edge
             if (!BoardUtils.IsOnEdge(king.Position, board) && (kingMoves.Count == 0 || kingMoves.Where(move => BoardUtils.IsOnEdge(move.To, board)).FirstOrDefault() == null))

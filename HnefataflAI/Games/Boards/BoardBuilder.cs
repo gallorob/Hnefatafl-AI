@@ -92,7 +92,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 7;
             int boardCols = 7;
             Position kingPosition = new Position(4, 'd');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(5, 'c'),
                 new Position(5, 'd'),
                 new Position(5, 'e'),
@@ -102,7 +102,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(3, 'd'),
                 new Position(3, 'e')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(7, 'c'),
                 new Position(7, 'd'),
                 new Position(7, 'e'),
@@ -142,13 +142,13 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 7;
             int boardCols = 7;
             Position kingPosition = new Position(4, 'd');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(5, 'd'),
                 new Position(4, 'c'),
                 new Position(4, 'e'),
                 new Position(3, 'd')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(7, 'd'),
                 new Position(6, 'd'),
                 new Position(4, 'a'),
@@ -180,13 +180,13 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 7;
             int boardCols = 7;
             Position kingPosition = new Position(4, 'd');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(5, 'c'),
                 new Position(5, 'e'),
                 new Position(3, 'c'),
                 new Position(3, 'e')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(7, 'b'),
                 new Position(7, 'f'),
                 new Position(6, 'a'),
@@ -218,7 +218,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 7;
             int boardCols = 7;
             Position kingPosition = new Position(4, 'd');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(6, 'd'),
                 new Position(5, 'd'),
                 new Position(4, 'b'),
@@ -228,7 +228,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(3, 'd'),
                 new Position(2, 'd')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(7, 'a'),
                 new Position(7, 'c'),
                 new Position(7, 'd'),
@@ -268,13 +268,13 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 7;
             int boardCols = 7;
             Position kingPosition = new Position(4, 'd');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(5, 'd'),
                 new Position(4, 'c'),
                 new Position(4, 'e'),
                 new Position(3, 'd')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(7, 'c'),
                 new Position(7, 'e'),
                 new Position(5, 'a'),
@@ -306,13 +306,13 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 7;
             int boardCols = 7;
             Position kingPosition = new Position(4, 'd');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(5, 'd'),
                 new Position(4, 'c'),
                 new Position(4, 'e'),
                 new Position(3, 'd')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(7, 'd'),
                 new Position(6, 'b'),
                 new Position(6, 'f'),
@@ -344,7 +344,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 7;
             int boardCols = 7;
             Position kingPosition = new Position(4, 'd');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(6, 'd'),
                 new Position(5, 'd'),
                 new Position(4, 'c'),
@@ -352,7 +352,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(3, 'd'),
                 new Position(2, 'd')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(7, 'c'),
                 new Position(7, 'd'),
                 new Position(6, 'c'),
@@ -388,7 +388,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 7;
             int boardCols = 7;
             Position kingPosition = new Position(4, 'd');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(6, 'd'),
                 new Position(5, 'd'),
                 new Position(4, 'b'),
@@ -398,7 +398,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(3, 'd'),
                 new Position(2, 'd')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(7, 'b'),
                 new Position(7, 'c'),
                 new Position(7, 'e'),
@@ -440,7 +440,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 9;
             int boardCols = 9;
             Position kingPosition = new Position(5, 'e');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(7, 'e'),
                 new Position(6, 'e'),
                 new Position(5, 'c'),
@@ -450,7 +450,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(4, 'e'),
                 new Position(3, 'e')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(9, 'd'),
                 new Position(9, 'e'),
                 new Position(9, 'f'),
@@ -494,7 +494,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 11;
             int boardCols = 11;
             Position kingPosition = new Position(6, 'f');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(8, 'f'),
                 new Position(7, 'e'),
                 new Position(7, 'f'),
@@ -508,7 +508,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(5, 'g'),
                 new Position(4, 'f')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(11, 'e'),
                 new Position(11, 'f'),
                 new Position(11, 'g'),
@@ -560,7 +560,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 11;
             int boardCols = 11;
             Position kingPosition = new Position(6, 'f');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(9, 'f'),
                 new Position(8, 'f'),
                 new Position(7, 'f'),
@@ -574,7 +574,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(4, 'f'),
                 new Position(3, 'f')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(11, 'd'),
                 new Position(11, 'e'),
                 new Position(11, 'f'),
@@ -626,7 +626,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 11;
             int boardCols = 11;
             Position kingPosition = new Position(6, 'f');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(8, 'f'),
                 new Position(7, 'e'),
                 new Position(7, 'f'),
@@ -640,7 +640,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(5, 'g'),
                 new Position(4, 'f')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(11, 'd'),
                 new Position(11, 'e'),
                 new Position(11, 'f'),
@@ -692,7 +692,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 11;
             int boardCols = 11;
             Position kingPosition = new Position(6, 'f');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(8, 'f'),
                 new Position(7, 'f'),
                 new Position(7, 'g'),
@@ -705,11 +705,11 @@ namespace HnefataflAI.Games.Boards
                 new Position(5, 'g'),
                 new Position(4, 'f')
             };
-            List<Position> eliteGuards = new List<Position>
+            HashSet<Position> eliteGuards = new HashSet<Position>
             {
                 new Position(7, 'e')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(11, 'd'),
                 new Position(11, 'e'),
                 new Position(11, 'f'),
@@ -731,7 +731,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(1, 'g'),
                 new Position(1, 'h')
             };
-            List<Position> commanders = new List<Position>
+            HashSet<Position> commanders = new HashSet<Position>
             {
                 new Position(10, 'f'),
                 new Position(6, 'b'),
@@ -764,7 +764,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 11;
             int boardCols = 11;
             Position kingPosition = new Position(6, 'f');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(9, 'f'),
                 new Position(8, 'f'),
                 new Position(7, 'f'),
@@ -778,7 +778,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(4, 'f'),
                 new Position(3, 'f')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(11, 'e'),
                 new Position(11, 'f'),
                 new Position(11, 'g'),
@@ -832,7 +832,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 13;
             int boardCols = 13;
             Position kingPosition = new Position(7, 'g');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(10, 'g'),
                 new Position(9, 'e'),
                 new Position(9, 'i'),
@@ -850,7 +850,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(5, 'i'),
                 new Position(4, 'g')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(13, 'e'),
                 new Position(13, 'f'),
                 new Position(13, 'g'),
@@ -912,7 +912,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 13;
             int boardCols = 13;
             Position kingPosition = new Position(7, 'g');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(10, 'g'),
                 new Position(9, 'e'),
                 new Position(9, 'i'),
@@ -930,7 +930,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(5, 'i'),
                 new Position(4, 'g')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(13, 'e'),
                 new Position(13, 'f'),
                 new Position(13, 'h'),
@@ -992,7 +992,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 13;
             int boardCols = 13;
             Position kingPosition = new Position(7, 'g');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(11, 'g'),
                 new Position(10, 'g'),
                 new Position(9, 'g'),
@@ -1010,7 +1010,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(4, 'g'),
                 new Position(3, 'g')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(13, 'd'),
                 new Position(13, 'e'),
                 new Position(13, 'f'),
@@ -1072,7 +1072,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 13;
             int boardCols = 13;
             Position kingPosition = new Position(7, 'g');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(10, 'g'),
                 new Position(9, 'g'),
                 new Position(8, 'g'),
@@ -1086,7 +1086,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(5, 'g'),
                 new Position(4, 'g')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(13, 'e'),
                 new Position(13, 'f'),
                 new Position(13, 'g'),
@@ -1140,7 +1140,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 13;
             int boardCols = 13;
             Position kingPosition = new Position(7, 'g');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(10, 'g'),
                 new Position(9, 'g'),
                 new Position(8, 'f'),
@@ -1158,7 +1158,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(5, 'g'),
                 new Position(4, 'g')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(13, 'e'),
                 new Position(13, 'f'),
                 new Position(13, 'g'),
@@ -1222,7 +1222,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 15;
             int boardCols = 15;
             Position kingPosition = new Position(8, 'h');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(11, 'h'),
                 new Position(10, 'g'),
                 new Position(10, 'h'),
@@ -1244,7 +1244,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(6, 'i'),
                 new Position(5, 'h')
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(15, 'f'),
                 new Position(15, 'g'),
                 new Position(15, 'h'),
@@ -1320,7 +1320,7 @@ namespace HnefataflAI.Games.Boards
             int boardRows = 19;
             int boardCols = 19;
             Position kingPosition = new Position(10, 'j');
-            List<Position> defenders = new List<Position>{
+            HashSet<Position> defenders = new HashSet<Position>{
                 new Position(15, 'i'),
                 new Position(15, 'k'),
                 new Position(13, 'j'),
@@ -1342,14 +1342,14 @@ namespace HnefataflAI.Games.Boards
                 new Position(5, 'i'),
                 new Position(5, 'k')
             };
-            List<Position> eliteGuards = new List<Position>
+            HashSet<Position> eliteGuards = new HashSet<Position>
             {
                 new Position(11, 'j'),
                 new Position(10, 'i'),
                 new Position(10, 'k'),
                 new Position(9, 'j'),
             };
-            List<Position> attackers = new List<Position>{
+            HashSet<Position> attackers = new HashSet<Position>{
                 new Position(19, 'c'),
                 new Position(19, 'f'),
                 new Position(19, 'n'),
@@ -1399,7 +1399,7 @@ namespace HnefataflAI.Games.Boards
                 new Position(1, 'n'),
                 new Position(1, 'q'),
             };
-            List<Position> corners = new List<Position>{
+            HashSet<Position> corners = new HashSet<Position>{
                 new Position(19, 'a'),
                 new Position(19, 'b'),
                 new Position(19, 'r'),
@@ -1433,7 +1433,7 @@ namespace HnefataflAI.Games.Boards
         /// <param name="thrones">The thrones, if different than the default one</param>
         /// <param name="corners">The corners, if different than the default four</param>
         /// <returns>The populated board</returns>
-        private static Board BuildBoard(int boardRows, int boardCols, Position kingPosition, List<Position> defenders, List<Position> attackers, List<Position> eliteGuards = null, List<Position> commanders = null, List<Position> thrones = null, List<Position> corners = null)
+        private static Board BuildBoard(int boardRows, int boardCols, Position kingPosition, HashSet<Position> defenders, HashSet<Position> attackers, HashSet<Position> eliteGuards = null, HashSet<Position> commanders = null, HashSet<Position> thrones = null, HashSet<Position> corners = null)
         {
             #region Validate the board
             // The board should be at least 5x5 and at most MAX_ROWSxMAX_COLS and should always be odd

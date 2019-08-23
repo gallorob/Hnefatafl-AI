@@ -35,7 +35,7 @@ namespace HnefataflAI.Games.Rules
         /// <param name="piece">The move's piece</param>
         /// <param name="board">The board</param>
         /// <returns>A list of all captures by the piece (possible King captures as well)</returns>
-        List<IPiece> CheckIfCaptures(IPiece piece, Board board);
+        HashSet<IPiece> CheckIfCaptures(IPiece piece, Board board);
         /// <summary>
         /// Check if a move is valid
         /// </summary>
@@ -56,7 +56,7 @@ namespace HnefataflAI.Games.Rules
         /// <param name="piece">The piece</param>
         /// <param name="board">The board</param>
         /// <returns>The moves for a piece in all directions</returns>
-        List<Move> GetMovesForPiece(IPiece piece, Board board);
+        HashSet<Move> GetMovesForPiece(IPiece piece, Board board);
         CaptureRuleSet GetCaptureRuleSet();
         MoveRuleSet GetMoveRuleSet();
         #endregion

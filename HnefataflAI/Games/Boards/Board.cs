@@ -31,19 +31,15 @@ namespace HnefataflAI.Games.Boards
         /// <summary>
         /// The board corners
         /// </summary>
-        public List<Position> CornerTiles { get; private set; }
+        public HashSet<Position> CornerTiles { get; private set; }
         /// <summary>
         /// The board anvils
         /// </summary>
-        public List<Position> ThroneTiles { get; private set; }
+        public HashSet<Position> ThroneTiles { get; private set; }
         /// <summary>
         /// The base camps for the attacker
         /// </summary>
-        public List<Position> AttackerBaseCamps { get; private set; }
-        /// <summary>
-        /// The base camps for the defender
-        /// </summary>
-        public List<Position> DefenderBaseCamps { get; private set; }
+        public HashSet<Position> AttackerBaseCamps { get; private set; }
         #endregion
 
         #region Constructors
@@ -57,9 +53,9 @@ namespace HnefataflAI.Games.Boards
 			this.TotalRows = numRows;
 			this.TotalCols = numCols;
 			this.board = new Matrix<IPiece>(numRows, numCols);
-            this.AttackerBaseCamps = new List<Position>();
-            this.CornerTiles = new List<Position>();
-            this.ThroneTiles = new List<Position>();
+            this.AttackerBaseCamps = new HashSet<Position>();
+            this.CornerTiles = new HashSet<Position>();
+            this.ThroneTiles = new HashSet<Position>();
         }
 
         public Position GetCenterPosition()
@@ -72,7 +68,7 @@ namespace HnefataflAI.Games.Boards
         /// </summary>
         public void AddCornerTiles()
         {
-            List<Position> corners = new List<Position>
+            HashSet<Position> corners = new HashSet<Position>
             {
                 new Position(1, DefaultValues.FIRST_COLUMN),
                 new Position(this.TotalRows, DefaultValues.FIRST_COLUMN),
@@ -85,16 +81,16 @@ namespace HnefataflAI.Games.Boards
         /// Add the given corners to the board
         /// </summary>
         /// <param name="corners">The corners to add</param>
-        public void AddCornerTiles(List<Position> corners)
+        public void AddCornerTiles(HashSet<Position> corners)
         {
-            this.CornerTiles.AddRange(corners);
+            SetUtils<Position>.AddRange(CornerTiles, corners);
         }
         /// <summary>
         /// Add the default throne tile to the board
         /// </summary>
         public void AddThroneTiles()
         {
-            List<Position> thrones = new List<Position>
+            HashSet<Position> thrones = new HashSet<Position>
             {
                 GetCenterPosition()
             };
@@ -104,9 +100,9 @@ namespace HnefataflAI.Games.Boards
         /// Add the throne tiles to the board
         /// </summary>
         /// <param name="thrones">The thrones to add</param>
-        public void AddThroneTiles(List<Position> thrones)
+        public void AddThroneTiles(HashSet<Position> thrones)
         {
-            this.ThroneTiles.AddRange(thrones);
+            SetUtils<Position>.AddRange(ThroneTiles, thrones);
         }
         /// <summary>
         /// Add the default base camps for a player to the board.
@@ -120,9 +116,9 @@ namespace HnefataflAI.Games.Boards
         /// </summary>
         /// <param name="baseCamps">The empty list of basecamps</param>
         /// <param name="pieceColor">The pieces color</param>
-        public void AddBaseCamps(List<Position> baseCamps, PieceColors pieceColor)
+        public void AddBaseCamps(HashSet<Position> baseCamps, PieceColors pieceColor)
         {
-            baseCamps.AddRange(this.GetPiecesByColor(pieceColor).Select(piece => piece.Position).ToList());
+            SetUtils<Position>.AddRange(baseCamps, GetPiecesByColor(pieceColor).Select(piece => piece.Position).ToArray());
         }
         #endregion
 

@@ -6,6 +6,7 @@
         MINIMAX,
         PARALLELMINIMAX,
         MINIMAXAB,
+        PARALLELMINIMAXAB,
         RANDOM
     }
 }

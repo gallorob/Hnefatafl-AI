@@ -260,20 +260,20 @@ namespace HnefataflAI.Commons.Utils
             }
             return null;
         }
-        public static List<IPiece> GetPieceNeighbouringPieces(IPiece piece, Board board)
-        {
-            List<IPiece> neighbours = new List<IPiece>();
-            foreach (Directions direction in PositionUtils.GetAllClockWiseDirections())
-            {
-                if (IsPositionMoveValid(piece.Position, direction, board))
-                {
-                    Position newPosition = piece.Position.MoveTo(direction);
-                    IPiece neighbour = board.At(newPosition);
-                    neighbours.Add(neighbour);
-                }
-            }
-            return neighbours;
-        }
+        //public static List<IPiece> GetPieceNeighbouringPieces(IPiece piece, Board board)
+        //{
+        //    List<IPiece> neighbours = new List<IPiece>();
+        //    foreach (Directions direction in PositionUtils.GetAllClockWiseDirections())
+        //    {
+        //        if (IsPositionMoveValid(piece.Position, direction, board))
+        //        {
+        //            Position newPosition = piece.Position.MoveTo(direction);
+        //            IPiece neighbour = board.At(newPosition);
+        //            neighbours.Add(neighbour);
+        //        }
+        //    }
+        //    return neighbours;
+        //}
         public static string GetPositionBoardRepresentation(int row, int col, Board board)
         {
             Position toCheck = GetPositionFromArrayValues(row, col);

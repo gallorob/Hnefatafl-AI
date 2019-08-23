@@ -23,7 +23,7 @@ namespace HnefataflAI.Games.GameState
         /// <summary>
         /// The captured pieces in the game status
         /// </summary>
-        public List<IPiece> CapturedPieces = new List<IPiece>();
+        public HashSet<IPiece> CapturedPieces = new HashSet<IPiece>();
         /// <summary>
         /// The next player's color
         /// </summary>

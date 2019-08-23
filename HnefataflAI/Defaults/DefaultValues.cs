@@ -43,7 +43,7 @@ namespace HnefataflAI.Defaults
         /// <summary>
         /// Boolean value to log the moves' evaluation results or not
         /// </summary>
-        public static readonly bool LOG_MOVES_EVAL = true;
+        public static readonly bool LOG_MOVES_EVAL = false;
         /// <summary>
         /// Boolean value to log the game with Cyningstan notation
         /// </summary>

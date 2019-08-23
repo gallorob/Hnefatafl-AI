@@ -44,7 +44,7 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <returns>The best move as a user input</returns>
         public override string[] GetMove(Board board)
         {
-            List<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
+            HashSet<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
             MovesLogger.Log(string.Format("Started decision making for {0}...", PieceColors));
             MoveValue bestMove = ComputeBestMoveMinimaxAB(DefaultValues.MINIMAX_DEPTH, board, moves, int.MinValue, int.MaxValue, true, this.PieceColors);
             MovesLogger.LogMove(bestMove.Move, bestMove.Value);
@@ -65,7 +65,7 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <param name="beta">The Beta value</param>
         /// <param name="isMaximizing">>If it's maximizing or minimizing</param>
         /// <returns>The best move in the current turn</returns>
-        private MoveValue ComputeBestMoveMinimaxAB(int depth, Board board, List<Move> moves, int alpha, int beta, bool isMaximizing, PieceColors pieceColors)
+        private MoveValue ComputeBestMoveMinimaxAB(int depth, Board board, HashSet<Move> moves, int alpha, int beta, bool isMaximizing, PieceColors pieceColors)
         {
             // reached the end of the branch, evaluate the board
             if (depth == 0)
@@ -77,8 +77,6 @@ namespace HnefataflAI.AI.Bots.Impl
             Move bestMove = null;
             int bestValue = isMaximizing ? int.MinValue : int.MaxValue;
             MoveValue bestMoveValue = new MoveValue(bestMove, bestValue);
-            // order moves in order to reduce number of nodes visited
-            OrderMoves(moves, board);
             foreach (Move move in moves)
             {
                 // update board with the move
@@ -162,7 +160,7 @@ namespace HnefataflAI.AI.Bots.Impl
                 // force to pick a move if none is chosen
                 if (bestMoveValue.Move is null)
                 {
-                    bestMoveValue.Move = moves[0];
+                    bestMoveValue.Move = moves.Where(nmove => nmove != null).First();
                 }
             }
             return bestMoveValue;

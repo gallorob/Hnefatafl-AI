@@ -16,23 +16,23 @@ namespace HnefataflAI.Games.Engine.Impl
         {
             this.Rule = rule;
         }
-        public List<Move> GetAvailableMoves(PieceColors playerColor, Board board)
+        public HashSet<Move> GetAvailableMoves(PieceColors playerColor, Board board)
         {
-            List<Move> availableMoves = new List<Move>();
+            HashSet<Move> availableMoves = new HashSet<Move>();
             List<IPiece> pieces = board.GetPiecesByColor(playerColor);
 
             foreach (IPiece piece in pieces)
             {
-                availableMoves.AddRange(GetAvailableMoves(piece, board));
+                SetUtils<Move>.AddRange(availableMoves, GetAvailableMoves(piece, board));
             }
 
             return availableMoves;
         }
-        public List<Move> GetAvailableMoves(IPiece piece, Board board)
+        public HashSet<Move> GetAvailableMoves(IPiece piece, Board board)
         {
             return this.Rule.GetMovesForPiece(piece, board);
         }
-        public List<IPiece> GetCapturedPieces(IPiece piece, Board board)
+        public HashSet<IPiece> GetCapturedPieces(IPiece piece, Board board)
         {
             return Rule.CheckIfCaptures(piece, board);
         }
@@ -45,12 +45,13 @@ namespace HnefataflAI.Games.Engine.Impl
             //}
             return PieceColorsUtils.GetOppositePieceColor(piece.PieceColors);
         }
+        // todo: refactor to improve
         public GameStatus GetGameStatus(Move move, Board board, List<Move> whiteMoves, List<Move> blackMoves)
         {
             IPiece movedPiece = board.At(move.To);
-            List<IPiece> capturedPieces = GetCapturedPieces(movedPiece, board);
+            HashSet<IPiece> capturedPieces = GetCapturedPieces(movedPiece, board);
             GameStatus gameStatus = new GameStatus(false);
-            gameStatus.CapturedPieces.AddRange(capturedPieces);
+            SetUtils<IPiece>.AddRange(gameStatus.CapturedPieces, capturedPieces);
             gameStatus.NextPlayer = GetNextPlayer(movedPiece, gameStatus);
 
             if (!(movedPiece is King))

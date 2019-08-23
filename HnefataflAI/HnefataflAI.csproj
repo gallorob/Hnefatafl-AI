@@ -65,6 +65,7 @@
     <Compile Include="AI\Bots\ATaflBot.cs" />
     <Compile Include="AI\Bots\BotTypes.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotParallelMinimax.cs" />
+    <Compile Include="AI\Bots\Impl\TaflBotParallelMinimaxAB.cs" />
     <Compile Include="AI\Bots\ITaflBot.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotBasic.cs" />
     <Compile Include="AI\Bots\Impl\TaflBotMinimax.cs" />
@@ -90,12 +91,12 @@
     <Compile Include="Commons\Utils\BoardUtils.cs" />
     <Compile Include="Commons\Utils\BotUtils.cs" />
     <Compile Include="Commons\Utils\CaptureUtils.cs" />
-    <Compile Include="Commons\Utils\ListUtils.cs" />
     <Compile Include="Commons\Utils\LoggingUtils.cs" />
     <Compile Include="Commons\Utils\MoveUtils.cs" />
     <Compile Include="Commons\Utils\PieceColorsUtils.cs" />
     <Compile Include="Commons\Utils\PositionUtils.cs" />
     <Compile Include="Commons\Utils\RuleUtils.cs" />
+    <Compile Include="Commons\Utils\SetUtils.cs" />
     <Compile Include="Commons\Utils\ShieldWallUtils.cs" />
     <Compile Include="Games\Boards\Board.cs" />
     <Compile Include="Commons\Move.cs" />

@@ -75,10 +75,10 @@ namespace HnefataflAI.Commons.Utils
         /// <param name="direction">The direction the piece is moving</param>
         /// <param name="moveRuleSet">The move rule set</param>
         /// <returns>The moves for a piece in a given direction</returns>
-        public static List<Move> GetMovesForPiece(IPiece piece, Board board, Directions direction, MoveRuleSet moveRuleSet)
+        public static HashSet<Move> GetMovesForPiece(IPiece piece, Board board, Directions direction, MoveRuleSet moveRuleSet)
         {
             int counter = 0;
-            List<Move> availableMoves = new List<Move>();
+            HashSet<Move> availableMoves = new HashSet<Move>();
             Position moved = piece.Position;
             int moveLimiter;
             if (piece is King)

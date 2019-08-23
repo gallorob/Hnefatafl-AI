@@ -10,9 +10,9 @@ namespace HnefataflAI.Games.Engine
     public interface IRuleEngine
     {
         IRule Rule { get; }
-        List<IPiece> GetCapturedPieces(IPiece piece, Board board);
-        List<Move> GetAvailableMoves(PieceColors playerColor, Board board);
-        List<Move> GetAvailableMoves(IPiece piece, Board board);
+        HashSet<IPiece> GetCapturedPieces(IPiece piece, Board board);
+        HashSet<Move> GetAvailableMoves(PieceColors playerColor, Board board);
+        HashSet<Move> GetAvailableMoves(IPiece piece, Board board);
         GameStatus GetGameStatus(Move move, Board board, List<Move> whiteMoves, List<Move> blackMoves);
         bool CanMove(PieceColors playerColor, Board board);
         void UpdatePiecesThreatLevel(Board board);

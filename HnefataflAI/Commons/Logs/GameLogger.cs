@@ -27,7 +27,7 @@ namespace HnefataflAI.Commons.Logs
                 Log(toLog + "\n");
             }
         }
-        public static void LogPiecesCaptures(List<IPiece> capturedPieces)
+        public static void LogPiecesCaptures(HashSet<IPiece> capturedPieces)
         {
             if (DefaultValues.LOG_GAME && capturedPieces.Count > 0)
             {
@@ -43,7 +43,7 @@ namespace HnefataflAI.Commons.Logs
                 Log(toLog + "\n");
             }
         }
-        public static void LogCyningstanStyle(Move move, List<IPiece> capturedPieces, bool isSuicidal, bool isWinning, bool isGameOver)
+        public static void LogCyningstanStyle(Move move, HashSet<IPiece> capturedPieces, bool isSuicidal, bool isWinning, bool isGameOver)
         {
             if (DefaultValues.LOG_CYNINGSTAN_STYLE)
             {

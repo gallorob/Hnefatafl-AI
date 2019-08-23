@@ -56,23 +56,23 @@ namespace HnefataflAI.Games.Rules
         public bool AllowExitForts { get; protected set; }
         #endregion
 
-        public virtual List<IPiece> CheckIfCaptures(IPiece piece, Board board)
+        public virtual HashSet<IPiece> CheckIfCaptures(IPiece piece, Board board)
         {
-            List<IPiece> capturedPieces = new List<IPiece>();
+            HashSet<IPiece> capturedPieces = new HashSet<IPiece>();
             bool isKingArmed = false;
             if ((piece is King && isKingArmed) || !(piece is King))
             {
                 foreach (Directions direction in PositionUtils.GetClockWiseDirections())
                 {
-                    ListUtils.AddIfNotNull(HasCapturedPiece(piece, board, direction), capturedPieces);
+                    SetUtils<IPiece>.AddIfNotNull(capturedPieces, HasCapturedPiece(piece, board, direction));
                 }
             }
             return capturedPieces;
         }
 
-        public virtual List<IPiece> HasCapturedPiece(IPiece piece, Board board, Directions direction)
+        public virtual HashSet<IPiece> HasCapturedPiece(IPiece piece, Board board, Directions direction)
         {
-            List<IPiece> captures = new List<IPiece>();
+            HashSet<IPiece> captures = new HashSet<IPiece>();
             CaptureRuleSet captureRuleSet = GetCaptureRuleSet();
             if (BoardUtils.IsPositionMoveValid(piece.Position, direction, board))
             {
@@ -131,12 +131,12 @@ namespace HnefataflAI.Games.Rules
             return CaptureUtils.IsPieceThreatened(piece, board, GetCaptureRuleSet());
         }
 
-        public virtual List<Move> GetMovesForPiece(IPiece piece, Board board)
+        public virtual HashSet<Move> GetMovesForPiece(IPiece piece, Board board)
         {
-            List<Move> availableMoves = new List<Move>();
+            HashSet<Move> availableMoves = new HashSet<Move>();
             foreach (Directions direction in PositionUtils.GetClockWiseDirections())
             {
-                availableMoves.AddRange(MoveUtils.GetMovesForPiece(piece, board, direction, GetMoveRuleSet()));
+                SetUtils<Move>.AddRange(availableMoves, MoveUtils.GetMovesForPiece(piece, board, direction, GetMoveRuleSet()));
             }
             return availableMoves;
         }

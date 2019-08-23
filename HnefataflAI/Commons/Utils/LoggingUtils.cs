@@ -22,7 +22,7 @@ namespace HnefataflAI.Commons.Utils
                 move.From,
                 move.To);
         }
-        public static String LogPiecesCaptures(List<IPiece> capturedPieces)
+        public static String LogPiecesCaptures(HashSet<IPiece> capturedPieces)
         {    
             return String.Format("Captures {0}", String.Join(", ", capturedPieces.Select(capturedPiece => capturedPiece.ToString()).ToArray()));
         }
@@ -34,7 +34,7 @@ namespace HnefataflAI.Commons.Utils
                 timeSpan.Seconds,
                 timeSpan.Milliseconds / 10);
         }
-        public static String LogCyningstanStyle(Move move, List<IPiece> capturedPieces, bool isSuicidal, bool isWinning, bool isGameOver)
+        public static String LogCyningstanStyle(Move move, HashSet<IPiece> capturedPieces, bool isSuicidal, bool isWinning, bool isGameOver)
         {
             string toLog = String.Format("{0}-{1}",
                 move.From,

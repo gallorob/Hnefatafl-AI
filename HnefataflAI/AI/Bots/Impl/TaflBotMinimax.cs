@@ -9,6 +9,7 @@ using HnefataflAI.Games.GameState;
 using HnefataflAI.Games.Rules;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HnefataflAI.AI.Bots.Impl
 {
@@ -48,7 +49,7 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <returns>The best move as a user input</returns>
         public override string[] GetMove(Board board)
         {
-            List<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
+            HashSet<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
             MovesLogger.Log(string.Format("Started decision making for {0}...", PieceColors));
             MoveValue bestMove = ComputeBestMoveMinimax(DefaultValues.MINIMAX_DEPTH, board, moves, true, this.PieceColors);
             MovesLogger.LogMove(bestMove.Move, bestMove.Value);
@@ -67,7 +68,7 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <param name="moves">The list of all possible moves</param>
         /// <param name="isMaximizing">>If it's maximizing or minimizing</param>
         /// <returns>The best move in the current turn</returns>
-        private MoveValue ComputeBestMoveMinimax(int depth, Board board, List<Move> moves, bool isMaximizing, PieceColors pieceColors)
+        private MoveValue ComputeBestMoveMinimax(int depth, Board board, HashSet<Move> moves, bool isMaximizing, PieceColors pieceColors)
         {
             // reached the end of the branch, evaluate the board
             if (depth == 0)
@@ -79,8 +80,6 @@ namespace HnefataflAI.AI.Bots.Impl
             Move bestMove = null;
             int bestValue = isMaximizing ? int.MinValue : int.MaxValue;
             MoveValue bestMoveValue = new MoveValue(bestMove, bestValue);
-            // randomize list so it's not always the same if no best move is found
-            ListUtils.ShuffleList(moves);
             foreach (Move move in moves)
             {
                 // update board with the move
@@ -153,7 +152,7 @@ namespace HnefataflAI.AI.Bots.Impl
                 // force to pick a move if none is chosen
                 if (bestMoveValue.Move is null)
                 {
-                    bestMoveValue.Move = moves[0];
+                    bestMoveValue.Move = moves.Where(nmove => nmove != null).First();
                 }
             }
             return bestMoveValue;

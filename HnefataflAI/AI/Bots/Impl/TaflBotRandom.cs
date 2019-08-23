@@ -38,10 +38,8 @@ namespace HnefataflAI.AI.Bots.Impl
         /// <returns>A move as a user input</returns>
         public override string[] GetMove(Board board)
         {
-            List<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
-            Random rnd = new Random();
-            int index = rnd.Next(moves.Count);
-            return MoveUtils.MoveAsInput(moves[index]);
+            HashSet<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
+            return MoveUtils.MoveAsInput(moves.GetEnumerator().Current);
         }
     }
 }

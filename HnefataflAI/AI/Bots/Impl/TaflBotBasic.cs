@@ -61,9 +61,7 @@ namespace HnefataflAI.AI.Bots.Impl
         {
             Move bestMove = null;
             int bestMoveValue = int.MinValue;
-            List<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
-            // randomize list so it's not always the same if no best move is found
-            ListUtils.ShuffleList(moves);
+            HashSet<Move> moves = GameEngine.GetMovesByColor(PieceColors, board);
             foreach (Move move in moves)
             {
                 // update board with the move

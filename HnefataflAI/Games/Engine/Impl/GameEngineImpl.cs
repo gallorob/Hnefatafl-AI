@@ -16,13 +16,13 @@ namespace HnefataflAI.Games.Engine.Impl
         public IRuleEngine RuleEngine { get; private set; }
         internal List<Move> WhiteMoves;
         internal List<Move> BlackMoves;
-        internal List<IPiece> CapturedPieces;
+        internal HashSet<IPiece> CapturedPieces;
         public GameEngineImpl(RuleTypes ruleType)
         {
             this.RuleEngine = new RuleEngineImpl(RuleUtils.GetRule(ruleType));
             this.WhiteMoves = new List<Move>();
             this.BlackMoves = new List<Move>();
-            this.CapturedPieces = new List<IPiece>();
+            this.CapturedPieces = new HashSet<IPiece>();
         }
         public Move ProcessPlayerMove(string[] playerMove, Board board)
         {
@@ -115,7 +115,7 @@ namespace HnefataflAI.Games.Engine.Impl
             this.CapturedPieces.Clear();
         }
         // todo: test if it works with AI
-        public void UndoCaptures(Board board, List<IPiece> captures)
+        public void UndoCaptures(Board board, HashSet<IPiece> captures)
         {
             foreach (IPiece piece in captures)
             {
@@ -133,19 +133,10 @@ namespace HnefataflAI.Games.Engine.Impl
                     ApplyCapture(capturedPiece, board);
                 }
             }
-            // todo: move to rule engine
-            if (!gameStatus.IsGameOver)
-            {
-                if (!this.RuleEngine.CanMove(gameStatus.NextPlayer, board))
-                {
-                    gameStatus.Status = Status.WIN;
-                    gameStatus.IsGameOver = true;
-                }
-            }
             return gameStatus;
         }
 
-        public List<Move> GetMovesByColor(PieceColors pieceColor, Board board)
+        public HashSet<Move> GetMovesByColor(PieceColors pieceColor, Board board)
         {
             return this.RuleEngine.GetAvailableMoves(pieceColor, board);
         }

@@ -325,7 +325,7 @@ namespace HnefataflAI.Commons.Utils
         public static bool DoesPieceReachPosition(IPiece piece, Position position, Board board, CaptureRuleSet captureRuleSet)
         {
             Directions direction = PositionUtils.GetPositionsDirection(piece.Position, position);
-            List<Move> moves = MoveUtils.GetMovesForPiece(piece, board, direction, captureRuleSet.moveRuleSet);
+            HashSet<Move> moves = MoveUtils.GetMovesForPiece(piece, board, direction, captureRuleSet.moveRuleSet);
             Move validMove = moves.Where(move => move.To.Equals(position)).FirstOrDefault();
             return validMove != null;
         }

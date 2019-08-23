@@ -2,6 +2,7 @@
 using HnefataflAI.Commons.Exceptions;
 using HnefataflAI.Player;
 using System;
+using System.Diagnostics;
 
 namespace HnefataflAI.Games
 {
@@ -34,8 +35,8 @@ namespace HnefataflAI.Games
         }
         public void PlayerPlay(IPlayer player)
         {
-            //try
-            //{
+            try
+            {
                 switch (player.PieceColors)
                 {
                     case PieceColors.BLACK:
@@ -46,17 +47,22 @@ namespace HnefataflAI.Games
                         break;
                 }
                 Console.WriteLine(Game.Board);
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
                 Game.PlayTurn(player);
+                stopwatch.Stop();
+                Console.Out.WriteLine(stopwatch.Elapsed.ToString());
+                Console.ReadKey();
                 Console.Clear();
-            //}
-            //catch (Exception e) when (e is InvalidMoveException || e is InvalidInputException || e is CustomGenericException)
-            //{
-            //    Console.WriteLine(e.Message);
-            //    Console.WriteLine(Messages.PRESS_TO_CONTINUE);
-            //    Console.ReadKey();
-            //    Console.Clear();
-            //    PlayerPlay(player);
-            //}
+            }
+                catch (Exception e) when(e is InvalidMoveException || e is InvalidInputException || e is CustomGenericException)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(Messages.PRESS_TO_CONTINUE);
+                Console.ReadKey();
+                Console.Clear();
+                PlayerPlay(player);
+            }
         }
         private void DisplayGameOver()
         {
