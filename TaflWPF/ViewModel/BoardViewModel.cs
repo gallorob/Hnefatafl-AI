@@ -18,10 +18,9 @@ namespace TaflWPF.ViewModel
         public List<char> Columns { get; set; }
         public List<int> Rows { get; set; }
         public bool ShowCorners { get; set; }
-        public List<Position> Corners { get; set; }
-        public List<Position> Thrones { get; set; }
-        public List<Position> AttackerBaseCamps { get; set; }
-        public List<Position> DefenderBaseCamps { get; set; }
+        public HashSet<Position> Corners { get; set; }
+        public HashSet<Position> Thrones { get; set; }
+        public HashSet<Position> AttackerBaseCamps { get; set; }
         internal Board Board { get; set; }
         internal IRuleEngine RuleEngine { get; set; }
 		public BoardViewModel(Board board)
@@ -35,7 +34,6 @@ namespace TaflWPF.ViewModel
             this.Corners = board.CornerTiles;
             this.Thrones = board.ThroneTiles;
             this.AttackerBaseCamps = board.AttackerBaseCamps;
-            this.DefenderBaseCamps = board.DefenderBaseCamps;
 
             this.Board = board;
             this.RuleEngine = new RuleEngineImpl(new HnefataflRule());

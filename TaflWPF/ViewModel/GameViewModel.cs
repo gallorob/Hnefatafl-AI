@@ -8,6 +8,7 @@ using HnefataflAI.Games.Boards;
 using HnefataflAI.Games.Engine;
 using HnefataflAI.Games.Engine.Impl;
 using HnefataflAI.Games.Rules;
+using HnefataflAI.Pieces;
 using HnefataflAI.Player;
 using HnefataflAI.Player.Impl;
 using System;
@@ -202,8 +203,12 @@ namespace TaflWPF.ViewModel
         }
         public bool CheckIfPieceWasCaptured(int index)
         {
-            List<int> captured = new List<int>();
-            Game.GameStatus.CapturedPieces.ForEach(piece => captured.Add(GridUtils.GetIndexFromPosition(piece.Position, BoardVM.Board.TotalCols)));
+            HashSet<int> captured = new HashSet<int>();
+            HashSet<IPiece> capturedPieces = Game.GameStatus.CapturedPieces;
+            foreach (IPiece piece in capturedPieces)
+            {
+                captured.Add(GridUtils.GetIndexFromPosition(piece.Position, BoardVM.Board.TotalCols));
+            }
             return captured.Contains(index);
         }
         public void RefreshCaptured()
