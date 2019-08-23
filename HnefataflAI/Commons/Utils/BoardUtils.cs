@@ -143,12 +143,13 @@ namespace HnefataflAI.Commons.Utils
         /// <returns>If a position is on a board's corner</returns>
         public static bool IsOnCorner(Position position, Board board)
         {
-            bool isOnBoardCorner = false;
-            foreach (Position corner in board.CornerTiles)
-            {
-                isOnBoardCorner |= position.Equals(corner);
-            }
-            return isOnBoardCorner;
+            return BoardMapper.LookUpTable[position].Equals(TileTypes.CORNER);
+            //bool isOnBoardCorner = false;
+            //foreach (Position corner in board.CornerTiles)
+            //{
+            //    isOnBoardCorner |= position.Equals(corner);
+            //}
+            //return isOnBoardCorner;
         }
         /// <summary>
         /// Check if a position is on a board's throne
@@ -158,12 +159,13 @@ namespace HnefataflAI.Commons.Utils
         /// <returns>If a position is on a board's throne</returns>
         public static bool IsOnThrone(Position position, Board board)
         {
-            bool isOnThrone = false;
-            foreach (Position throne in board.ThroneTiles)
-            {
-                isOnThrone |= position.Equals(throne);
-            }
-            return isOnThrone;
+            return BoardMapper.LookUpTable[position].Equals(TileTypes.THRONE);
+            //bool isOnThrone = false;
+            //foreach (Position throne in board.ThroneTiles)
+            //{
+            //    isOnThrone |= position.Equals(throne);
+            //}
+            //return isOnThrone;
         }
         /// <summary>
         /// Check if a position is an enemy's base camp
@@ -173,12 +175,13 @@ namespace HnefataflAI.Commons.Utils
         /// <returns>If a position is an enemy's base camp</returns>
         public static bool IsOnEnemyCamp(Position position, Board board)
         {
-            bool isOnEnemyBaseCamp = false;
-            foreach (Position baseCamp in board.AttackerBaseCamps)
-            {
-                isOnEnemyBaseCamp |= position.Equals(baseCamp);
-            }
-            return isOnEnemyBaseCamp;
+            return BoardMapper.LookUpTable[position].Equals(TileTypes.BASECAMP);
+            //bool isOnEnemyBaseCamp = false;
+            //foreach (Position baseCamp in board.AttackerBaseCamps)
+            //{
+            //    isOnEnemyBaseCamp |= position.Equals(baseCamp);
+            //}
+            //return isOnEnemyBaseCamp;
         }
         /// <summary>
         /// Get the first piece in a direction from the given position
@@ -277,27 +280,41 @@ namespace HnefataflAI.Commons.Utils
         public static string GetPositionBoardRepresentation(int row, int col, Board board)
         {
             Position toCheck = GetPositionFromArrayValues(row, col);
-            if (board.ThroneTiles.Contains(toCheck))
+            TileTypes tile = BoardMapper.LookUpTable[toCheck];
+            switch (tile)
             {
-                return " x ";
+                case TileTypes.SIMPLE:
+                    return " . ";
+                case TileTypes.THRONE:
+                    return " x ";
+                case TileTypes.CORNER:
+                    return " * ";
+                case TileTypes.BASECAMP:
+                    return " a ";
+                default:
+                    throw new CustomGenericException(typeof(BoardUtils).Name, MethodBase.GetCurrentMethod().Name, string.Format("Unrecognized tile type {0}", tile));
             }
-            if (board.CornerTiles.Contains(toCheck))
-            {
-                return " * ";
-            }
-            if (board.AttackerBaseCamps.Contains(toCheck))
-            {
-                return " a ";
-            }
-            return " . ";
+            //if (board.ThroneTiles.Contains(toCheck))
+            //{
+            //    return " x ";
+            //}
+            //if (board.CornerTiles.Contains(toCheck))
+            //{
+            //    return " * ";
+            //}
+            //if (board.AttackerBaseCamps.Contains(toCheck))
+            //{
+            //    return " a ";
+            //}
+            //return " . ";
         }
         public static Board DuplicateBoard(Board board)
         {
             int boardCols = board.TotalCols;
             Board newBoard = new Board(board.TotalRows, boardCols);
-            newBoard.AddThroneTiles(board.ThroneTiles);
-            newBoard.AddCornerTiles(board.CornerTiles);
-            newBoard.AddBaseCamps(board.AttackerBaseCamps, PieceColors.BLACK);
+            //newBoard.AddThroneTiles(board.ThroneTiles);
+            //newBoard.AddCornerTiles(board.CornerTiles);
+            //newBoard.AddBaseCamps(board.AttackerBaseCamps, PieceColors.BLACK);
             char[] oldBoard = board.AsString().ToCharArray();
             for (int i = 0; i < oldBoard.Length; i++)
             {

@@ -1493,6 +1493,7 @@ namespace HnefataflAI.Games.Boards
                     board.AddPiece(new Commander(commander));
                 }
             }
+            board.FinalizeCreation();
             // add throne/s
             if (thrones != null && thrones.Count > 0)
             {

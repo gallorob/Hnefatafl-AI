@@ -31,9 +31,9 @@ namespace TaflWPF.ViewModel
             this.Columns = GridUtils.GetLetters(this.ColumnCount);
             this.Rows = GridUtils.GetNumbers(this.RowCount);
 
-            this.Corners = board.CornerTiles;
-            this.Thrones = board.ThroneTiles;
-            this.AttackerBaseCamps = board.AttackerBaseCamps;
+            //this.Corners = board.CornerTiles;
+            //this.Thrones = board.ThroneTiles;
+            //this.AttackerBaseCamps = board.AttackerBaseCamps;
 
             this.Board = board;
             this.RuleEngine = new RuleEngineImpl(new HnefataflRule());
@@ -51,7 +51,7 @@ namespace TaflWPF.ViewModel
                     Position = piece != null ? piece.Position : GridUtils.GetPositionFromIndex(i, ColumnCount),
                     IsThreatened = piece != null ? piece.IsThreatened : false
                 };
-				pieceVM.PositionType = Board.CornerTiles.Contains(pieceVM.Position) ? PositionType.CORNER : Board.ThroneTiles.Contains(pieceVM.Position) ? PositionType.THRONE : PositionType.DEFAULT;
+				//pieceVM.PositionType = Board.CornerTiles.Contains(pieceVM.Position) ? PositionType.CORNER : Board.ThroneTiles.Contains(pieceVM.Position) ? PositionType.THRONE : PositionType.DEFAULT;
 				this.Pieces.Add(pieceVM);
             }
         }

@@ -21,8 +21,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  .  .  A  A  .  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(5, 'c')));
             board.AddPiece(new Defender(new Position(3, 'd')));
             board.AddPiece(new King(new Position(4, 'd')));
@@ -38,6 +36,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(3, 'f')));
             board.AddPiece(new Attacker(new Position(2, 'd')));
             board.AddPiece(new Attacker(new Position(2, 'e')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsTrue(RuleUtils.CheckIfHasEncircled(board));
         }
         [TestMethod()]
@@ -52,8 +53,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 A  .  .  A  A  .  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(5, 'c')));
             board.AddPiece(new Defender(new Position(3, 'd')));
             board.AddPiece(new King(new Position(4, 'd')));
@@ -70,6 +69,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(2, 'a')));
             board.AddPiece(new Attacker(new Position(2, 'd')));
             board.AddPiece(new Attacker(new Position(2, 'e')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsTrue(RuleUtils.CheckIfHasEncircled(board));
         }
         [TestMethod()]
@@ -84,8 +86,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  .  .  A  A  .  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(5, 'c')));
             board.AddPiece(new Defender(new Position(3, 'd')));
             board.AddPiece(new King(new Position(4, 'd')));
@@ -100,6 +100,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(3, 'f')));
             board.AddPiece(new Attacker(new Position(2, 'd')));
             board.AddPiece(new Attacker(new Position(2, 'e')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsFalse(RuleUtils.CheckIfHasEncircled(board));
         }
         [TestMethod()]
@@ -114,8 +117,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  .  .  A  A  .  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(5, 'c')));
             board.AddPiece(new Defender(new Position(3, 'd')));
             board.AddPiece(new King(new Position(4, 'd')));
@@ -131,6 +132,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(3, 'f')));
             board.AddPiece(new Attacker(new Position(2, 'd')));
             board.AddPiece(new Attacker(new Position(2, 'e')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsFalse(RuleUtils.CheckIfHasEncircled(board));
         }
         [TestMethod()]
@@ -145,8 +149,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 D  .  .  A  A  .  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(5, 'c')));
             board.AddPiece(new Defender(new Position(3, 'd')));
             board.AddPiece(new Defender(new Position(2, 'a')));
@@ -163,6 +165,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(3, 'f')));
             board.AddPiece(new Attacker(new Position(2, 'd')));
             board.AddPiece(new Attacker(new Position(2, 'e')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsFalse(RuleUtils.CheckIfHasEncircled(board));
         }
         [TestMethod()]
@@ -177,8 +182,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 D  .  .  A  A  .  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(5, 'c')));
             board.AddPiece(new Defender(new Position(3, 'd')));
             board.AddPiece(new Defender(new Position(2, 'a')));
@@ -196,6 +199,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(3, 'f')));
             board.AddPiece(new Attacker(new Position(2, 'd')));
             board.AddPiece(new Attacker(new Position(2, 'e')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsFalse(RuleUtils.CheckIfHasEncircled(board));
         }
 
@@ -212,8 +218,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 1	 *  .  D  K  D  A  *
             CaptureRuleSet captureRuleSet = RuleUtils.GetRule(RuleTypes.HNEFATAFL).GetCaptureRuleSet();
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new King(new Position(1, 'd')));
             board.AddPiece(new Defender(new Position(3, 'c')));
             board.AddPiece(new Defender(new Position(3, 'd')));
@@ -225,6 +229,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(3, 'e')));
             board.AddPiece(new Attacker(new Position(2, 'f')));
             board.AddPiece(new Attacker(new Position(1, 'f')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsTrue(RuleUtils.IsInExitFort(board, captureRuleSet));
         }
         [TestMethod()]
@@ -240,8 +247,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 1	 *  .  D  K  D  A  *
             CaptureRuleSet captureRuleSet = RuleUtils.GetRule(RuleTypes.HNEFATAFL).GetCaptureRuleSet();
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new King(new Position(1, 'd')));
             board.AddPiece(new Defender(new Position(3, 'c')));
             board.AddPiece(new Defender(new Position(3, 'd')));
@@ -253,6 +258,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(3, 'e')));
             board.AddPiece(new Attacker(new Position(2, 'f')));
             board.AddPiece(new Attacker(new Position(1, 'f')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsFalse(RuleUtils.IsInExitFort(board, captureRuleSet));
         }
 
@@ -269,8 +277,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 1	 *  .  .  .  .  .  *
             CaptureRuleSet captureRuleSet = RuleUtils.GetRule(RuleTypes.HNEFATAFL).GetCaptureRuleSet();
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new King(new Position(4, 'd')));
             board.AddPiece(new Defender(new Position(6, 'd')));
             board.AddPiece(new Defender(new Position(6, 'e')));
@@ -283,6 +289,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(6, 'b')));
             board.AddPiece(new Attacker(new Position(4, 'b')));
             board.AddPiece(new Attacker(new Position(2, 'e')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsTrue(RuleUtils.IsInDrawFort(board, captureRuleSet));
         }
         [TestMethod()]
@@ -298,8 +307,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 1	 *  .  .  .  .  .  *
             CaptureRuleSet captureRuleSet = RuleUtils.GetRule(RuleTypes.HNEFATAFL).GetCaptureRuleSet();
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new King(new Position(4, 'd')));
             board.AddPiece(new Defender(new Position(6, 'd')));
             board.AddPiece(new Defender(new Position(6, 'e')));
@@ -312,6 +319,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(6, 'b')));
             board.AddPiece(new Attacker(new Position(4, 'b')));
             board.AddPiece(new Attacker(new Position(2, 'e')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsFalse(RuleUtils.IsInDrawFort(board, captureRuleSet));
         }
     }

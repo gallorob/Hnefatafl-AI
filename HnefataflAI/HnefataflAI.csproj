@@ -75,6 +75,7 @@
     <Compile Include="AI\PieceValues.cs" />
     <Compile Include="Commons\CaptureRuleSet.cs" />
     <Compile Include="Commons\Converter\ArrayToSingleValueConverter.cs" />
+    <Compile Include="Commons\Converter\PositionIndexConverter.cs" />
     <Compile Include="Commons\DataTypes\ConcurrentHashSet.cs" />
     <Compile Include="Commons\DataTypes\Matrix.cs" />
     <Compile Include="Commons\Exceptions\CustomGenericException.cs" />
@@ -104,7 +105,9 @@
     <Compile Include="Commons\Positions\Position.cs" />
     <Compile Include="Defaults\DefaultValues.cs" />
     <Compile Include="Games\Boards\BoardBuilder.cs" />
+    <Compile Include="Games\Boards\BoardMapper.cs" />
     <Compile Include="Games\Boards\BoardTypes.cs" />
+    <Compile Include="Games\Boards\TileTypes.cs" />
     <Compile Include="Games\ConsoleGameRunner.cs" />
     <Compile Include="Games\Engine\IGameEngine.cs" />
     <Compile Include="Games\Engine\Impl\GameEngineImpl.cs" />

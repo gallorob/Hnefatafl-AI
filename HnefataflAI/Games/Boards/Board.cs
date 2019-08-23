@@ -28,18 +28,6 @@ namespace HnefataflAI.Games.Boards
         /// The number of total columns in the board
         /// </summary>
 		public int TotalCols { get; private set; }
-        /// <summary>
-        /// The board corners
-        /// </summary>
-        public HashSet<Position> CornerTiles { get; private set; }
-        /// <summary>
-        /// The board anvils
-        /// </summary>
-        public HashSet<Position> ThroneTiles { get; private set; }
-        /// <summary>
-        /// The base camps for the attacker
-        /// </summary>
-        public HashSet<Position> AttackerBaseCamps { get; private set; }
         #endregion
 
         #region Constructors
@@ -53,9 +41,6 @@ namespace HnefataflAI.Games.Boards
 			this.TotalRows = numRows;
 			this.TotalCols = numCols;
 			this.board = new Matrix<IPiece>(numRows, numCols);
-            this.AttackerBaseCamps = new HashSet<Position>();
-            this.CornerTiles = new HashSet<Position>();
-            this.ThroneTiles = new HashSet<Position>();
         }
 
         public Position GetCenterPosition()
@@ -63,19 +48,21 @@ namespace HnefataflAI.Games.Boards
             return new Position(this.TotalRows / 2 + 1, (char)(DefaultValues.FIRST_COLUMN + (this.TotalCols / 2)));
         }
 
+        public void FinalizeCreation()
+        {
+            BoardMapper.InitializeTable(TotalRows, TotalCols);
+            AddBaseCamps();
+        }
+
         /// <summary>
         /// Add the default 4 corners to the board
         /// </summary>
         public void AddCornerTiles()
         {
-            HashSet<Position> corners = new HashSet<Position>
-            {
-                new Position(1, DefaultValues.FIRST_COLUMN),
-                new Position(this.TotalRows, DefaultValues.FIRST_COLUMN),
-                new Position(1, (char)(DefaultValues.FIRST_COLUMN + this.TotalCols - 1)),
-                new Position(this.TotalRows, (char)(DefaultValues.FIRST_COLUMN + this.TotalCols - 1))
-            };
-            this.AddCornerTiles(corners);
+            BoardMapper.AddEntry(new Position(1, DefaultValues.FIRST_COLUMN), TileTypes.CORNER);
+            BoardMapper.AddEntry(new Position(this.TotalRows, DefaultValues.FIRST_COLUMN), TileTypes.CORNER);
+            BoardMapper.AddEntry(new Position(1, (char)(DefaultValues.FIRST_COLUMN + this.TotalCols - 1)), TileTypes.CORNER);
+            BoardMapper.AddEntry(new Position(this.TotalRows, (char)(DefaultValues.FIRST_COLUMN + this.TotalCols - 1)), TileTypes.CORNER);
         }
         /// <summary>
         /// Add the given corners to the board
@@ -83,18 +70,17 @@ namespace HnefataflAI.Games.Boards
         /// <param name="corners">The corners to add</param>
         public void AddCornerTiles(HashSet<Position> corners)
         {
-            SetUtils<Position>.AddRange(CornerTiles, corners);
+            for (int i = 0; i < corners.Count; i++)
+            {
+                BoardMapper.AddEntry(corners.ElementAt(i), TileTypes.CORNER);
+            }
         }
         /// <summary>
         /// Add the default throne tile to the board
         /// </summary>
         public void AddThroneTiles()
         {
-            HashSet<Position> thrones = new HashSet<Position>
-            {
-                GetCenterPosition()
-            };
-            this.AddThroneTiles(thrones);
+            BoardMapper.AddEntry(GetCenterPosition(), TileTypes.THRONE);
         }
         /// <summary>
         /// Add the throne tiles to the board
@@ -102,23 +88,21 @@ namespace HnefataflAI.Games.Boards
         /// <param name="thrones">The thrones to add</param>
         public void AddThroneTiles(HashSet<Position> thrones)
         {
-            SetUtils<Position>.AddRange(ThroneTiles, thrones);
+            for (int i = 0; i < thrones.Count; i++)
+            {
+                BoardMapper.AddEntry(thrones.ElementAt(i), TileTypes.THRONE);
+            }
         }
         /// <summary>
         /// Add the default base camps for a player to the board.
         /// </summary>
 		public void AddBaseCamps()
         {
-            this.AddBaseCamps(this.AttackerBaseCamps, PieceColors.BLACK);
-        }
-        /// <summary>
-        /// Add the base camps for a player to the board.
-        /// </summary>
-        /// <param name="baseCamps">The empty list of basecamps</param>
-        /// <param name="pieceColor">The pieces color</param>
-        public void AddBaseCamps(HashSet<Position> baseCamps, PieceColors pieceColor)
-        {
-            SetUtils<Position>.AddRange(baseCamps, GetPiecesByColor(pieceColor).Select(piece => piece.Position).ToArray());
+            Position[] positions = GetPiecesByColor(PieceColors.BLACK).Select(piece => piece.Position).ToArray();
+            for (int i = 0; i < positions.Length; i++)
+            {
+                BoardMapper.AddEntry(positions.ElementAt(i), TileTypes.BASECAMP);
+            }
         }
         #endregion
 

@@ -54,10 +54,10 @@ namespace HnefataflAI
         }
         static void RunPvPCGame()
         {
-            RuleTypes ruleType = RuleTypes.TABLUT;
-            BoardTypes boardType = BoardTypes.BRANDUBH_7X7;
+            RuleTypes ruleType = RuleTypes.HNEFATAFL;
+            BoardTypes boardType = BoardTypes.ARDRDI_7X7;
             IPlayer player1 = new HumanPlayer(PieceColors.BLACK);
-            ITaflBot player2 = BotUtils.GetTaflBot(BotTypes.PARALLELMINIMAXAB, PieceColors.WHITE, ruleType);
+            ITaflBot player2 = BotUtils.GetTaflBot(BotTypes.PARALLELMINIMAX, PieceColors.WHITE, ruleType);
 
             Game game = new Game(boardType, player1, player2, ruleType);
             ConsoleGameRunner consoleGameRunner = new ConsoleGameRunner(game);

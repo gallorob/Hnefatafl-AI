@@ -25,13 +25,14 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  .  .  .  .  A  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(3, 'f')));
             board.AddPiece(new Attacker(new Position(4, 'f')));
             board.AddPiece(new Attacker(new Position(2, 'f')));
             IPiece piece = board.At(new Position(3, 'f'));
             IPiece moved = board.At(new Position(2, 'f'));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsTrue(CaptureUtils.IsPieceCaptured(piece, moved, board, HnefataflCaptureRuleSet));
         }
 
@@ -49,12 +50,13 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  .  .  .  .  .  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(4, 'e')));
             board.AddPiece(new Attacker(new Position(4, 'f')));
             IPiece piece = board.At(new Position(4, 'e'));
             IPiece moved = board.At(new Position(4, 'f'));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsTrue(CaptureUtils.IsPieceCaptured(piece, moved, board, HnefataflCaptureRuleSet));
         }
 
@@ -72,12 +74,13 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  .  .  .  .  .  D 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(2, 'g')));
             board.AddPiece(new Attacker(new Position(3, 'g')));
             IPiece piece = board.At(new Position(2, 'g'));
             IPiece moved = board.At(new Position(3, 'g'));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             Assert.IsTrue(CaptureUtils.IsPieceCaptured(piece, moved, board, HnefataflCaptureRuleSet));
         }
 
@@ -96,8 +99,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  D  D  D  .  .  . 
             /// 1	 *  A  A  A  D  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(2, 'b')));
             board.AddPiece(new Defender(new Position(2, 'c')));
             board.AddPiece(new Defender(new Position(2, 'd')));
@@ -105,6 +106,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(1, 'b')));
             board.AddPiece(new Attacker(new Position(1, 'c')));
             board.AddPiece(new Attacker(new Position(1, 'd')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             IPiece piece = board.At(new Position(1, 'c'));
             IPiece moved = board.At(new Position(1, 'e'));
             Assert.IsTrue(CaptureUtils.IsPieceCaptured(piece, moved, board, HnefataflCaptureRuleSet));
@@ -125,8 +129,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  D  D  D  .  .  . 
             /// 1	 *  A  A  A  D  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(2, 'b')));
             board.AddPiece(new Defender(new Position(2, 'c')));
             board.AddPiece(new Defender(new Position(2, 'd')));
@@ -134,6 +136,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(1, 'b')));
             board.AddPiece(new Attacker(new Position(1, 'c')));
             board.AddPiece(new Attacker(new Position(1, 'd')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             IPiece piece = board.At(new Position(1, 'c'));
             IPiece moved = board.At(new Position(2, 'c'));
             Assert.IsFalse(CaptureUtils.IsPieceCaptured(piece, moved, board, HnefataflCaptureRuleSet));
@@ -153,14 +158,15 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  .  D  D  .  .  . 
             /// 1	 *  A  A  A  D  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(2, 'c')));
             board.AddPiece(new Defender(new Position(2, 'd')));
             board.AddPiece(new Defender(new Position(1, 'e')));
             board.AddPiece(new Attacker(new Position(1, 'b')));
             board.AddPiece(new Attacker(new Position(1, 'c')));
             board.AddPiece(new Attacker(new Position(1, 'd')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             IPiece piece = board.At(new Position(1, 'd'));
             IPiece moved = board.At(new Position(1, 'e'));
             Assert.IsFalse(CaptureUtils.IsPieceCaptured(piece, moved, board, HnefataflCaptureRuleSet));

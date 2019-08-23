@@ -25,13 +25,14 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  .  .  .  .  .  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(5, 'g')));
             board.AddPiece(new Defender(new Position(4, 'g')));
             board.AddPiece(new Attacker(new Position(6, 'g')));
             board.AddPiece(new Attacker(new Position(5, 'f')));
             board.AddPiece(new Attacker(new Position(4, 'f')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             IPiece piece = board.At(new Position(4, 'g'));
             Assert.IsTrue(CaptureUtils.IsInShieldWall(piece, board, Directions.RIGHT, HnefataflCaptureRuleSet).Count == 2);            
         }
@@ -50,13 +51,14 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  .  .  .  .  .  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(5, 'g')));
             board.AddPiece(new Defender(new Position(4, 'g')));
             board.AddPiece(new Attacker(new Position(6, 'g')));
             board.AddPiece(new Attacker(new Position(5, 'f')));
             board.AddPiece(new Attacker(new Position(4, 'f')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             IPiece piece = board.At(new Position(5, 'g'));
             Assert.IsTrue(CaptureUtils.IsInShieldWall(piece, board, Directions.RIGHT, HnefataflCaptureRuleSet).Count == 2);
         }
@@ -75,12 +77,13 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  .  .  .  .  .  . 
             /// 1	 *  .  .  .  .  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(5, 'g')));
             board.AddPiece(new Defender(new Position(4, 'g')));
             board.AddPiece(new Attacker(new Position(6, 'g')));
             board.AddPiece(new Attacker(new Position(4, 'f')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             IPiece piece = board.At(new Position(5, 'g'));
             Assert.IsFalse(CaptureUtils.IsInShieldWall(piece, board, Directions.RIGHT, HnefataflCaptureRuleSet).Count == 2);
         }
@@ -99,8 +102,6 @@ namespace HnefataflAI.Commons.Utils.Tests
             /// 2	 .  D  D  D  .  .  . 
             /// 1	 *  A  A  A  D  .  *
             Board board = new Board(7, 7);
-            board.AddThroneTiles();
-            board.AddCornerTiles();
             board.AddPiece(new Defender(new Position(2, 'b')));
             board.AddPiece(new Defender(new Position(2, 'c')));
             board.AddPiece(new Defender(new Position(2, 'd')));
@@ -108,6 +109,9 @@ namespace HnefataflAI.Commons.Utils.Tests
             board.AddPiece(new Attacker(new Position(1, 'b')));
             board.AddPiece(new Attacker(new Position(1, 'c')));
             board.AddPiece(new Attacker(new Position(1, 'd')));
+            board.FinalizeCreation();
+            board.AddThroneTiles();
+            board.AddCornerTiles();
             IPiece piece = board.At(new Position(1, 'c'));
             IPiece moved = board.At(new Position(1, 'd'));
             Assert.IsTrue(CaptureUtils.IsShieldWallComplete(piece, moved, board, Directions.DOWN, HnefataflCaptureRuleSet).Count == 2);
