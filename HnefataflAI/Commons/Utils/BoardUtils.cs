@@ -142,21 +142,15 @@ namespace HnefataflAI.Commons.Utils
         /// <param name="board">The board</param>
         /// <returns>If a position is on a board's corner</returns>
         public static bool IsOnCorner(Position position, Board board)
-		{
-			return position.Row == 0 && position.Col == 0
-				|| position.Row == 0 && position.Col == board.TotalCols
-				|| position.Row == board.TotalRows && position.Col == 0
-				|| position.Row == board.TotalRows && position.Col == board.TotalCols;
-
-			//return BoardMapper.LookUpTable[position].Equals(TileTypes.CORNER);
-
-			//bool isOnBoardCorner = false;
-			//foreach (Position corner in board.CornerTiles)
-			//{
-			//    isOnBoardCorner |= position.Equals(corner);
-			//}
-			//return isOnBoardCorner;
-		}
+        {
+            return BoardMapper.LookUpTable[position].Equals(TileTypes.CORNER);
+            //bool isOnBoardCorner = false;
+            //foreach (Position corner in board.CornerTiles)
+            //{
+            //    isOnBoardCorner |= position.Equals(corner);
+            //}
+            //return isOnBoardCorner;
+        }
         /// <summary>
         /// Check if a position is on a board's throne
         /// </summary>
@@ -165,10 +159,7 @@ namespace HnefataflAI.Commons.Utils
         /// <returns>If a position is on a board's throne</returns>
         public static bool IsOnThrone(Position position, Board board)
         {
-			return position.Row == board.TotalRows / 2 - 1 && position.Col == board.TotalCols / 2 - 1;
-
-            //return BoardMapper.LookUpTable[position].Equals(TileTypes.THRONE);
-
+            return BoardMapper.LookUpTable[position].Equals(TileTypes.THRONE);
             //bool isOnThrone = false;
             //foreach (Position throne in board.ThroneTiles)
             //{
